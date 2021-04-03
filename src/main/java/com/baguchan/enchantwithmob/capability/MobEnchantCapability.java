@@ -34,7 +34,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
         this.mobEnchants.add(new MobEnchantHandler(mobEnchant, enchantLevel));
         this.onNewEnchantEffect(entity, mobEnchant, enchantLevel);
         //Sync Client Enchant
-        if (!entity.world.isRemote) {
+        if (!entity.level.isClientSide) {
             MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
             EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
@@ -49,7 +49,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
             this.onRemoveEnchantEffect(entity, mobEnchants.get(i).getMobEnchant());
         }
         //Sync Client Enchant
-        if (!entity.world.isRemote) {
+        if (!entity.level.isClientSide) {
             RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
             EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
@@ -63,7 +63,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
         this.mobEnchants.remove(mobEnchant);
         this.onRemoveEnchantEffect(entity, mobEnchant);
         //Sync Client Enchant
-        if (!entity.world.isRemote) {
+        if (!entity.level.isClientSide) {
             RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
             EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
         }
@@ -74,8 +74,8 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
      * Add Enchant Attribute
      */
     protected void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-        if (!entity.world.isRemote) {
-            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributeManager(), enchantLevel);
+        if (!entity.level.isClientSide) {
+            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
         }
     }
 
@@ -83,8 +83,8 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
      * Changed Enchant Attribute When Enchant is Changed
      */
     protected void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-        if (!entity.world.isRemote) {
-            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributeManager(), enchantLevel);
+        if (!entity.level.isClientSide) {
+            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
         }
     }
 
@@ -92,8 +92,8 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
      * Remove Enchant Attribute effect
      */
     protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant) {
-        if (!entity.world.isRemote) {
-            enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributeManager());
+        if (!entity.level.isClientSide()) {
+            enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
         }
     }
 

@@ -19,7 +19,7 @@ public class MobEnchantedMessage {
     private int level;
 
     public MobEnchantedMessage(Entity entity, MobEnchantHandler enchantType) {
-        this.entityId = entity.getEntityId();
+        this.entityId = entity.getId();
         this.enchantType = enchantType.getMobEnchant();
         this.level = enchantType.getEnchantLevel();
     }
@@ -31,20 +31,20 @@ public class MobEnchantedMessage {
     }
 
     public MobEnchantedMessage(Entity entity, MobEnchant enchantType, int level) {
-        this.entityId = entity.getEntityId();
+        this.entityId = entity.getId();
         this.enchantType = enchantType;
         this.level = level;
     }
 
     public void serialize(PacketBuffer buffer) {
         buffer.writeInt(this.entityId);
-        buffer.writeString(this.enchantType.toString());
+        buffer.writeUtf(this.enchantType.toString());
         buffer.writeInt(this.level);
     }
 
     public static MobEnchantedMessage deserialize(PacketBuffer buffer) {
         int entityId = buffer.readInt();
-        MobEnchant enchantType = MobEnchantUtils.getEnchantFromString(buffer.readString());
+        MobEnchant enchantType = MobEnchantUtils.getEnchantFromString(buffer.readUtf());
         int level = buffer.readInt();
 
         return new MobEnchantedMessage(entityId, new MobEnchantHandler(enchantType, level));
@@ -55,7 +55,7 @@ public class MobEnchantedMessage {
 
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.world.getEntityByID(message.entityId);
+                Entity entity = Minecraft.getInstance().player.level.getEntity(message.entityId);
                 if (entity != null && entity instanceof LivingEntity) {
                     entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
                     {

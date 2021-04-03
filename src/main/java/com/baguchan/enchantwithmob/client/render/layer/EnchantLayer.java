@@ -35,7 +35,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         RenderSystem.fog(2918, 0.0F, 0.0F, 0.0F, 1.0F);
         RenderSystem.enableFog();
     }, () -> {
-        FogRenderer.applyFog();
+        FogRenderer.levelFogColor();
         RenderSystem.disableFog();
     });
     protected static final RenderState.AlphaState DEFAULT_ALPHA = new RenderState.AlphaState(0.003921569F);
@@ -50,19 +50,19 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
             if (cap.hasEnchant() && !entitylivingbaseIn.isInvisible()) {
-                float f = (float) entitylivingbaseIn.ticksExisted + partialTicks;
+                float f = (float) entitylivingbaseIn.tickCount + partialTicks;
                 EntityModel<T> entitymodel = this.func_225635_b_();
-                entitymodel.setLivingAnimations(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
-                this.getEntityModel().copyModelAttributesTo(entitymodel);
+                entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
+                this.getParentModel().copyPropertiesTo(entitymodel);
                 IVertexBuilder ivertexbuilder = bufferIn.getBuffer(getEnergyLight(this.getEnchantTexture(), this.func_225634_a_(f), f * 0.01F));
-                entitymodel.setRotationAngles(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-                entitymodel.render(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+                entitymodel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+                entitymodel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
             }
         });
     }
 
     public static RenderType getEnergyLight(ResourceLocation locationIn, float uIn, float vIn) {
-        return RenderType.makeType("energy_light", DefaultVertexFormats.ENTITY, 7, 256, false, true, RenderType.State.getBuilder().texture(new RenderState.TextureState(locationIn, false, false)).texturing(new RenderState.OffsetTexturingState(uIn, vIn)).fog(BLACK_FOG).transparency(ADDITIVE_TRANSPARENCY).diffuseLighting(DIFFUSE_LIGHTING_ENABLED).alpha(DEFAULT_ALPHA).cull(CULL_DISABLED).overlay(OVERLAY_ENABLED).build(false));
+        return RenderType.create("energy_light", DefaultVertexFormats.NEW_ENTITY, 7, 256, false, true, RenderType.State.builder().setTextureState(new RenderState.TextureState(locationIn, false, false)).setTexturingState(new RenderState.OffsetTexturingState(uIn, vIn)).setFogState(BLACK_FOG).setTransparencyState(ADDITIVE_TRANSPARENCY).setDiffuseLightingState(DIFFUSE_LIGHTING_ENABLED).setAlphaState(DEFAULT_ALPHA).setCullState(CULL_DISABLED).setOverlayState(OVERLAY_ENABLED).createCompositeState(false));
     }
 
     protected float func_225634_a_(float p_225634_1_) {
@@ -74,6 +74,6 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
     }
 
     protected EntityModel<T> func_225635_b_() {
-        return this.getEntityModel();
+        return this.getParentModel();
     }
 }

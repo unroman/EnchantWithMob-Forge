@@ -16,24 +16,24 @@ public class MobUnEnchantBookItem extends Item {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
 
         playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
             MobEnchantUtils.removeMobEnchantToEntity(playerIn, cap);
         });
-        playerIn.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+        playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-        stack.damageItem(1, playerIn, (entity) -> entity.sendBreakAnimation(handIn));
-        playerIn.getCooldownTracker().setCooldown(stack.getItem(), 80);
+        stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
+        playerIn.getCooldowns().addCooldown(stack.getItem(), 80);
 
-        return ActionResult.resultSuccess(stack);
+        return ActionResult.success(stack);
 
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack p_77636_1_) {
         return true;
     }
 }

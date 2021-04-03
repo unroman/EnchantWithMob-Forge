@@ -57,31 +57,31 @@ public class MobEnchantBookItem extends Item {
     }*/
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
+    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
+        ItemStack stack = playerIn.getItemInHand(handIn);
         if (EnchantConfig.COMMON.enchantYourSelf.get() && MobEnchantUtils.hasMobEnchant(stack)) {
             playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
                 MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
             });
-            playerIn.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+            playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-            stack.damageItem(1, playerIn, (entity) -> entity.sendBreakAnimation(handIn));
+            stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
 
-            playerIn.getCooldownTracker().setCooldown(stack.getItem(), 60);
+            playerIn.getCooldowns().addCooldown(stack.getItem(), 60);
 
-            return ActionResult.resultSuccess(stack);
+            return ActionResult.success(stack);
         }
-        return super.onItemRightClick(worldIn, playerIn, handIn);
+        return super.use(worldIn, playerIn, handIn);
     }
 
     @Override
-    public void fillItemGroup(ItemGroup group, NonNullList<ItemStack> items) {
-        if (this.isInGroup(group)) {
+    public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
+        if (this.allowdedIn(p_150895_1_)) {
             for (MobEnchant enchant : MobEnchants.getRegistry()) {
                 ItemStack stack = new ItemStack(this);
                 MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
-                items.add(stack);
+                p_150895_2_.add(stack);
             }
         }
 
@@ -92,9 +92,10 @@ public class MobEnchantBookItem extends Item {
         return compoundnbt != null ? compoundnbt.getList(MobEnchantUtils.TAG_STORED_MOBENCHANTS, 10) : new ListNBT();
     }
 
+
     @Override
-    public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
         if (MobEnchantUtils.hasMobEnchant(stack)) {
             ListNBT listnbt = MobEnchantUtils.getEnchantmentListForNBT(stack.getTag());
 
@@ -107,7 +108,7 @@ public class MobEnchantBookItem extends Item {
                 if (mobEnchant != null) {
                     TextFormatting[] textformatting = new TextFormatting[]{TextFormatting.AQUA};
 
-                    tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).mergeStyle(textformatting).appendString(" ").append(new TranslationTextComponent("enchantment.level." + level).mergeStyle(textformatting)));
+                    tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslationTextComponent("enchantment.level." + level).withStyle(textformatting)));
                 }
             }
 
@@ -134,7 +135,7 @@ public class MobEnchantBookItem extends Item {
 
             if (!list1.isEmpty()) {
                 tooltip.add(StringTextComponent.EMPTY);
-                tooltip.add((new TranslationTextComponent("mobenchant.enchantwithmob.when_ehcnanted")).mergeStyle(TextFormatting.DARK_PURPLE));
+                tooltip.add((new TranslationTextComponent("mobenchant.enchantwithmob.when_ehcnanted")).withStyle(TextFormatting.DARK_PURPLE));
 
                 for (Pair<Attribute, AttributeModifier> pair : list1) {
                     AttributeModifier attributemodifier2 = pair.getSecond();
@@ -147,10 +148,10 @@ public class MobEnchantBookItem extends Item {
                     }
 
                     if (d0 > 0.0D) {
-                        tooltip.add((new TranslationTextComponent("attribute.modifier.plus." + attributemodifier2.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getAttributeName()))).mergeStyle(TextFormatting.BLUE));
+                        tooltip.add((new TranslationTextComponent("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getDescriptionId()))).withStyle(TextFormatting.BLUE));
                     } else if (d0 < 0.0D) {
                         d1 = d1 * -1.0D;
-                        tooltip.add((new TranslationTextComponent("attribute.modifier.take." + attributemodifier2.getOperation().getId(), ItemStack.DECIMALFORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getAttributeName()))).mergeStyle(TextFormatting.RED));
+                        tooltip.add((new TranslationTextComponent("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getDescriptionId()))).withStyle(TextFormatting.RED));
                     }
                 }
             }
@@ -158,7 +159,7 @@ public class MobEnchantBookItem extends Item {
     }
 
     @Override
-    public boolean hasEffect(ItemStack stack) {
+    public boolean isFoil(ItemStack p_77636_1_) {
         return true;
     }
 }

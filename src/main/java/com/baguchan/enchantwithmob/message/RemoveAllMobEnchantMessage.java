@@ -14,7 +14,7 @@ public class RemoveAllMobEnchantMessage {
     private int entityId;
 
     public RemoveAllMobEnchantMessage(Entity entity) {
-        this.entityId = entity.getEntityId();
+        this.entityId = entity.getId();
     }
 
     public RemoveAllMobEnchantMessage(int id) {
@@ -36,7 +36,7 @@ public class RemoveAllMobEnchantMessage {
 
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
-                Entity entity = Minecraft.getInstance().player.world.getEntityByID(message.entityId);
+                Entity entity = Minecraft.getInstance().player.level.getEntity(message.entityId);
                 if (entity != null && entity instanceof LivingEntity) {
                     entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
                     {

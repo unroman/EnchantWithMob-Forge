@@ -34,8 +34,8 @@ public class MobEnchantUtils {
      */
     @Nullable
     public static MobEnchant getEnchantFromNBT(@Nullable CompoundNBT tag) {
-        if (tag != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryCreate(tag.getString(TAG_MOBENCHANT)))) {
-            return MobEnchants.getRegistry().getValue(ResourceLocation.tryCreate(tag.getString(TAG_MOBENCHANT)));
+        if (tag != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)))) {
+            return MobEnchants.getRegistry().getValue(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)));
         } else {
             return null;
         }
@@ -61,8 +61,8 @@ public class MobEnchantUtils {
      */
     @Nullable
     public static MobEnchant getEnchantFromString(@Nullable String id) {
-        if (id != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryCreate(id))) {
-            return MobEnchants.getRegistry().getValue(ResourceLocation.tryCreate(id));
+        if (id != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryParse(id))) {
+            return MobEnchants.getRegistry().getValue(ResourceLocation.tryParse(id));
         } else {
             return null;
         }
@@ -121,7 +121,7 @@ public class MobEnchantUtils {
         }
 
         if (listnbt.isEmpty()) {
-            stack.removeChildTag(TAG_STORED_MOBENCHANTS);
+            stack.removeTagKey(TAG_STORED_MOBENCHANTS);
         }
     }
 
@@ -148,7 +148,7 @@ public class MobEnchantUtils {
 
         for (int i = 0; i < listnbt.size(); ++i) {
             CompoundNBT compoundnbt = listnbt.getCompound(i);
-            ResourceLocation resourcelocation1 = ResourceLocation.tryCreate(compoundnbt.getString("MobEnchant"));
+            ResourceLocation resourcelocation1 = ResourceLocation.tryParse(compoundnbt.getString("MobEnchant"));
             if (resourcelocation1 != null && resourcelocation1.equals(resourcelocation)) {
                 if (compoundnbt.getInt(TAG_ENCHANT_LEVEL) < level) {
                     compoundnbt.putInt(TAG_ENCHANT_LEVEL, level);
@@ -276,7 +276,7 @@ public class MobEnchantUtils {
                 list.add(WeightedRandom.getRandomItem(randomIn, list1));
 
                 while (randomIn.nextInt(50) <= level) {
-                    removeIncompatible(list1, Util.getLast(list));
+                    removeIncompatible(list1, Util.lastOf(list));
                     if (list1.isEmpty()) {
                         break;
                     }

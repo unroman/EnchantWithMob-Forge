@@ -10,13 +10,13 @@ import net.minecraftforge.fml.event.lifecycle.FMLLoadCompleteEvent;
 @OnlyIn(Dist.CLIENT)
 public class ClientRegistrar {
     public static void loadComplete(FMLLoadCompleteEvent evt) {
-        Minecraft.getInstance().getRenderManager().renderers.values().forEach(r -> {
+        Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(r -> {
             if (r instanceof LivingRenderer) {
                 ((LivingRenderer) r).addLayer(new EnchantLayer((LivingRenderer) r));
             }
         });
 
-        Minecraft.getInstance().getRenderManager().getSkinMap().values().forEach(r -> {
+        Minecraft.getInstance().getEntityRenderDispatcher().getSkinMap().values().forEach(r -> {
             if (r instanceof LivingRenderer) {
                 ((LivingRenderer) r).addLayer(new EnchantLayer((LivingRenderer) r));
             }

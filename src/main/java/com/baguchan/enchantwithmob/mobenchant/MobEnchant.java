@@ -78,7 +78,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
     }
 
     public MobEnchant addAttributesModifier(Attribute attributeIn, String uuid, double amount, AttributeModifier.Operation operation) {
-        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), Util.makeTranslationKey("mobenchant", this.getRegistryName()), amount, operation);
+        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), Util.makeDescriptionId("mobenchant", this.getRegistryName()), amount, operation);
         this.attributeModifierMap.put(attributeIn, attributemodifier);
         return this;
     }
@@ -89,7 +89,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
 
     public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn) {
         for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-            ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.createInstanceIfAbsent(entry.getKey());
+			ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.getInstance(entry.getKey());
             if (modifiableattributeinstance != null) {
                 modifiableattributeinstance.removeModifier(entry.getValue());
             }
@@ -99,11 +99,11 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
 
     public void applyAttributesModifiersToEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn, int amplifier) {
         for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-            ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.createInstanceIfAbsent(entry.getKey());
+			ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.getInstance(entry.getKey());
             if (modifiableattributeinstance != null) {
                 AttributeModifier attributemodifier = entry.getValue();
-                modifiableattributeinstance.removeModifier(attributemodifier);
-                modifiableattributeinstance.applyPersistentModifier(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
+				modifiableattributeinstance.removeModifier(attributemodifier);
+				modifiableattributeinstance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), this.getRegistryName().toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
             }
         }
     }

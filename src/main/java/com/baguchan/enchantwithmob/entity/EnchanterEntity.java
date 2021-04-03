@@ -12,7 +12,6 @@ import net.minecraft.entity.monster.*;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
@@ -37,7 +36,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
     public EnchanterEntity(EntityType<? extends EnchanterEntity> type, World p_i48551_2_) {
         super(type, p_i48551_2_);
-        this.experienceValue = 12;
+        this.xpReward = 12;
     }
 
     @Override
@@ -52,48 +51,28 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.8D));
         this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
         this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setCallsForHelp());
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setAlertOthers());
         this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true)).setUnseenMemoryTicks(300));
         this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false)).setUnseenMemoryTicks(300));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, false));
     }
 
     @Override
-    protected void registerData() {
-        super.registerData();
-    }
-
-    @Override
-    public void applyWaveBonus(int p_213660_1_, boolean p_213660_2_) {
-
+    protected void defineSynchedData() {
+        super.defineSynchedData();
     }
 
     public static AttributeModifierMap.MutableAttribute getAttributeMap() {
-        return MonsterEntity.func_234295_eP_().createMutableAttribute(Attributes.MOVEMENT_SPEED, (double) 0.3F).createMutableAttribute(Attributes.MAX_HEALTH, 24.0D).createMutableAttribute(Attributes.FOLLOW_RANGE, 24.0D).createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0F);
-    }
-
-    @Override
-    public void readAdditional(CompoundNBT compound) {
-        super.readAdditional(compound);
-    }
-
-    @Override
-    public void writeAdditional(CompoundNBT compound) {
-        super.writeAdditional(compound);
-    }
-
-    @Override
-    protected void updateAITasks() {
-        super.updateAITasks();
+        return MonsterEntity.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, (double) 0.3F).add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.FOLLOW_RANGE, 24.0D).add(Attributes.ATTACK_DAMAGE, 2.0F);
     }
 
     @Override
     public void tick() {
         super.tick();
 
-        if (this.world.isRemote) {
+        if (this.level.isClientSide) {
             this.clientSideBookAnimation0 = this.clientSideBookAnimation;
-            if (this.isSpellcasting()) {
+            if (this.isCastingSpell()) {
                 this.clientSideBookAnimation = MathHelper.clamp(this.clientSideBookAnimation + 0.1F, 0.0F, 1.0F);
             } else {
                 this.clientSideBookAnimation = MathHelper.clamp(this.clientSideBookAnimation - 0.15F, 0.0F, 1.0F);
@@ -115,17 +94,16 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         this.prevCapeY = this.capeY;
         this.prevCapeZ = this.capeZ;
         this.capeY += gravity;
-        this.capeX += (this.getPosX() - this.capeX) * elasticity;
-        this.capeY += (this.getPosY() - this.capeY) * elasticity;
-        this.capeZ += (this.getPosZ() - this.capeZ) * elasticity;
+        this.capeX += (this.getX() - this.capeX) * elasticity;
+        this.capeY += (this.getY() - this.capeY) * elasticity;
+        this.capeZ += (this.getZ() - this.capeZ) * elasticity;
     }
 
-    @Override
-    public boolean isOnSameTeam(Entity entityIn) {
-        if (super.isOnSameTeam(entityIn)) {
+    public boolean isAlliedTo(Entity p_184191_1_) {
+        if (super.isAlliedTo(p_184191_1_)) {
             return true;
-        } else if (entityIn instanceof LivingEntity && ((LivingEntity) entityIn).getCreatureAttribute() == CreatureAttribute.ILLAGER) {
-            return this.getTeam() == null && entityIn.getTeam() == null;
+        } else if (p_184191_1_ instanceof LivingEntity && ((LivingEntity) p_184191_1_).getMobType() == CreatureAttribute.ILLAGER) {
+            return this.getTeam() == null && p_184191_1_.getTeam() == null;
         } else {
             return false;
         }
@@ -142,51 +120,54 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
 
     @Override
-    protected void dropSpecialItems(DamageSource source, int looting, boolean recentlyHitIn) {
-        super.dropSpecialItems(source, looting, recentlyHitIn);
+    protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHitIn) {
+        super.dropCustomDeathLoot(source, looting, recentlyHitIn);
 
-        if (this.rand.nextFloat() < 0.15F + 0.025F * looting) {
-            if (this.raid != null && this.isRaidActive() && this.getWave() > 0) {
+        if (this.random.nextFloat() < 0.15F + 0.025F * looting) {
+            if (this.raid != null && this.hasActiveRaid() && this.getWave() > 0) {
                 ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 
-                this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 20 + this.getWave() * 2, true));
+                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20 + this.getWave() * 2, true));
             } else {
                 ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 
-                this.entityDropItem(MobEnchantUtils.addRandomEnchantmentToItemStack(rand, itemStack, 20, true));
+                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20, true));
             }
         }
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
+        return SoundEvents.ILLUSIONER_AMBIENT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_ILLUSIONER_DEATH;
+        return SoundEvents.ILLUSIONER_DEATH;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ENTITY_ILLUSIONER_HURT;
+        return SoundEvents.ILLUSIONER_HURT;
+    }
+
+
+    protected SoundEvent getCastingSoundEvent() {
+        return SoundEvents.ILLUSIONER_CAST_SPELL;
     }
 
     @Override
-    protected SoundEvent getSpellSound() {
-        return SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE;
+    public SoundEvent getCelebrateSound() {
+        return SoundEvents.ILLUSIONER_AMBIENT;
     }
 
-    @Override
-    public SoundEvent getRaidLossSound() {
-        return SoundEvents.ENTITY_ILLUSIONER_AMBIENT;
+    public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
     public AbstractIllagerEntity.ArmPose getArmPose() {
-        if (this.isSpellcasting()) {
+        if (this.isCastingSpell()) {
             return AbstractIllagerEntity.ArmPose.SPELLCASTING;
         } else {
             return AbstractIllagerEntity.ArmPose.CROSSED;
@@ -200,10 +181,10 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
         @Override
         public void tick() {
-            if (EnchanterEntity.this.isSpellcasting() && EnchanterEntity.this.getEnchantTarget() != null) {
-                EnchanterEntity.this.getLookController().setLookPositionWithEntity(EnchanterEntity.this.getEnchantTarget(), (float) EnchanterEntity.this.getHorizontalFaceSpeed(), (float) EnchanterEntity.this.getVerticalFaceSpeed());
-            } else if (EnchanterEntity.this.isSpellcasting() && EnchanterEntity.this.getAttackTarget() != null) {
-                EnchanterEntity.this.getLookController().setLookPositionWithEntity(EnchanterEntity.this.getAttackTarget(), (float) EnchanterEntity.this.getHorizontalFaceSpeed(), (float) EnchanterEntity.this.getVerticalFaceSpeed());
+            if (EnchanterEntity.this.isCastingSpell() && EnchanterEntity.this.getEnchantTarget() != null) {
+                EnchanterEntity.this.getLookControl().setLookAt(EnchanterEntity.this.getEnchantTarget(), (float) EnchanterEntity.this.getMaxHeadYRot(), (float) EnchanterEntity.this.getMaxHeadXRot());
+            } else if (EnchanterEntity.this.isCastingSpell() && EnchanterEntity.this.getTarget() != null) {
+                EnchanterEntity.this.getLookControl().setLookAt(EnchanterEntity.this.getTarget(), (float) EnchanterEntity.this.getMaxHeadYRot(), (float) EnchanterEntity.this.getMaxHeadXRot());
             }
         }
     }
@@ -218,21 +199,21 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
          * method as well.
          */
-        public boolean shouldExecute() {
-            if (EnchanterEntity.this.getAttackTarget() == null) {
+        public boolean canUse() {
+            if (EnchanterEntity.this.getTarget() == null) {
                 return false;
-            } else if (EnchanterEntity.this.isSpellcasting()) {
+            } else if (EnchanterEntity.this.isCastingSpell()) {
                 return false;
-            } else if (EnchanterEntity.this.ticksExisted < this.spellCooldown) {
+            } else if (EnchanterEntity.this.tickCount < this.nextAttackTickCount) {
                 return false;
             } else {
-                List<LivingEntity> list = EnchanterEntity.this.world.getEntitiesWithinAABB(LivingEntity.class, EnchanterEntity.this.getBoundingBox().grow(16.0D, 4.0D, 16.0D), this.fillter);
+                List<LivingEntity> list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 4.0D, 16.0D), this.fillter);
                 if (list.isEmpty()) {
                     return false;
                 } else {
-                    LivingEntity target = list.get(EnchanterEntity.this.rand.nextInt(list.size()));
-                    if (target != EnchanterEntity.this.getAttackTarget()) {
-                        EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.rand.nextInt(list.size())));
+                    LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
+                    if (target != EnchanterEntity.this.getTarget()) {
+                        EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
                         return true;
                     } else {
                         return false;
@@ -244,24 +225,24 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         /**
          * Returns whether an in-progress EntityAIBase should continue executing
          */
-        public boolean shouldContinueExecuting() {
-            return EnchanterEntity.this.getEnchantTarget() != null && EnchanterEntity.this.getEnchantTarget() != EnchanterEntity.this.getAttackTarget() && this.spellWarmup > 0;
+        public boolean canContinueToUse() {
+            return EnchanterEntity.this.getEnchantTarget() != null && EnchanterEntity.this.getEnchantTarget() != EnchanterEntity.this.getTarget() && this.attackWarmupDelay > 0;
         }
 
         /**
          * Reset the task's internal state. Called when this task is interrupted by another one
          */
-        public void resetTask() {
-            super.resetTask();
+        public void stop() {
+            super.stop();
             EnchanterEntity.this.setEnchantTarget(null);
         }
 
-        protected void castSpell() {
+        protected void performSpellCasting() {
             LivingEntity entity = EnchanterEntity.this.getEnchantTarget();
             if (entity != null && entity.isAlive()) {
                 entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
                 {
-                    MobEnchantUtils.addRandomEnchantmentToEntity(entity, cap, entity.getRNG(), 12, false);
+                    MobEnchantUtils.addRandomEnchantmentToEntity(entity, cap, entity.getRandom(), 12, false);
                 });
             }
         }
@@ -279,10 +260,10 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         }
 
         protected SoundEvent getSpellPrepareSound() {
-            return SoundEvents.ITEM_BOOK_PAGE_TURN;
+            return SoundEvents.BOOK_PAGE_TURN;
         }
 
-        protected SpellcastingIllagerEntity.SpellType getSpellType() {
+        protected SpellcastingIllagerEntity.SpellType getSpell() {
             return SpellcastingIllagerEntity.SpellType.WOLOLO;
         }
     }
@@ -299,9 +280,9 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
          * method as well.
          */
-        public boolean shouldExecute() {
-            if (super.shouldExecute() && this.avoidTarget == this.enchanter.getAttackTarget()) {
-                return this.enchanter.getAttackTarget() != null;
+        public boolean canUse() {
+            if (super.canUse() && this.toAvoid == this.enchanter.getTarget()) {
+                return this.enchanter.getTarget() != null;
             } else {
                 return false;
             }
@@ -310,16 +291,16 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         /**
          * Execute a one shot task or start executing a continuous task
          */
-        public void startExecuting() {
-            EnchanterEntity.this.setAttackTarget((LivingEntity) null);
-            super.startExecuting();
+        public void start() {
+            EnchanterEntity.this.setTarget((LivingEntity) null);
+            super.start();
         }
 
         /**
          * Keep ticking a continuous task that has already been started
          */
         public void tick() {
-            EnchanterEntity.this.setAttackTarget((LivingEntity) null);
+            EnchanterEntity.this.setTarget((LivingEntity) null);
             super.tick();
         }
     }
@@ -330,49 +311,49 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
         AttackGoal(EnchanterEntity enchanter) {
             this.enchanter = enchanter;
-            this.setMutexFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+            this.setFlags(EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
         }
 
         @Override
-        public boolean shouldExecute() {
-            LivingEntity livingentity = this.enchanter.getAttackTarget();
+        public boolean canUse() {
+            LivingEntity livingentity = this.enchanter.getTarget();
             if (livingentity == null) {
                 return false;
             } else if (!livingentity.isAlive()) {
                 return false;
             } else {
-                return this.getAttackReachSqr(livingentity) >= this.enchanter.getDistanceSq(livingentity.getPosX(), livingentity.getPosY(), livingentity.getPosZ());
+                return this.getAttackReachSqr(livingentity) >= this.enchanter.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ());
             }
         }
 
         @Override
-        public void resetTask() {
-            super.resetTask();
+        public void stop() {
+            super.stop();
             this.cooldown = 5;
         }
 
         @Override
         public void tick() {
             super.tick();
-            LivingEntity livingentity = this.enchanter.getAttackTarget();
+            LivingEntity livingentity = this.enchanter.getTarget();
 
             if (livingentity != null && livingentity.isAlive()) {
-                this.enchanter.getLookController().setLookPositionWithEntity(livingentity, 30.0F, 30.0F);
-                if (this.getAttackReachSqr(livingentity) >= this.enchanter.getDistanceSq(livingentity.getPosX(), livingentity.getPosY(), livingentity.getPosZ())) {
+                this.enchanter.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
+                if (this.getAttackReachSqr(livingentity) >= this.enchanter.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ())) {
                     if (this.cooldown <= 0) {
-                        this.enchanter.swingArm(Hand.MAIN_HAND);
-                        this.enchanter.attackEntityAsMob(livingentity);
+                        this.enchanter.swing(Hand.MAIN_HAND);
+                        this.enchanter.doHurtTarget(livingentity);
 
                         this.cooldown = 30;
                     }
-                    this.enchanter.getNavigator().clearPath();
+                    this.enchanter.getNavigation().stop();
                 }
             }
             this.cooldown = Math.max(this.cooldown - 1, 0);
         }
 
         protected double getAttackReachSqr(LivingEntity attackTarget) {
-            return (double) (this.enchanter.getWidth() * 1.5F * this.enchanter.getWidth() * 1.5F + attackTarget.getWidth());
+            return (double) (this.enchanter.getBbWidth() * 1.5F * this.enchanter.getBbWidth() * 1.5F + attackTarget.getBbWidth());
         }
     }
 
