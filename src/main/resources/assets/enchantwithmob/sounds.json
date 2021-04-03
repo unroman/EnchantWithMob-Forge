@@ -1,0 +1,69 @@
+{
+  "entity.enchanter.ambient": {
+    "sounds": [
+      {
+        "name": "enchantwithmob:enchanter/idle1"
+      },
+      {
+        "name": "enchantwithmob:enchanter/idle2"
+      },
+      {
+        "name": "enchantwithmob:enchanter/idle3"
+      }
+    ],
+    "subtitle": "subtitles.entity.enchanter.ambient"
+  },
+  "entity.enchanter.hurt": {
+    "sounds": [
+      {
+        "name": "enchantwithmob:enchanter/hurt1"
+      },
+      {
+        "name": "enchantwithmob:enchanter/hurt2"
+      },
+      {
+        "name": "enchantwithmob:enchanter/hurt3"
+      }
+    ],
+    "subtitle": "subtitles.entity.enchanter.hurt"
+  },
+  "entity.enchanter.death": {
+    "sounds": [
+      {
+        "name": "enchantwithmob:enchanter/death1"
+      },
+      {
+        "name": "enchantwithmob:enchanter/death2"
+      },
+      {
+        "name": "enchantwithmob:enchanter/death3"
+      }
+    ],
+    "subtitle": "subtitles.entity.enchanter.death"
+  },
+  "entity.enchanter.spell": {
+    "sounds": [
+      {
+        "name": "enchantwithmob:enchanter/spell1"
+      },
+      {
+        "name": "enchantwithmob:enchanter/spell2"
+      }
+    ],
+    "subtitle": "subtitles.entity.enchanter.spell"
+  },
+  "entity.enchanter.attack": {
+    "sounds": [
+      {
+        "name": "enchantwithmob:enchanter/attack1"
+      },
+      {
+        "name": "enchantwithmob:enchanter/attack2"
+      },
+      {
+        "name": "enchantwithmob:enchanter/attack3"
+      }
+    ],
+    "subtitle": "subtitles.entity.enchanter.attack"
+  }
+}

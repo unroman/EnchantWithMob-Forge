@@ -2,6 +2,7 @@ package com.baguchan.enchantwithmob.entity;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.registry.ModItems;
+import com.baguchan.enchantwithmob.registry.ModSoundEvents;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -137,28 +138,35 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     }
 
     @Override
+    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
+        this.playSound(ModSoundEvents.ENCHANTER_ATTACK, this.getSoundVolume(), this.getVoicePitch());
+
+        return super.hurt(p_70097_1_, p_70097_2_);
+    }
+
+    @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ILLUSIONER_AMBIENT;
+        return ModSoundEvents.ENCHANTER_AMBIENT;
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ILLUSIONER_DEATH;
+        return ModSoundEvents.ENCHANTER_DEATH;
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return SoundEvents.ILLUSIONER_HURT;
+        return ModSoundEvents.ENCHANTER_HURT;
     }
 
 
     protected SoundEvent getCastingSoundEvent() {
-        return SoundEvents.ILLUSIONER_CAST_SPELL;
+        return ModSoundEvents.ENCHANTER_SPELL;
     }
 
     @Override
     public SoundEvent getCelebrateSound() {
-        return SoundEvents.ILLUSIONER_AMBIENT;
+        return ModSoundEvents.ENCHANTER_AMBIENT;
     }
 
     public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
