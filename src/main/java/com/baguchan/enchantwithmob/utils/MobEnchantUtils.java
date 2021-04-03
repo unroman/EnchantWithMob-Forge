@@ -190,6 +190,16 @@ public class MobEnchantUtils {
         capability.removeAllMobEnchant(entity);
     }
 
+    public static int getExperienceFromMob(MobEnchantCapability cap) {
+        int l = 0;
+        for (MobEnchantHandler list : cap.getMobEnchants()) {
+            MobEnchant enchantment = list.getMobEnchant();
+            int integer = list.getEnchantLevel();
+            l += enchantment.getMinEnchantability(integer);
+        }
+        return l;
+    }
+
     /**
      * add Mob Enchantments From ItemStack
      *

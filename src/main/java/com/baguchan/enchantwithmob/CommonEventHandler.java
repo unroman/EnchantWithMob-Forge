@@ -315,6 +315,11 @@ public class CommonEventHandler {
 
 	@SubscribeEvent
 	public static void onExpDropped(LivingExperienceDropEvent event) {
+		LivingEntity entity = event.getEntityLiving();
+		entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
+			if (cap.hasEnchant())
+				event.setDroppedExperience(event.getDroppedExperience() + MobEnchantUtils.getExperienceFromMob(cap));
+		});
 	}
 
 	@SubscribeEvent
