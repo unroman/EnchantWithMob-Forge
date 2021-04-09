@@ -28,7 +28,6 @@ public class EnchanterRenderer<T extends EnchanterEntity> extends MobRenderer<T,
     public EnchanterRenderer(EntityRendererManager p_i47477_1_) {
         super(p_i47477_1_, new EnchanterModel<>(), 0.5F);
         this.addLayer(new HeadLayer<>(this));
-        //this.addLayer(new CrossArmHeldItemLayer<>(this));
     }
 
     @Override
