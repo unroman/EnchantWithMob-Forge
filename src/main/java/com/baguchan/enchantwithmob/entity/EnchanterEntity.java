@@ -137,11 +137,12 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         }
     }
 
+
     @Override
-    public boolean hurt(DamageSource p_70097_1_, float p_70097_2_) {
+    public boolean doHurtTarget(Entity p_70652_1_) {
         this.playSound(ModSoundEvents.ENCHANTER_ATTACK, this.getSoundVolume(), this.getVoicePitch());
 
-        return super.hurt(p_70097_1_, p_70097_2_);
+        return super.doHurtTarget(p_70652_1_);
     }
 
     @Override
