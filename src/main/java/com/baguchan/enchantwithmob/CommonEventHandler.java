@@ -103,7 +103,7 @@ public class CommonEventHandler {
 					}
 				}
 
-				if (cap.isFromOwner() && (!cap.hasOwner() || cap.hasOwner() && livingEntity.distanceToSqr(cap.enchantOwner.get()) > 128)) {
+				if (cap.isFromOwner() && (!cap.hasOwner() || cap.hasOwner() && livingEntity.distanceToSqr(cap.enchantOwner.get()) > 256)) {
 					cap.removeMobEnchantFromOwner(livingEntity);
 					livingEntity.playSound(SoundEvents.ITEM_BREAK, 1.5F, 1.6F);
 				}
