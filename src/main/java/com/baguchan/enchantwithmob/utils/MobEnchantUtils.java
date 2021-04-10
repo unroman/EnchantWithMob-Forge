@@ -201,33 +201,52 @@ public class MobEnchantUtils {
     }
 
     /**
-     * add Mob Enchantments From ItemStack
-     *
-     * @param livingEntity Enchanting target
-     * @param capability   MobEnchant Capability
-     * @param random       Random
-     * @param level        max limit level MobEnchant
-     * @param allowRare    setting is allow rare enchant
-     */
-    public static void addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
-        List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+	 * add Mob Enchantments To Entity
+	 *
+	 * @param livingEntity Enchanting target
+	 * @param capability   MobEnchant Capability
+	 * @param random       Random
+	 * @param level        max limit level MobEnchant
+	 * @param allowRare    setting is allow rare enchant
+	 */
+	public static void addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
 
-        for (MobEnchantmentData enchantmentdata : list) {
-            if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
-                capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
-            }
-        }
-    }
+		for (MobEnchantmentData enchantmentdata : list) {
+			if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
+				capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+			}
+		}
+	}
 
-    public static ItemStack addRandomEnchantmentToItemStack(Random random, ItemStack stack, int level, boolean allowRare) {
-        List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+	/**
+	 * add Mob Enchantments To Entity(but unstable enchant)
+	 *
+	 * @param livingEntity Enchanting target
+	 * @param capability   MobEnchant Capability
+	 * @param random       Random
+	 * @param level        max limit level MobEnchant
+	 * @param allowRare    setting is allow rare enchant
+	 */
+	public static void addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
 
-        for (MobEnchantmentData enchantmentdata : list) {
-            addMobEnchantToItemStack(stack, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
-        }
+		for (MobEnchantmentData enchantmentdata : list) {
+			if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
+				capability.addMobEnchantFromOwner(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ownerEntity);
+			}
+		}
+	}
 
-        return stack;
-    }
+	public static ItemStack addRandomEnchantmentToItemStack(Random random, ItemStack stack, int level, boolean allowRare) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+
+		for (MobEnchantmentData enchantmentdata : list) {
+			addMobEnchantToItemStack(stack, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+		}
+
+		return stack;
+	}
 
     public static boolean findMobEnchant(List<MobEnchant> list, MobEnchant findMobEnchant) {
         for (MobEnchant mobEnchant : list) {

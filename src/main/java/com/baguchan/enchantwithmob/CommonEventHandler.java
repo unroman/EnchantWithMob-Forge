@@ -102,6 +102,11 @@ public class CommonEventHandler {
 						EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
 					}
 				}
+
+				if (cap.isFromOwner() && (!cap.hasOwner() || cap.hasOwner() && livingEntity.distanceToSqr(cap.enchantOwner.get()) > 128)) {
+					cap.removeMobEnchantFromOwner(livingEntity);
+					livingEntity.playSound(SoundEvents.ITEM_BREAK, 1.5F, 1.6F);
+				}
 			});
 		}
 
@@ -118,6 +123,8 @@ public class CommonEventHandler {
 					enchantHandler.getMobEnchant().tick(livingEntity, enchantHandler.getEnchantLevel());
 				}
 
+				if (cap.hasOwner()) {
+				}
 			});
 		}
 	}

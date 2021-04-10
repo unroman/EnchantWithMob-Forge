@@ -3,8 +3,10 @@ package com.baguchan.enchantwithmob;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantStorage;
 import com.baguchan.enchantwithmob.client.ClientRegistrar;
+import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
 import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
+import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
 import com.baguchan.enchantwithmob.registry.ModEntities;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -75,15 +77,23 @@ public class EnchantWithMob
     }
 
     private void setupMessages() {
-        CHANNEL.messageBuilder(MobEnchantedMessage.class, 0)
-                .encoder(MobEnchantedMessage::serialize).decoder(MobEnchantedMessage::deserialize)
-                .consumer(MobEnchantedMessage::handle)
-                .add();
-        CHANNEL.messageBuilder(RemoveAllMobEnchantMessage.class, 1)
-                .encoder(RemoveAllMobEnchantMessage::serialize).decoder(RemoveAllMobEnchantMessage::deserialize)
-                .consumer(RemoveAllMobEnchantMessage::handle)
-                .add();
-    }
+		CHANNEL.messageBuilder(MobEnchantedMessage.class, 0)
+				.encoder(MobEnchantedMessage::serialize).decoder(MobEnchantedMessage::deserialize)
+				.consumer(MobEnchantedMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(RemoveAllMobEnchantMessage.class, 1)
+				.encoder(RemoveAllMobEnchantMessage::serialize).decoder(RemoveAllMobEnchantMessage::deserialize)
+				.consumer(RemoveAllMobEnchantMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(MobEnchantFromOwnerMessage.class, 2)
+				.encoder(MobEnchantFromOwnerMessage::serialize).decoder(MobEnchantFromOwnerMessage::deserialize)
+				.consumer(MobEnchantFromOwnerMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(RemoveMobEnchantOwnerMessage.class, 3)
+				.encoder(RemoveMobEnchantOwnerMessage::serialize).decoder(RemoveMobEnchantOwnerMessage::deserialize)
+				.consumer(RemoveMobEnchantOwnerMessage::handle)
+				.add();
+	}
 
     private void doClientStuff(final FMLClientSetupEvent event) {
         // do something that can only be done on the client
