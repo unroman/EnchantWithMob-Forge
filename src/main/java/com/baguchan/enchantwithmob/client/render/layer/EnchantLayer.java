@@ -51,7 +51,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         {
             if (cap.hasEnchant() && !entitylivingbaseIn.isInvisible()) {
                 float f = (float) entitylivingbaseIn.tickCount + partialTicks;
-                EntityModel<T> entitymodel = this.func_225635_b_();
+                EntityModel<T> entitymodel = this.getParentModel();
                 entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
                 this.getParentModel().copyPropertiesTo(entitymodel);
                 IVertexBuilder ivertexbuilder = bufferIn.getBuffer(getEnergyLight(this.getEnchantTexture(), this.func_225634_a_(f), f * 0.01F));
@@ -71,9 +71,5 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
 
     protected ResourceLocation getEnchantTexture() {
         return ENCHANT_TEXTURE;
-    }
-
-    protected EntityModel<T> func_225635_b_() {
-        return this.getParentModel();
     }
 }
