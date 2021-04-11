@@ -204,6 +204,10 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             return !(entity instanceof EnchanterEntity) && entity instanceof IMob && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
         };
 
+        private final Predicate<LivingEntity> enchanted_fillter = (entity) -> {
+            return !(entity instanceof EnchanterEntity) && entity instanceof IMob && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
+        };
+
         /**
          * Returns whether execution should begin. You can also read and cache any state necessary for execution in this
          * method as well.
@@ -220,10 +224,16 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
                 if (list.isEmpty()) {
                     return false;
                 } else {
-                    LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
-                    if (target != EnchanterEntity.this.getTarget()) {
-                        EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
-                        return true;
+                    List<LivingEntity> enchanted_list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(32.0D, 16.0D, 32.0D), this.enchanted_fillter);
+
+                    if (enchanted_list.size() < 3) {
+                        LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
+                        if (target != EnchanterEntity.this.getTarget()) {
+                            EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
+                            return true;
+                        } else {
+                            return false;
+                        }
                     } else {
                         return false;
                     }
