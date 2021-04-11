@@ -226,7 +226,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
                 } else {
                     List<LivingEntity> enchanted_list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(32.0D, 16.0D, 32.0D), this.enchanted_fillter);
 
-                    if (enchanted_list.size() < 3) {
+                    if (enchanted_list.size() < 4) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
                         if (target != EnchanterEntity.this.getTarget()) {
                             EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
