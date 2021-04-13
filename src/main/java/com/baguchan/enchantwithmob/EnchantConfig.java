@@ -45,7 +45,7 @@ public class EnchantConfig {
                     .define("make Enchanted Mob can Spawn Natural", true);
             spawnEnchantedAnimal = builder
                     .translation(EnchantWithMob.MODID + ".config.spawnEnchantedAnimal")
-                    .define("maje Enchanted Animal can Spawn Natural", false);
+                    .define("make Enchanted Animal can Spawn Natural", false);
             enchantYourSelf = builder
                     .translation(EnchantWithMob.MODID + ".config.enchantYourSelf")
                     .define("when this config turn on,you can enchant yourself", true);
