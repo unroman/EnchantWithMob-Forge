@@ -38,13 +38,13 @@ public class MobEnchantedMessage {
 
     public void serialize(PacketBuffer buffer) {
         buffer.writeInt(this.entityId);
-        buffer.writeUtf(this.enchantType.toString());
+        buffer.writeResourceLocation(this.enchantType.getRegistryName());
         buffer.writeInt(this.level);
     }
 
     public static MobEnchantedMessage deserialize(PacketBuffer buffer) {
         int entityId = buffer.readInt();
-        MobEnchant enchantType = MobEnchantUtils.getEnchantFromString(buffer.readUtf());
+        MobEnchant enchantType = MobEnchantUtils.getEnchantFromResourceLocation(buffer.readResourceLocation());
         int level = buffer.readInt();
 
         return new MobEnchantedMessage(entityId, new MobEnchantHandler(enchantType, level));

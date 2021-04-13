@@ -68,6 +68,15 @@ public class MobEnchantUtils {
         }
     }
 
+    @Nullable
+    public static MobEnchant getEnchantFromResourceLocation(@Nullable ResourceLocation id) {
+        if (id != null && MobEnchants.getRegistry().containsKey(id)) {
+            return MobEnchants.getRegistry().getValue(id);
+        } else {
+            return null;
+        }
+    }
+
     /**
      * check ItemStack has Mob Enchant
      *
