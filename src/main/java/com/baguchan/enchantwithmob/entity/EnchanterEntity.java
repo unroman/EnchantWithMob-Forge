@@ -137,6 +137,10 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         }
     }
 
+    @Override
+    public boolean canBeLeader() {
+        return false;
+    }
 
     @Override
     public boolean doHurtTarget(Entity p_70652_1_) {
@@ -220,11 +224,11 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             } else if (EnchanterEntity.this.tickCount < this.nextAttackTickCount) {
                 return false;
             } else {
-                List<LivingEntity> list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 4.0D, 16.0D), this.fillter);
+                List<LivingEntity> list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.fillter);
                 if (list.isEmpty()) {
                     return false;
                 } else {
-                    List<LivingEntity> enchanted_list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(32.0D, 16.0D, 32.0D), this.enchanted_fillter);
+                    List<LivingEntity> enchanted_list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.enchanted_fillter);
 
                     if (enchanted_list.size() < 4) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
