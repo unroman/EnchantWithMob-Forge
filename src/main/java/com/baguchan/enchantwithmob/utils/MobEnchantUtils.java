@@ -247,15 +247,24 @@ public class MobEnchantUtils {
 		}
 	}
 
-	public static ItemStack addRandomEnchantmentToItemStack(Random random, ItemStack stack, int level, boolean allowRare) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+    public static ItemStack addRandomEnchantmentToItemStack(Random random, ItemStack stack, int level, boolean allowRare) {
+        List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
 
-		for (MobEnchantmentData enchantmentdata : list) {
-			addMobEnchantToItemStack(stack, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
-		}
+        for (MobEnchantmentData enchantmentdata : list) {
+            addMobEnchantToItemStack(stack, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+        }
 
-		return stack;
-	}
+        return stack;
+    }
+
+    public static boolean findMobEnchantHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
+        for (MobEnchantHandler mobEnchant : list) {
+            if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static boolean findMobEnchant(List<MobEnchant> list, MobEnchant findMobEnchant) {
         for (MobEnchant mobEnchant : list) {

@@ -121,13 +121,13 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
 
 
     /*
-     * Add Enchant Attribute
-     */
-    protected void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-        if (!entity.level.isClientSide) {
-            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
-        }
-    }
+	 * Add Enchant Attribute
+	 */
+	public void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
+		if (!entity.level.isClientSide) {
+			enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
+		}
+	}
 
     /*
      * Changed Enchant Attribute When Enchant is Changed
