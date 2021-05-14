@@ -59,19 +59,20 @@ public class CommonEventHandler {
 								livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 								{
 									int i = 0;
+									float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty();
 									switch (world.getDifficulty()) {
 										case EASY:
-											i = MathHelper.clamp(5 + world.getRandom().nextInt(15), 0, 20);
+											i = (int) MathHelper.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 0, 20);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
 										case NORMAL:
-											i = MathHelper.clamp(10 + world.getRandom().nextInt(20), 0, 30);
+											i = (int) MathHelper.clamp((10 + world.getRandom().nextInt(15)) * difficultScale, 0, 40);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
 										case HARD:
-											i = MathHelper.clamp(10 + world.getRandom().nextInt(25), 0, 35);
+											i = (int) MathHelper.clamp((10 + world.getRandom().nextInt(20)) * difficultScale, 0, 50);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
