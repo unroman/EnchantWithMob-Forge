@@ -59,7 +59,7 @@ public class MobEnchantedMessage {
                 if (entity != null && entity instanceof LivingEntity) {
                     entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
                     {
-                        if (!MobEnchantUtils.findMobEnchantHandler(enchantCap.mobEnchants, message.enchantType)) {
+                        if (!MobEnchantUtils.findMobEnchantHandler(enchantCap.getMobEnchants(), message.enchantType)) {
                             enchantCap.addMobEnchant((LivingEntity) entity, message.enchantType, message.level);
                         }
                     });

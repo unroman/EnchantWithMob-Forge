@@ -24,8 +24,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
-	public List<MobEnchantHandler> mobEnchants = Lists.newArrayList();
-	public Optional<LivingEntity> enchantOwner = Optional.empty();
+	private List<MobEnchantHandler> mobEnchants = Lists.newArrayList();
+	private Optional<LivingEntity> enchantOwner = Optional.empty();
 	private boolean fromOwner;
 
 

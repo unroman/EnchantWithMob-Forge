@@ -29,7 +29,7 @@ public class ClientEnchantHUDEvent {
 				if (cap.hasEnchant()) {
 					mc.font.draw(stack, mc.crosshairPickEntity.getDisplayName(), (int) 20, (int) 50, 0xe0e0e0);
 
-					for (MobEnchantHandler mobEnchantHandler : cap.mobEnchants) {
+					for (MobEnchantHandler mobEnchantHandler : cap.getMobEnchants()) {
 						MobEnchant mobEnchant = mobEnchantHandler.getMobEnchant();
 						int mobEnchantLevel = mobEnchantHandler.getEnchantLevel();
 
@@ -38,7 +38,7 @@ public class ClientEnchantHUDEvent {
 						ITextComponent s = new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslationTextComponent("enchantment.level." + mobEnchantLevel)).withStyle(textformatting);
 
 						int xOffset = 20;
-						int yOffset = cap.mobEnchants.indexOf(mobEnchantHandler) * 10 + 60;
+						int yOffset = cap.getMobEnchants().indexOf(mobEnchantHandler) * 10 + 60;
 
 						mc.font.draw(stack, s, (int) (xOffset), (int) yOffset, 0xe0e0e0);
 					}
