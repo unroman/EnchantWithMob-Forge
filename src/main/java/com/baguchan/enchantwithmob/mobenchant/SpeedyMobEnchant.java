@@ -19,9 +19,4 @@ public class SpeedyMobEnchant extends MobEnchant {
     public int getMaxEnchantability(int enchantmentLevel) {
         return this.getMinEnchantability(enchantmentLevel) + 20;
     }
-
-    @Override
-    public int getMinLevel() {
-        return 10;
-    }
 }
