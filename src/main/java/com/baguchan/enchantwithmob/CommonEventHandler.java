@@ -62,7 +62,7 @@ public class CommonEventHandler {
 									float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
 									switch (world.getDifficulty()) {
 										case EASY:
-											i = (int) MathHelper.clamp((world.getRandom().nextInt(5)) * difficultScale, 1, 20);
+											i = (int) MathHelper.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
