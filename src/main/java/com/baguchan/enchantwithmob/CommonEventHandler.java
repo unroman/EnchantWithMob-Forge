@@ -67,7 +67,7 @@ public class CommonEventHandler {
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
 										case NORMAL:
-											i = (int) MathHelper.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 40);
+											i = (int) MathHelper.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
