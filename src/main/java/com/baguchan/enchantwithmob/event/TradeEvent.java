@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class TradeEvent {
     @SubscribeEvent
     public static void wanderTradeEvent(WandererTradesEvent event) {
-        List<VillagerTrades.ITrade> trades = event.getGenericTrades();
+        List<VillagerTrades.ITrade> trades = event.getRareTrades();
         trades.add(new MobEnchantedBookForEmeraldsTrade(15));
     }
 
