@@ -6,7 +6,7 @@ public class HealthBoostMobEnchant extends MobEnchant {
     }
 
     public int getMinEnchantability(int enchantmentLevel) {
-        return 15 + (enchantmentLevel - 1) * 20;
+        return 15 + (enchantmentLevel - 1) * 10;
     }
 
     public int getMaxEnchantability(int enchantmentLevel) {
