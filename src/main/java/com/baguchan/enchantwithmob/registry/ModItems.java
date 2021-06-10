@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob.registry;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
+import com.baguchan.enchantwithmob.client.render.item.EnchantBookItemRender;
 import com.baguchan.enchantwithmob.item.MobEnchantBookItem;
 import com.baguchan.enchantwithmob.item.MobUnEnchantBookItem;
 import net.minecraft.item.BlockItem;
@@ -14,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModItems {
-    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBookItem((new Item.Properties()).stacksTo(1).durability(5).tab(ItemGroup.TAB_MISC));
+    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBookItem((new Item.Properties()).stacksTo(1).durability(5).tab(ItemGroup.TAB_MISC).setISTER(() -> EnchantBookItemRender::new));
     public static final Item MOB_UNENCHANT_BOOK = new MobUnEnchantBookItem((new Item.Properties()).stacksTo(1).durability(5).tab(ItemGroup.TAB_MISC));
     public static final Item ENCHANTER_SPAWNEGG = new SpawnEggItem(ModEntities.ENCHANTER, 9804699, 0x81052d, (new Item.Properties()).tab(ItemGroup.TAB_MISC));
 
