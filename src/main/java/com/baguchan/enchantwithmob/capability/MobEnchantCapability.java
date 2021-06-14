@@ -180,7 +180,7 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
 		ListNBT listnbt = new ListNBT();
 
 		for (int i = 0; i < mobEnchants.size(); i++) {
-			listnbt.set(i, mobEnchants.get(i).writeNBT());
+			listnbt.add(mobEnchants.get(i).writeNBT());
 		}
 
 		nbt.put("StoredMobEnchants", listnbt);
