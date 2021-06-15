@@ -193,12 +193,14 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
     public void deserializeNBT(CompoundNBT nbt) {
 		ListNBT list = MobEnchantUtils.getEnchantmentListForNBT(nbt);
 
+		mobEnchants.clear();
+
 		for (int i = 0; i < list.size(); ++i) {
 			CompoundNBT compoundnbt = list.getCompound(i);
 
-			mobEnchants.set(i, new MobEnchantHandler(MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt)));
+			mobEnchants.add(new MobEnchantHandler(MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt)));
 		}
 
 		fromOwner = nbt.getBoolean("FromOwner");
-    }
+	}
 }
