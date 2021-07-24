@@ -2,7 +2,7 @@ package com.baguchan.enchantwithmob.capability;
 
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public class MobEnchantHandler {
     private MobEnchant mobEnchant;
@@ -14,27 +14,27 @@ public class MobEnchantHandler {
     }
 
 
-    public MobEnchant getMobEnchant() {
-        return mobEnchant;
-    }
+	public MobEnchant getMobEnchant() {
+		return mobEnchant;
+	}
 
-    public int getEnchantLevel() {
-        return enchantLevel;
-    }
+	public int getEnchantLevel() {
+		return enchantLevel;
+	}
 
-    public CompoundNBT writeNBT() {
-        CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag writeNBT() {
+		CompoundTag nbt = new CompoundTag();
 
-        if (mobEnchant != null) {
-            nbt.putString("MobEnchant", mobEnchant.getRegistryName().toString());
-            nbt.putInt("EnchantLevel", enchantLevel);
-        }
+		if (mobEnchant != null) {
+			nbt.putString("MobEnchant", mobEnchant.getRegistryName().toString());
+			nbt.putInt("EnchantLevel", enchantLevel);
+		}
 
-        return nbt;
-    }
+		return nbt;
+	}
 
-    public void readNBT(CompoundNBT nbt) {
-        mobEnchant = MobEnchantUtils.getEnchantFromNBT(nbt);
-        enchantLevel = MobEnchantUtils.getEnchantLevelFromNBT(nbt);
-    }
+	public void readNBT(CompoundTag nbt) {
+		mobEnchant = MobEnchantUtils.getEnchantFromNBT(nbt);
+		enchantLevel = MobEnchantUtils.getEnchantLevelFromNBT(nbt);
+	}
 }

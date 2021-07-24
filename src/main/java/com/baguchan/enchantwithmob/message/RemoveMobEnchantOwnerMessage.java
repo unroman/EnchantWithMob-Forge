@@ -2,11 +2,11 @@ package com.baguchan.enchantwithmob.message;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -22,11 +22,11 @@ public class RemoveMobEnchantOwnerMessage {
 	}
 
 
-	public void serialize(PacketBuffer buffer) {
+	public void serialize(FriendlyByteBuf buffer) {
 		buffer.writeInt(this.entityId);
 	}
 
-	public static RemoveMobEnchantOwnerMessage deserialize(PacketBuffer buffer) {
+	public static RemoveMobEnchantOwnerMessage deserialize(FriendlyByteBuf buffer) {
 		int entityId = buffer.readInt();
 
 		return new RemoveMobEnchantOwnerMessage(entityId);

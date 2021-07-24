@@ -1,25 +1,15 @@
 package com.baguchan.enchantwithmob.event;
 
-import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.EnchantWithMob;
-import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
-import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, value = Dist.CLIENT)
 public class ClientEnchantHUDEvent {
 
-	@SubscribeEvent
+	/*@SubscribeEvent
 	public static void renderHudEvent(RenderGameOverlayEvent.Post event) {
-		MatrixStack stack = event.getMatrixStack();
+		PoseStack stack = event.getPoseStack();
 
 		Minecraft mc = Minecraft.getInstance();
 
@@ -46,5 +36,5 @@ public class ClientEnchantHUDEvent {
 			});
 			stack.popPose();
 		}
-	}
+	}*/
 }

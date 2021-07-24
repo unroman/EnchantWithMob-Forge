@@ -1,9 +1,7 @@
 package com.baguchan.enchantwithmob;
 
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -38,12 +36,12 @@ public class EnchantConfig {
         showEnchantedMobHud = CLIENT.showEnchantedMobHud.get();
     }
 
-    @SubscribeEvent
+    /*@SubscribeEvent
     public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
         if (configEvent.getConfig().getSpec() == EnchantConfig.COMMON_SPEC) {
             bakeConfig();
         }
-    }
+    }*/
 
     public static class Common {
         public final ForgeConfigSpec.BooleanValue naturalSpawnEnchantedMob;

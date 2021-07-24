@@ -1,12 +1,12 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
 import com.google.common.collect.Maps;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.AttributeModifierManager;
-import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Map;
@@ -87,26 +87,26 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
         return this.attributeModifierMap;
     }
 
-    public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn) {
-        for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-			ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.getInstance(entry.getKey());
-            if (modifiableattributeinstance != null) {
-                modifiableattributeinstance.removeModifier(entry.getValue());
-            }
-        }
+	public void removeAttributesModifiersFromEntity(LivingEntity entityLivingBaseIn, AttributeMap attributeMapIn) {
+		for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+			AttributeInstance modifiableattributeinstance = attributeMapIn.getInstance(entry.getKey());
+			if (modifiableattributeinstance != null) {
+				modifiableattributeinstance.removeModifier(entry.getValue());
+			}
+		}
 
-    }
+	}
 
-    public void applyAttributesModifiersToEntity(LivingEntity entityLivingBaseIn, AttributeModifierManager attributeMapIn, int amplifier) {
-        for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-			ModifiableAttributeInstance modifiableattributeinstance = attributeMapIn.getInstance(entry.getKey());
-            if (modifiableattributeinstance != null) {
-                AttributeModifier attributemodifier = entry.getValue();
+	public void applyAttributesModifiersToEntity(LivingEntity entityLivingBaseIn, AttributeMap attributeMapIn, int amplifier) {
+		for (Map.Entry<Attribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+			AttributeInstance modifiableattributeinstance = attributeMapIn.getInstance(entry.getKey());
+			if (modifiableattributeinstance != null) {
+				AttributeModifier attributemodifier = entry.getValue();
 				modifiableattributeinstance.removeModifier(attributemodifier);
 				modifiableattributeinstance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), this.getRegistryName().toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
-            }
-        }
-    }
+			}
+		}
+	}
 
     public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
         return modifier.getAmount() * (double) (amplifier);

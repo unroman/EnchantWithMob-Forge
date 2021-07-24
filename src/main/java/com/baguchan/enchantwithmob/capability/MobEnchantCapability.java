@@ -8,22 +8,22 @@ import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.capabilities.ICapabilitySerializable;
+import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
+public class MobEnchantCapability implements ICapabilityProvider, INBTSerializable<CompoundTag> {
 	private List<MobEnchantHandler> mobEnchants = Lists.newArrayList();
 	private Optional<LivingEntity> enchantOwner = Optional.empty();
 	private boolean fromOwner;
@@ -174,10 +174,10 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
 		return capability == EnchantWithMob.MOB_ENCHANT_CAP ? LazyOptional.of(() -> this).cast() : LazyOptional.empty();
 	}
 
-	public CompoundNBT serializeNBT() {
-		CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag nbt = new CompoundTag();
 
-		ListNBT listnbt = new ListNBT();
+		ListTag listnbt = new ListTag();
 
 		for (int i = 0; i < mobEnchants.size(); i++) {
 			listnbt.add(mobEnchants.get(i).writeNBT());
@@ -188,15 +188,15 @@ public class MobEnchantCapability implements ICapabilityProvider, ICapabilitySer
 
 
 		return nbt;
-    }
+	}
 
-    public void deserializeNBT(CompoundNBT nbt) {
-		ListNBT list = MobEnchantUtils.getEnchantmentListForNBT(nbt);
+	public void deserializeNBT(CompoundTag nbt) {
+		ListTag list = MobEnchantUtils.getEnchantmentListForNBT(nbt);
 
 		mobEnchants.clear();
 
 		for (int i = 0; i < list.size(); ++i) {
-			CompoundNBT compoundnbt = list.getCompound(i);
+			CompoundTag compoundnbt = list.getCompound(i);
 
 			mobEnchants.add(new MobEnchantHandler(MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt)));
 		}

@@ -1,16 +1,17 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.monster.GuardianEntity;
+
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Guardian;
 
 public class ThornEnchant extends MobEnchant {
-    public ThornEnchant(Properties properties) {
-        super(properties);
-    }
+	public ThornEnchant(Properties properties) {
+		super(properties);
+	}
 
-    public int getMinEnchantability(int enchantmentLevel) {
-        return 10 + 20 * (enchantmentLevel - 1);
-    }
+	public int getMinEnchantability(int enchantmentLevel) {
+		return 10 + 20 * (enchantmentLevel - 1);
+	}
 
     public int getMaxEnchantability(int enchantmentLevel) {
         return this.getMinEnchantability(enchantmentLevel) + 50;
@@ -18,6 +19,6 @@ public class ThornEnchant extends MobEnchant {
 
     @Override
     public boolean isCompatibleMob(LivingEntity livingEntity) {
-        return !(livingEntity instanceof GuardianEntity);
+		return !(livingEntity instanceof Guardian);
     }
 }

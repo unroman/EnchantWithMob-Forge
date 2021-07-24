@@ -1,13 +1,14 @@
 package com.baguchan.enchantwithmob.registry;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvent;
+import com.baguchan.enchantwithmob.EnchantWithMob;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
-@EventBusSubscriber(modid = "enchantwithmob", bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModSoundEvents {
 	public static final SoundEvent ENCHANTER_AMBIENT = createEvent("entity.enchanter.ambient");
 	public static final SoundEvent ENCHANTER_HURT = createEvent("entity.enchanter.hurt");
@@ -16,8 +17,8 @@ public class ModSoundEvents {
 	public static final SoundEvent ENCHANTER_ATTACK = createEvent("entity.enchanter.attack");
 
 	private static SoundEvent createEvent(String sound) {
-		ResourceLocation name = new ResourceLocation("enchantwithmob", sound);
-		return (SoundEvent) (new SoundEvent(name)).setRegistryName(name);
+		ResourceLocation name = new ResourceLocation(EnchantWithMob.MODID, sound);
+		return (new SoundEvent(name)).setRegistryName(name);
 	}
 
 	@SubscribeEvent

@@ -5,16 +5,17 @@ import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.merchant.villager.VillagerTrades;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.MerchantOffer;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -23,30 +24,32 @@ import java.util.stream.Collectors;
 public class TradeEvent {
     @SubscribeEvent
     public static void wanderTradeEvent(WandererTradesEvent event) {
-        List<VillagerTrades.ITrade> trades = event.getRareTrades();
+		List<VillagerTrades.ItemListing> trades = event.getRareTrades();
         trades.add(new MobEnchantedBookForEmeraldsTrade(15));
     }
 
-    static class MobEnchantedBookForEmeraldsTrade implements VillagerTrades.ITrade {
-        private final int xpValue;
+	static class MobEnchantedBookForEmeraldsTrade implements VillagerTrades.ItemListing {
+		private final int xpValue;
 
-        public MobEnchantedBookForEmeraldsTrade(int xpValueIn) {
-            this.xpValue = xpValueIn;
-        }
+		public MobEnchantedBookForEmeraldsTrade(int xpValueIn) {
+			this.xpValue = xpValueIn;
+		}
 
-        public MerchantOffer getOffer(Entity trader, Random rand) {
-            List<MobEnchant> list = MobEnchants.getRegistry().getValues().stream().collect(Collectors.toList());
-            MobEnchant enchantment = list.get(rand.nextInt(list.size()));
-            int i = MathHelper.nextInt(rand, enchantment.getMinLevel(), enchantment.getMaxLevel());
-            ItemStack itemstack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
-            MobEnchantUtils.addMobEnchantToItemStack(itemstack, enchantment, i);
-            int j = 2 + rand.nextInt(5 + i * 10) + 3 * i;
+		@Nullable
+		@Override
+		public MerchantOffer getOffer(Entity trader, Random rand) {
+			List<MobEnchant> list = MobEnchants.getRegistry().getValues().stream().collect(Collectors.toList());
+			MobEnchant enchantment = list.get(rand.nextInt(list.size()));
+			int i = Mth.nextInt(rand, enchantment.getMinLevel(), enchantment.getMaxLevel());
+			ItemStack itemstack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+			MobEnchantUtils.addMobEnchantToItemStack(itemstack, enchantment, i);
+			int j = 2 + rand.nextInt(5 + i * 10) + 3 * i;
 
-            if (j > 64) {
-                j = 64;
-            }
+			if (j > 64) {
+				j = 64;
+			}
 
-            return new MerchantOffer(new ItemStack(Items.EMERALD, j), ItemStack.EMPTY, itemstack, 12, this.xpValue, 0.2F);
-        }
+			return new MerchantOffer(new ItemStack(Items.EMERALD, j), ItemStack.EMPTY, itemstack, 12, this.xpValue, 0.2F);
+		}
     }
 }

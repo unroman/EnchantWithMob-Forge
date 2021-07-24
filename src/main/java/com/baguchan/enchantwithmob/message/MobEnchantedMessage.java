@@ -5,11 +5,11 @@ import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.fml.LogicalSide;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -36,13 +36,13 @@ public class MobEnchantedMessage {
         this.level = level;
     }
 
-    public void serialize(PacketBuffer buffer) {
+    public void serialize(FriendlyByteBuf buffer) {
         buffer.writeInt(this.entityId);
         buffer.writeResourceLocation(this.enchantType.getRegistryName());
         buffer.writeInt(this.level);
     }
 
-    public static MobEnchantedMessage deserialize(PacketBuffer buffer) {
+    public static MobEnchantedMessage deserialize(FriendlyByteBuf buffer) {
         int entityId = buffer.readInt();
         MobEnchant enchantType = MobEnchantUtils.getEnchantFromResourceLocation(buffer.readResourceLocation());
         int level = buffer.readInt();

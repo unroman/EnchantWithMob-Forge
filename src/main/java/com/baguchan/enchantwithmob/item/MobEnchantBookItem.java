@@ -7,33 +7,32 @@ import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
 public class MobEnchantBookItem extends Item {
-    public MobEnchantBookItem(Properties group) {
-        super(group);
-    }
+	public MobEnchantBookItem(Item.Properties group) {
+		super(group);
+	}
 
 
     /*
@@ -56,66 +55,64 @@ public class MobEnchantBookItem extends Item {
         return super.itemInteractionForEntity(stack, playerIn, target, hand);
     }*/
 
-    @Override
-    public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        ItemStack stack = playerIn.getItemInHand(handIn);
-        if (EnchantConfig.COMMON.enchantYourSelf.get() && MobEnchantUtils.hasMobEnchant(stack)) {
-            playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-            {
-                MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
-            });
-            playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
+		ItemStack stack = playerIn.getItemInHand(handIn);
+		if (EnchantConfig.COMMON.enchantYourSelf.get() && MobEnchantUtils.hasMobEnchant(stack)) {
+			playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+			{
+				MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
+			});
+			playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-            stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
+			stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
 
             playerIn.getCooldowns().addCooldown(stack.getItem(), 60);
 
-            return ActionResult.success(stack);
+			return InteractionResultHolder.success(stack);
         }
-        return super.use(worldIn, playerIn, handIn);
+		return super.use(level, playerIn, handIn);
     }
 
-    @Override
-    public void fillItemCategory(ItemGroup p_150895_1_, NonNullList<ItemStack> p_150895_2_) {
-        if (this.allowdedIn(p_150895_1_)) {
-            for (MobEnchant enchant : MobEnchants.getRegistry()) {
-                ItemStack stack = new ItemStack(this);
-                MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
-                p_150895_2_.add(stack);
-            }
-        }
+	@Override
+	public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
+		if (this.allowdedIn(p_41391_)) {
+			for (MobEnchant enchant : MobEnchants.getRegistry()) {
+				ItemStack stack = new ItemStack(this);
+				MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
+				p_41392_.add(stack);
+			}
+		}
+	}
 
-    }
+	public static ListTag getEnchantmentList(ItemStack stack) {
+		CompoundTag compoundnbt = stack.getTag();
+		return compoundnbt != null ? compoundnbt.getList(MobEnchantUtils.TAG_STORED_MOBENCHANTS, 10) : new ListTag();
+	}
 
-    public static ListNBT getEnchantmentList(ItemStack stack) {
-        CompoundNBT compoundnbt = stack.getTag();
-        return compoundnbt != null ? compoundnbt.getList(MobEnchantUtils.TAG_STORED_MOBENCHANTS, 10) : new ListNBT();
-    }
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag p_41424_) {
+		super.appendHoverText(stack, level, tooltip, p_41424_);
+		if (MobEnchantUtils.hasMobEnchant(stack)) {
+			ListTag listnbt = MobEnchantUtils.getEnchantmentListForNBT(stack.getTag());
 
+			for (int i = 0; i < listnbt.size(); ++i) {
+				CompoundTag compoundnbt = listnbt.getCompound(i);
 
-    @Override
-    public void appendHoverText(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-        if (MobEnchantUtils.hasMobEnchant(stack)) {
-            ListNBT listnbt = MobEnchantUtils.getEnchantmentListForNBT(stack.getTag());
+				MobEnchant mobEnchant = MobEnchantUtils.getEnchantFromNBT(compoundnbt);
+				int enchantmentLevel = MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt);
 
-            for (int i = 0; i < listnbt.size(); ++i) {
-                CompoundNBT compoundnbt = listnbt.getCompound(i);
+				if (mobEnchant != null) {
+					ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.AQUA};
 
-                MobEnchant mobEnchant = MobEnchantUtils.getEnchantFromNBT(compoundnbt);
-                int level = MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt);
-
-                if (mobEnchant != null) {
-                    TextFormatting[] textformatting = new TextFormatting[]{TextFormatting.AQUA};
-
-                    tooltip.add(new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslationTextComponent("enchantment.level." + level).withStyle(textformatting)));
+					tooltip.add(new TranslatableComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + enchantmentLevel).withStyle(textformatting)));
                 }
             }
 
             List<Pair<Attribute, AttributeModifier>> list1 = Lists.newArrayList();
 
             for (int i = 0; i < listnbt.size(); ++i) {
-                CompoundNBT compoundnbt = listnbt.getCompound(i);
+				CompoundTag compoundnbt = listnbt.getCompound(i);
 
                 MobEnchant mobEnchant = MobEnchantUtils.getEnchantFromNBT(compoundnbt);
                 int mobEnchantLevel = MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt);
@@ -134,24 +131,24 @@ public class MobEnchantBookItem extends Item {
 
 
             if (!list1.isEmpty()) {
-                tooltip.add(StringTextComponent.EMPTY);
-                tooltip.add((new TranslationTextComponent("mobenchant.enchantwithmob.when_ehcnanted")).withStyle(TextFormatting.DARK_PURPLE));
+				//tooltip.add(StringTextComponent.EMPTY);
+				tooltip.add((new TranslatableComponent("mobenchant.enchantwithmob.when_ehcnanted")).withStyle(ChatFormatting.DARK_PURPLE));
 
-                for (Pair<Attribute, AttributeModifier> pair : list1) {
-                    AttributeModifier attributemodifier2 = pair.getSecond();
-                    double d0 = attributemodifier2.getAmount();
-                    double d1;
-                    if (attributemodifier2.getOperation() != AttributeModifier.Operation.MULTIPLY_BASE && attributemodifier2.getOperation() != AttributeModifier.Operation.MULTIPLY_TOTAL) {
-                        d1 = attributemodifier2.getAmount();
-                    } else {
-                        d1 = attributemodifier2.getAmount() * 100.0D;
-                    }
+				for (Pair<Attribute, AttributeModifier> pair : list1) {
+					AttributeModifier attributemodifier2 = pair.getSecond();
+					double d0 = attributemodifier2.getAmount();
+					double d1;
+					if (attributemodifier2.getOperation() != AttributeModifier.Operation.MULTIPLY_BASE && attributemodifier2.getOperation() != AttributeModifier.Operation.MULTIPLY_TOTAL) {
+						d1 = attributemodifier2.getAmount();
+					} else {
+						d1 = attributemodifier2.getAmount() * 100.0D;
+					}
 
                     if (d0 > 0.0D) {
-                        tooltip.add((new TranslationTextComponent("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getDescriptionId()))).withStyle(TextFormatting.BLUE));
+						tooltip.add((new TranslatableComponent("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslatableComponent(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
                     } else if (d0 < 0.0D) {
-                        d1 = d1 * -1.0D;
-                        tooltip.add((new TranslationTextComponent("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslationTextComponent(pair.getFirst().getDescriptionId()))).withStyle(TextFormatting.RED));
+						d1 = d1 * -1.0D;
+						tooltip.add((new TranslatableComponent("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslatableComponent(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.RED));
                     }
                 }
             }

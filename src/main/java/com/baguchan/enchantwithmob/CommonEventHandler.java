@@ -7,21 +7,21 @@ import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.passive.SnowGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.GameRules;
-import net.minecraft.world.IWorld;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -32,7 +32,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.util.Map;
 
@@ -48,12 +48,12 @@ public class CommonEventHandler {
 	@SubscribeEvent
 	public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
 		if (event.getEntity() instanceof LivingEntity) {
-			IWorld world = event.getWorld();
+			LevelAccessor world = event.getWorld();
 
 			if (world.getLevelData().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
 				LivingEntity livingEntity = (LivingEntity) event.getEntity();
-				if (!(livingEntity instanceof AnimalEntity) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
-					if (event.getSpawnReason() != SpawnReason.BREEDING && event.getSpawnReason() != SpawnReason.CONVERSION && event.getSpawnReason() != SpawnReason.STRUCTURE && event.getSpawnReason() != SpawnReason.MOB_SUMMONED) {
+				if (!(livingEntity instanceof Animal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
+					if (event.getSpawnReason() != MobSpawnType.BREEDING && event.getSpawnReason() != MobSpawnType.CONVERSION && event.getSpawnReason() != MobSpawnType.STRUCTURE && event.getSpawnReason() != MobSpawnType.MOB_SUMMONED) {
 						if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() * 0.025F) {
 							if (!world.isClientSide()) {
 								livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
@@ -62,17 +62,17 @@ public class CommonEventHandler {
 									float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
 									switch (world.getDifficulty()) {
 										case EASY:
-											i = (int) MathHelper.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
+											i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
 										case NORMAL:
-											i = (int) MathHelper.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
+											i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
 										case HARD:
-											i = (int) MathHelper.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
+											i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
 
 											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
 											break;
@@ -141,7 +141,7 @@ public class CommonEventHandler {
 			{
 				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.STRONG)) {
 					//make snowman stronger
-					if (event.getSource().getEntity() != null && event.getSource().getEntity() instanceof SnowGolemEntity && event.getAmount() == 0) {
+					if (event.getSource().getEntity() != null && event.getSource().getEntity() instanceof SnowGolem && event.getAmount() == 0) {
 						event.setAmount(getDamageAddition(1, cap));
 					} else if (event.getAmount() > 0) {
 						event.setAmount(getDamageAddition(event.getAmount(), cap));
@@ -180,7 +180,7 @@ public class CommonEventHandler {
 	public static float getDamageReduction(float damage, MobEnchantCapability cap) {
 		int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION);
 		if (i > 0) {
-			damage -= (double) MathHelper.floor(damage * (double) ((float) i * 0.15F));
+			damage -= (double) Mth.floor(damage * (double) ((float) i * 0.15F));
 		}
 		return damage;
 	}
@@ -188,7 +188,7 @@ public class CommonEventHandler {
 	public static float getThornDamage(float damage, MobEnchantCapability cap) {
 		int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.THORN);
 		if (i > 0) {
-			damage = (float) MathHelper.floor(damage * (double) ((float) i * 0.15F));
+			damage = (float) Mth.floor(damage * (double) ((float) i * 0.15F));
 		}
 		return damage;
 	}
@@ -213,7 +213,7 @@ public class CommonEventHandler {
 
 						event.getPlayer().getCooldowns().addCooldown(stack.getItem(), 60);
 
-						event.setCancellationResult(ActionResultType.SUCCESS);
+						event.setCancellationResult(InteractionResult.SUCCESS);
 						event.setCanceled(true);
 					});
 				}
@@ -233,7 +233,7 @@ public class CommonEventHandler {
 
 					event.getPlayer().getCooldowns().addCooldown(stack.getItem(), 80);
 
-					event.setCancellationResult(ActionResultType.SUCCESS);
+					event.setCancellationResult(InteractionResult.SUCCESS);
 					event.setCanceled(true);
 				});
 
@@ -311,11 +311,11 @@ public class CommonEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-		PlayerEntity player = event.getPlayer();
-		if (player instanceof ServerPlayerEntity)
+		Player player = event.getPlayer();
+		if (player instanceof ServerPlayer)
 			player.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(handler -> {
 				for (int i = 0; i < handler.getMobEnchants().size(); i++) {
-					EnchantWithMob.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) player), new MobEnchantedMessage(player, handler.getMobEnchants().get(i)));
+					EnchantWithMob.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new MobEnchantedMessage(player, handler.getMobEnchants().get(i)));
 
 				}
 			});
@@ -332,7 +332,7 @@ public class CommonEventHandler {
 
 	@SubscribeEvent
 	public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-		PlayerEntity playerEntity = event.getPlayer();
+		Player playerEntity = event.getPlayer();
 		playerEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(handler -> {
 			for (int i = 0; i < handler.getMobEnchants().size(); i++) {
 				EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new MobEnchantedMessage(playerEntity, handler.getMobEnchants().get(i)));

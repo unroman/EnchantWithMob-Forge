@@ -4,21 +4,27 @@ import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.registry.ModSoundEvents;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.ai.goal.*;
-import net.minecraft.entity.merchant.villager.AbstractVillagerEntity;
-import net.minecraft.entity.monster.*;
-import net.minecraft.entity.passive.IronGolemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.AbstractIllager;
+import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.SpellcasterIllager;
+import net.minecraft.world.entity.npc.AbstractVillager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -27,7 +33,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class EnchanterEntity extends SpellcastingIllagerEntity {
+public class EnchanterEntity extends SpellcasterIllager {
     private LivingEntity enchantTarget;
 
     public float prevCapeX, prevCapeY, prevCapeZ;
@@ -35,7 +41,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     private float clientSideBookAnimation0;
     private float clientSideBookAnimation;
 
-    public EnchanterEntity(EntityType<? extends EnchanterEntity> type, World p_i48551_2_) {
+    public EnchanterEntity(EntityType<? extends EnchanterEntity> type, Level p_i48551_2_) {
         super(type, p_i48551_2_);
         this.xpReward = 12;
     }
@@ -43,19 +49,20 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new SwimGoal(this));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new EnchanterEntity.CastingSpellGoal());
         this.goalSelector.addGoal(1, new AttackGoal(this));
-        this.goalSelector.addGoal(3, new AvoidTargetEntityGoal<>(this, MobEntity.class, 6.5F, 0.8D, 1.05D));
-        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.8D, 1.15D));
+        this.goalSelector.addGoal(3, new AvoidTargetEntityGoal<>(this, Mob.class, 6.5F, 0.8D, 1.05D));
+        this.goalSelector.addGoal(3, new AvoidEntityGoal<>(this, Player.class, 8.0F, 0.8D, 1.15D));
         this.goalSelector.addGoal(4, new EnchanterEntity.SpellGoal());
-        this.goalSelector.addGoal(8, new RandomWalkingGoal(this, 0.8D));
-        this.goalSelector.addGoal(9, new LookAtGoal(this, PlayerEntity.class, 3.0F, 1.0F));
-        this.goalSelector.addGoal(10, new LookAtGoal(this, MobEntity.class, 8.0F));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, AbstractRaiderEntity.class)).setAlertOthers());
-        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, PlayerEntity.class, true)).setUnseenMemoryTicks(300));
-        this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillagerEntity.class, false)).setUnseenMemoryTicks(300));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolemEntity.class, false));
+        this.goalSelector.addGoal(8, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(9, new LookAtPlayerGoal(this, Player.class, 3.0F, 1.0F));
+        this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
+        this.goalSelector.addGoal(11, new RandomLookAroundGoal(this));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Raider.class)).setAlertOthers());
+        this.targetSelector.addGoal(2, (new NearestAttackableTargetGoal<>(this, Player.class, true)).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(3, (new NearestAttackableTargetGoal<>(this, AbstractVillager.class, false)).setUnseenMemoryTicks(300));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
     }
 
     @Override
@@ -63,8 +70,8 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         super.defineSynchedData();
     }
 
-    public static AttributeModifierMap.MutableAttribute getAttributeMap() {
-        return MonsterEntity.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, (double) 0.3F).add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.FOLLOW_RANGE, 24.0D).add(Attributes.ATTACK_DAMAGE, 2.0F);
+    public static AttributeSupplier.Builder createAttributeMap() {
+        return Monster.createMonsterAttributes().add(Attributes.MOVEMENT_SPEED, (double) 0.3F).add(Attributes.MAX_HEALTH, 24.0D).add(Attributes.FOLLOW_RANGE, 24.0D).add(Attributes.ATTACK_DAMAGE, 2.0F);
     }
 
     @Override
@@ -74,9 +81,9 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
         if (this.level.isClientSide) {
             this.clientSideBookAnimation0 = this.clientSideBookAnimation;
             if (this.isCastingSpell()) {
-                this.clientSideBookAnimation = MathHelper.clamp(this.clientSideBookAnimation + 0.1F, 0.0F, 1.0F);
+                this.clientSideBookAnimation = Mth.clamp(this.clientSideBookAnimation + 0.1F, 0.0F, 1.0F);
             } else {
-                this.clientSideBookAnimation = MathHelper.clamp(this.clientSideBookAnimation - 0.15F, 0.0F, 1.0F);
+                this.clientSideBookAnimation = Mth.clamp(this.clientSideBookAnimation - 0.15F, 0.0F, 1.0F);
             }
         }
 
@@ -85,7 +92,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
     @OnlyIn(Dist.CLIENT)
     public float getBookAnimationScale(float tick) {
-        return MathHelper.lerp(tick, this.clientSideBookAnimation0, this.clientSideBookAnimation) / 1.0F;
+        return Mth.lerp(tick, this.clientSideBookAnimation0, this.clientSideBookAnimation) / 1.0F;
     }
 
     private void updateCape() {
@@ -103,7 +110,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     public boolean isAlliedTo(Entity p_184191_1_) {
         if (super.isAlliedTo(p_184191_1_)) {
             return true;
-        } else if (p_184191_1_ instanceof LivingEntity && ((LivingEntity) p_184191_1_).getMobType() == CreatureAttribute.ILLAGER) {
+        } else if (p_184191_1_ instanceof LivingEntity && ((LivingEntity) p_184191_1_).getMobType() == MobType.ILLAGER) {
             return this.getTeam() == null && p_184191_1_.getTeam() == null;
         } else {
             return false;
@@ -179,15 +186,15 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public AbstractIllagerEntity.ArmPose getArmPose() {
+    public AbstractIllager.IllagerArmPose getArmPose() {
         if (this.isCastingSpell()) {
-            return AbstractIllagerEntity.ArmPose.SPELLCASTING;
+            return AbstractIllager.IllagerArmPose.SPELLCASTING;
         } else {
-            return AbstractIllagerEntity.ArmPose.CROSSED;
+            return AbstractIllager.IllagerArmPose.CROSSED;
         }
     }
 
-    class CastingSpellGoal extends SpellcastingIllagerEntity.CastingASpellGoal {
+    class CastingSpellGoal extends SpellcasterIllager.SpellcasterCastingSpellGoal {
         private CastingSpellGoal() {
             super();
         }
@@ -203,13 +210,13 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
     }
 
 
-    public class SpellGoal extends SpellcastingIllagerEntity.UseSpellGoal {
+    public class SpellGoal extends SpellcasterIllager.SpellcasterUseSpellGoal {
         private final Predicate<LivingEntity> fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof IMob && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity instanceof Enemy && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
         };
 
         private final Predicate<LivingEntity> enchanted_fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof IMob && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity instanceof Enemy && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
         };
 
         /**
@@ -286,12 +293,12 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
             return SoundEvents.BOOK_PAGE_TURN;
         }
 
-        protected SpellcastingIllagerEntity.SpellType getSpell() {
-            return SpellcastingIllagerEntity.SpellType.WOLOLO;
+        protected SpellcasterIllager.IllagerSpell getSpell() {
+            return SpellcasterIllager.IllagerSpell.WOLOLO;
         }
     }
 
-    class AvoidTargetEntityGoal<T extends LivingEntity> extends net.minecraft.entity.ai.goal.AvoidEntityGoal<T> {
+    class AvoidTargetEntityGoal<T extends LivingEntity> extends AvoidEntityGoal<T> {
         private final EnchanterEntity enchanter;
 
         public AvoidTargetEntityGoal(EnchanterEntity enchanterIn, Class<T> entityClassToAvoidIn, float avoidDistanceIn, double farSpeedIn, double nearSpeedIn) {
@@ -364,7 +371,7 @@ public class EnchanterEntity extends SpellcastingIllagerEntity {
                 this.enchanter.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
                 if (this.getAttackReachSqr(livingentity) >= this.enchanter.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ())) {
                     if (this.cooldown <= 0) {
-                        this.enchanter.swing(Hand.MAIN_HAND);
+                        this.enchanter.swing(InteractionHand.MAIN_HAND);
                         this.enchanter.doHurtTarget(livingentity);
 
                         this.cooldown = 30;

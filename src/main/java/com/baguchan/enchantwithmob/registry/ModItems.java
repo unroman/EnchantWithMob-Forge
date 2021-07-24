@@ -1,23 +1,22 @@
 package com.baguchan.enchantwithmob.registry;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
-import com.baguchan.enchantwithmob.client.render.item.EnchantBookItemRender;
 import com.baguchan.enchantwithmob.item.MobEnchantBookItem;
 import com.baguchan.enchantwithmob.item.MobUnEnchantBookItem;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.SpawnEggItem;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SpawnEggItem;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModItems {
-    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBookItem((new Item.Properties()).stacksTo(1).durability(5).tab(ItemGroup.TAB_MISC).setISTER(() -> EnchantBookItemRender::new));
-    public static final Item MOB_UNENCHANT_BOOK = new MobUnEnchantBookItem((new Item.Properties()).stacksTo(1).durability(5).tab(ItemGroup.TAB_MISC).setISTER(() -> EnchantBookItemRender::new));
-    public static final Item ENCHANTER_SPAWNEGG = new SpawnEggItem(ModEntities.ENCHANTER, 9804699, 0x81052d, (new Item.Properties()).tab(ItemGroup.TAB_MISC));
+    public static final Item MOB_ENCHANT_BOOK = new MobEnchantBookItem((new Item.Properties()).stacksTo(1).durability(5).tab(CreativeModeTab.TAB_MISC));
+    public static final Item MOB_UNENCHANT_BOOK = new MobUnEnchantBookItem((new Item.Properties()).stacksTo(1).durability(5).tab(CreativeModeTab.TAB_MISC));
+    public static final Item ENCHANTER_SPAWNEGG = new SpawnEggItem(ModEntities.ENCHANTER, 9804699, 0x81052d, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC));
 
     public static void register(RegistryEvent.Register<Item> registry, Item item, String id) {
         if (item instanceof BlockItem) {
