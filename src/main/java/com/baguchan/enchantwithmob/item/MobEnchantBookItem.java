@@ -74,7 +74,7 @@ public class MobEnchantBookItem extends Item {
 
 				return InteractionResultHolder.success(stack);
 			} else {
-				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant"), true);
+				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant_yourself"), true);
 				return InteractionResultHolder.fail(stack);
 			}
         }
