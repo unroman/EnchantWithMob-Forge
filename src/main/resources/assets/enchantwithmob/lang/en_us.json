@@ -12,6 +12,7 @@
   "advancements.adventure.hidden_books.title": "Hidden Books",
   "advancements.adventure.hidden_books.description": "Get the Mob Enchantment Book",
   "mobenchant.enchantwithmob.when_ehcnanted": "When Enchanted",
+  "enchantwithmob.cannot.enchant": "This mob cannot grant that enchantment",
   "subtitles.entity.enchanter.ambient": "Enchanter murmur",
   "subtitles.entity.enchanter.hurt": "Enchanter Hurt",
   "subtitles.entity.enchanter.death": "Enchanter Death",

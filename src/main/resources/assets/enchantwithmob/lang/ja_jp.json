@@ -12,6 +12,7 @@
   "advancements.adventure.hidden_books.title": "禁断の本",
   "advancements.adventure.hidden_books.description": "モブエンチャントブックを手に入れる",
   "mobenchant.enchantwithmob.when_ehcnanted": "エンチャントした時",
+  "enchantwithmob.cannot.enchant": "このmobはそのエンチャントを付与できません",
   "subtitles.entity.enchanter.ambient": "エンチャンターがつぶやく",
   "subtitles.entity.enchanter.hurt": "エンチャンターがダメージを受ける",
   "subtitles.entity.enchanter.death": "エンチャンターが死ぬ",

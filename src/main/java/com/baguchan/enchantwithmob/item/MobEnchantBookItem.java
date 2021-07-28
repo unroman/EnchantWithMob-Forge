@@ -59,17 +59,24 @@ public class MobEnchantBookItem extends Item {
 	public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
 		if (EnchantConfig.COMMON.enchantYourSelf.get() && MobEnchantUtils.hasMobEnchant(stack)) {
+			final boolean[] flag = {false};
 			playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 			{
-				MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
+				flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
 			});
-			playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-			stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
+			if (flag[0]) {
+				playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-            playerIn.getCooldowns().addCooldown(stack.getItem(), 60);
+				stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
 
-			return InteractionResultHolder.success(stack);
+				playerIn.getCooldowns().addCooldown(stack.getItem(), 60);
+
+				return InteractionResultHolder.success(stack);
+			} else {
+				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant"), true);
+				return InteractionResultHolder.fail(stack);
+			}
         }
 		return super.use(level, playerIn, handIn);
     }

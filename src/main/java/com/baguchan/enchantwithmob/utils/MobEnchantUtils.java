@@ -179,21 +179,25 @@ public class MobEnchantUtils {
     }
 
     /**
-     * add Mob Enchantments From ItemStack
-     *
-     * @param itemIn     MobEnchanted Item
-     * @param entity     Enchanting target
-     * @param capability MobEnchant Capability
-     */
-    public static void addItemMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
+	 * add Mob Enchantments From ItemStack
+	 *
+	 * @param itemIn     MobEnchanted Item
+	 * @param entity     Enchanting target
+	 * @param capability MobEnchant Capability
+	 */
+	public static boolean addItemMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
 		ListTag listnbt = getEnchantmentListForNBT(itemIn.getTag());
-        for (int i = 0; i < listnbt.size(); ++i) {
+		boolean flag = false;
+
+		for (int i = 0; i < listnbt.size(); ++i) {
 			CompoundTag compoundnbt = listnbt.getCompound(i);
-            if (checkAllowMobEnchantFromMob(MobEnchantUtils.getEnchantFromNBT(compoundnbt), entity, capability)) {
-                capability.addMobEnchant(entity, MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt));
-            }
-        }
-    }
+			if (checkAllowMobEnchantFromMob(MobEnchantUtils.getEnchantFromNBT(compoundnbt), entity, capability)) {
+				capability.addMobEnchant(entity, MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt));
+				flag = true;
+			}
+		}
+		return flag;
+	}
 
     public static void removeMobEnchantToEntity(LivingEntity entity, MobEnchantCapability capability) {
         capability.removeAllMobEnchant(entity);
@@ -209,7 +213,7 @@ public class MobEnchantUtils {
         return l;
     }
 
-    /**
+	/**
 	 * add Mob Enchantments To Entity
 	 *
 	 * @param livingEntity Enchanting target
@@ -218,14 +222,17 @@ public class MobEnchantUtils {
 	 * @param level        max limit level MobEnchant
 	 * @param allowRare    setting is allow rare enchant
 	 */
-	public static void addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
+	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
 		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
 
+		boolean flag = false;
 		for (MobEnchantmentData enchantmentdata : list) {
 			if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
 				capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+				flag = true;
 			}
 		}
+		return flag;
 	}
 
 	/**
@@ -237,15 +244,21 @@ public class MobEnchantUtils {
 	 * @param level        max limit level MobEnchant
 	 * @param allowRare    setting is allow rare enchant
 	 */
-	public static void addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
+	public static boolean addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, MobEnchantCapability capability, Random random, int level, boolean allowRare) {
 		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+
+		boolean flag = false;
 
 		for (MobEnchantmentData enchantmentdata : list) {
 			if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
 				capability.addMobEnchantFromOwner(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ownerEntity);
+				flag = true;
 			}
 		}
-		capability.addOwner(livingEntity, ownerEntity);
+		if (flag) {
+			capability.addOwner(livingEntity, ownerEntity);
+		}
+		return flag;
 	}
 
     public static ItemStack addRandomEnchantmentToItemStack(Random random, ItemStack stack, int level, boolean allowRare) {

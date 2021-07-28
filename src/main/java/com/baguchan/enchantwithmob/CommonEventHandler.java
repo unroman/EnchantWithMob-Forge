@@ -7,6 +7,7 @@ import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -206,15 +207,22 @@ public class CommonEventHandler {
 
 					target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 					{
-						MobEnchantUtils.addItemMobEnchantToEntity(stack, target, cap);
-						event.getPlayer().playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+						final boolean[] flag = {false};
+						flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, target, cap);
 
-						stack.hurtAndBreak(1, event.getPlayer(), (entity) -> entity.broadcastBreakEvent(event.getHand()));
+						if (flag[0]) {
+							event.getPlayer().playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-						event.getPlayer().getCooldowns().addCooldown(stack.getItem(), 60);
+							stack.hurtAndBreak(1, event.getPlayer(), (entity) -> entity.broadcastBreakEvent(event.getHand()));
 
-						event.setCancellationResult(InteractionResult.SUCCESS);
-						event.setCanceled(true);
+							event.getPlayer().getCooldowns().addCooldown(stack.getItem(), 60);
+
+							event.setCancellationResult(InteractionResult.SUCCESS);
+							event.setCanceled(true);
+						} else {
+							event.getPlayer().displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant"), true);
+							event.setCancellationResult(InteractionResult.FAIL);
+						}
 					});
 				}
 			}
