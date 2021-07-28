@@ -9,16 +9,12 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
-import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,39 +29,16 @@ import net.minecraftforge.fml.common.Mod;
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, value = Dist.CLIENT)
 public class ClientEventHandler {
-	private static final ResourceLocation ENCHANT_TEXTURE = new ResourceLocation("textures/misc/enchanted_item_glint.png");
-
-	protected static final RenderStateShard.TransparencyStateShard GLINT_TRANSPARENCY = new RenderStateShard.TransparencyStateShard("glint_transparency", () -> {
+	protected static final RenderStateShard.LightmapStateShard LIGHTMAP = new RenderStateShard.LightmapStateShard(true);
+	protected static final RenderStateShard.TransparencyStateShard ADDITIVE_TRANSPARENCY = new RenderStateShard.TransparencyStateShard("additive_transparency", () -> {
 		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_COLOR, GlStateManager.DestFactor.ONE, GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE);
+		RenderSystem.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 	}, () -> {
 		RenderSystem.disableBlend();
 		RenderSystem.defaultBlendFunc();
 	});
-	protected static final RenderStateShard.ShaderStateShard RENDERTYPE_EYES_SHADER = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEyesShader);
 	protected static final RenderStateShard.ShaderStateShard RENDERTYPE_ENTITY_GLINT_SHADER = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityGlintShader);
-
-	protected static final RenderStateShard.TexturingStateShard ENTITY_GLINT_TEXTURING = new RenderStateShard.TexturingStateShard("entity_glint_texturing", () -> {
-		setupGlintTexturing(0.16F);
-	}, () -> {
-		RenderSystem.resetTextureMatrix();
-	});
 	protected static final RenderStateShard.CullStateShard NO_CULL = new RenderStateShard.CullStateShard(false);
-	protected static final RenderStateShard.DepthTestStateShard EQUAL_DEPTH_TEST = new RenderStateShard.DepthTestStateShard("==", 514);
-	protected static final RenderStateShard.WriteMaskStateShard COLOR_WRITE = new RenderStateShard.WriteMaskStateShard(true, false);
-	protected static final RenderStateShard.OutputStateShard ITEM_ENTITY_TARGET = new RenderStateShard.OutputStateShard("item_entity_target", () -> {
-		if (Minecraft.useShaderTransparency()) {
-			Minecraft.getInstance().levelRenderer.getItemEntityTarget().bindWrite(false);
-		}
-
-	}, () -> {
-		if (Minecraft.useShaderTransparency()) {
-			Minecraft.getInstance().getMainRenderTarget().bindWrite(false);
-		}
-
-	});
-
-	private static final RenderType ENTITY_ENCHANT_GLINT = RenderType.create("entity_enchant_glint", DefaultVertexFormat.POSITION_TEX, VertexFormat.Mode.QUADS, 256, false, false, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, true, false)).setWriteMaskState(COLOR_WRITE).setCullState(NO_CULL).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(GLINT_TRANSPARENCY).setOutputState(ITEM_ENTITY_TARGET).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
 
 	@SubscribeEvent
 	public static void renderEnchantBeam(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
@@ -83,18 +56,11 @@ public class ClientEventHandler {
 
 	}
 
-	private static void setupGlintTexturing(float p_110187_) {
-		long var1 = Util.getMillis() * 8L;
-		float var3 = (float) (var1 % 110000L) / 110000.0F;
-		float var4 = (float) (var1 % 30000L) / 30000.0F;
-		Matrix4f var5 = Matrix4f.createTranslateMatrix(-var3, var4, 0.0F);
-		var5.multiply(Vector3f.ZP.rotationDegrees(10.0F));
-		var5.multiply(Matrix4f.createScaleMatrix(p_110187_, p_110187_, p_110187_));
-		RenderSystem.setTextureMatrix(var5);
+	public static RenderType enchantBeamSwirl(float p_228636_1_, float p_228636_2_) {
+		return RenderType.create("entity_enchant_glint", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(new RenderStateShard.OffsetTexturingStateShard(p_228636_1_, p_228636_2_)).createCompositeState(false));
 	}
 
 	private static void renderBeam(LivingEntity p_229118_1_, float p_229118_2_, PoseStack p_229118_3_, MultiBufferSource p_229118_4_, Entity p_229118_5_, LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>> renderer) {
-
 		float tick = (float) p_229118_1_.tickCount + p_229118_2_;
 		p_229118_3_.pushPose();
 		Vec3 vector3d = p_229118_5_.getRopeHoldPosition(p_229118_2_);
@@ -110,7 +76,7 @@ public class ClientEventHandler {
 		float f1 = (float) (vector3d.y - d4);
 		float f2 = (float) (vector3d.z - d5);
 		float f3 = 0.1F;
-		VertexConsumer ivertexbuilder = p_229118_4_.getBuffer(ENTITY_ENCHANT_GLINT);
+		VertexConsumer ivertexbuilder = p_229118_4_.getBuffer(enchantBeamSwirl(xOffset(f) % 1.0F, tick * 0.01F % 1.0F));
 		Matrix4f matrix4f = p_229118_3_.last().pose();
 		float f4 = Mth.fastInvSqrt(f * f + f2 * f2) * 0.1F / 2.0F;
 		float f5 = f2 * f4;
@@ -124,6 +90,10 @@ public class ClientEventHandler {
 		renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.05F, 0.1F, f5, f6);
 		renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.1F, 0.0F, f5, f6);
 		p_229118_3_.popPose();
+	}
+
+	protected static float xOffset(float p_116683_) {
+		return p_116683_ * 0.01F;
 	}
 
 	public static void renderSide(VertexConsumer p_229119_0_, Matrix4f p_229119_1_, float p_229119_2_, float p_229119_3_, float p_229119_4_, int p_229119_5_, int p_229119_6_, int p_229119_7_, int p_229119_8_, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_) {

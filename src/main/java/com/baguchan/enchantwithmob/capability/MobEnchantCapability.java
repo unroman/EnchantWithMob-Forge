@@ -64,8 +64,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
-
-		this.addOwner(entity, owner);
 	}
 
 	public void addOwner(LivingEntity entity, @Nullable LivingEntity owner) {

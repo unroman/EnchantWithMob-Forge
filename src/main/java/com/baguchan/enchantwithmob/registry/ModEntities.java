@@ -1,20 +1,14 @@
 package com.baguchan.enchantwithmob.registry;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
-import com.baguchan.enchantwithmob.client.model.EnchanterModel;
-import com.baguchan.enchantwithmob.client.render.EnchanterRenderer;
 import com.baguchan.enchantwithmob.entity.EnchanterEntity;
-import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.raid.Raid;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmlclient.registry.RenderingRegistry;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModEntities {
@@ -33,12 +27,5 @@ public class ModEntities {
     @SubscribeEvent
     public static void registerEntity(EntityAttributeCreationEvent event) {
         event.put(ENCHANTER, EnchanterEntity.createAttributeMap().build());
-    }
-
-
-    @OnlyIn(Dist.CLIENT)
-    public static void setupEntitiesClient() {
-        EntityRenderers.register(ENCHANTER, EnchanterRenderer::new);
-        RenderingRegistry.registerLayerDefinition(ModModelLayers.ENCHANTER, EnchanterModel::createBodyLayer);
     }
 }

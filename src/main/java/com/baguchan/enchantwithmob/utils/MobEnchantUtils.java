@@ -245,6 +245,7 @@ public class MobEnchantUtils {
 				capability.addMobEnchantFromOwner(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ownerEntity);
 			}
 		}
+		capability.addOwner(livingEntity, ownerEntity);
 	}
 
     public static ItemStack addRandomEnchantmentToItemStack(Random random, ItemStack stack, int level, boolean allowRare) {
@@ -340,7 +341,7 @@ public class MobEnchantUtils {
 				}
             }
 
-            return list;
+			return list1;
         }
     }
 
