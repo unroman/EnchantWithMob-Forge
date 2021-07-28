@@ -1,7 +1,9 @@
 package com.baguchan.enchantwithmob;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -13,35 +15,34 @@ public class EnchantConfig {
     public static boolean spawnEnchantedAnimal;
     public static boolean enchantYourSelf;
 
-    public static final Client CLIENT;
-    public static final ForgeConfigSpec CLIENT_SPEC;
-
     public static boolean showEnchantedMobHud;
 
     static {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
-
-        Pair<Client, ForgeConfigSpec> specPair2 = new ForgeConfigSpec.Builder().configure(Client::new);
-        CLIENT_SPEC = specPair2.getRight();
-        CLIENT = specPair2.getLeft();
     }
 
     public static void bakeConfig() {
         naturalSpawnEnchantedMob = COMMON.naturalSpawnEnchantedMob.get();
         spawnEnchantedAnimal = COMMON.spawnEnchantedAnimal.get();
         enchantYourSelf = COMMON.enchantYourSelf.get();
-
-        showEnchantedMobHud = CLIENT.showEnchantedMobHud.get();
     }
 
-    /*@SubscribeEvent
-    public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
+
+    @SubscribeEvent
+    public static void onModConfigEvent(final ModConfigEvent.Loading configEvent) {
         if (configEvent.getConfig().getSpec() == EnchantConfig.COMMON_SPEC) {
             bakeConfig();
         }
-    }*/
+    }
+
+    @SubscribeEvent
+    public static void onModConfigEvent(final ModConfigEvent.Reloading configEvent) {
+        if (configEvent.getConfig().getSpec() == EnchantConfig.COMMON_SPEC) {
+            bakeConfig();
+        }
+    }
 
     public static class Common {
         public final ForgeConfigSpec.BooleanValue naturalSpawnEnchantedMob;
@@ -58,16 +59,6 @@ public class EnchantConfig {
             enchantYourSelf = builder
                     .translation(EnchantWithMob.MODID + ".config.enchantYourSelf")
                     .define("when this config turn on,you can enchant yourself", true);
-        }
-    }
-
-    public static class Client {
-        public final ForgeConfigSpec.BooleanValue showEnchantedMobHud;
-
-        public Client(ForgeConfigSpec.Builder builder) {
-            showEnchantedMobHud = builder
-                    .translation(EnchantWithMob.MODID + ".config.showEnchantedMobHud")
-                    .define("Show what EnchantedMob has MobEnchant", true);
         }
     }
 
