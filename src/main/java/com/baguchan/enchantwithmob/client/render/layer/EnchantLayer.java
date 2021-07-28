@@ -7,6 +7,9 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+import net.minecraft.Util;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -32,6 +35,11 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
     });
     protected static final RenderStateShard.ShaderStateShard RENDERTYPE_ENTITY_GLINT_SHADER = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityGlintShader);
     protected static final RenderStateShard.CullStateShard NO_CULL = new RenderStateShard.CullStateShard(false);
+    protected static final RenderStateShard.TexturingStateShard ENTITY_GLINT_TEXTURING = new RenderStateShard.TexturingStateShard("entity_glint_texturing", () -> {
+        setupGlintTexturing(0.16F);
+    }, () -> {
+        RenderSystem.resetTextureMatrix();
+    });
 
     public EnchantLayer(RenderLayerParent<T, M> p_i50947_1_) {
         super(p_i50947_1_);
@@ -46,18 +54,24 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
                 EntityModel<T> entitymodel = this.getParentModel();
                 entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
                 this.getParentModel().copyPropertiesTo(entitymodel);
-                VertexConsumer ivertexbuilder = bufferIn.getBuffer(this.enchantBeamSwirl(this.xOffset(f) % 1.0F, tick * 0.01F % 1.0F));
+                VertexConsumer ivertexbuilder = bufferIn.getBuffer(this.enchantBeamSwirl());
                 entitymodel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
                 entitymodel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
             }
         });
     }
 
-    protected float xOffset(float p_116683_) {
-        return p_116683_ * 0.01F;
+    public RenderType enchantBeamSwirl() {
+        return RenderType.create("entity_enchant_glint", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
     }
 
-    public RenderType enchantBeamSwirl(float p_228636_1_, float p_228636_2_) {
-        return RenderType.create("entity_enchant_glint", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(new RenderStateShard.OffsetTexturingStateShard(p_228636_1_, p_228636_2_)).createCompositeState(false));
+    private static void setupGlintTexturing(float p_110187_) {
+        long var1 = Util.getMillis() * 8L;
+        float var3 = (float) (var1 % 110000L) / 110000.0F;
+        float var4 = (float) (var1 % 30000L) / 30000.0F;
+        Matrix4f var5 = Matrix4f.createTranslateMatrix(-var3, var4, 0.0F);
+        var5.multiply(Vector3f.ZP.rotationDegrees(10.0F));
+        var5.multiply(Matrix4f.createScaleMatrix(p_110187_, p_110187_, p_110187_));
+        RenderSystem.setTextureMatrix(var5);
     }
 }

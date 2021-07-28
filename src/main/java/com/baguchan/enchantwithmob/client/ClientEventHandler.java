@@ -9,6 +9,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3d;
+import com.mojang.math.Vector3f;
+import net.minecraft.Util;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -39,6 +41,11 @@ public class ClientEventHandler {
 	});
 	protected static final RenderStateShard.ShaderStateShard RENDERTYPE_ENTITY_GLINT_SHADER = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityGlintShader);
 	protected static final RenderStateShard.CullStateShard NO_CULL = new RenderStateShard.CullStateShard(false);
+	protected static final RenderStateShard.TexturingStateShard ENTITY_GLINT_TEXTURING = new RenderStateShard.TexturingStateShard("entity_glint_texturing", () -> {
+		setupGlintTexturing(0.16F);
+	}, () -> {
+		RenderSystem.resetTextureMatrix();
+	});
 
 	@SubscribeEvent
 	public static void renderEnchantBeam(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
@@ -56,8 +63,8 @@ public class ClientEventHandler {
 
 	}
 
-	public static RenderType enchantBeamSwirl(float p_228636_1_, float p_228636_2_) {
-		return RenderType.create("entity_enchant_glint", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(new RenderStateShard.OffsetTexturingStateShard(p_228636_1_, p_228636_2_)).createCompositeState(false));
+	public static RenderType enchantBeamSwirl() {
+		return RenderType.create("entity_enchant_glint", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENTITY_GLINT_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
 	}
 
 	private static void renderBeam(LivingEntity p_229118_1_, float p_229118_2_, PoseStack p_229118_3_, MultiBufferSource p_229118_4_, Entity p_229118_5_, LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>> renderer) {
@@ -76,7 +83,7 @@ public class ClientEventHandler {
 		float f1 = (float) (vector3d.y - d4);
 		float f2 = (float) (vector3d.z - d5);
 		float f3 = 0.1F;
-		VertexConsumer ivertexbuilder = p_229118_4_.getBuffer(enchantBeamSwirl(xOffset(f) % 1.0F, tick * 0.01F % 1.0F));
+		VertexConsumer ivertexbuilder = p_229118_4_.getBuffer(enchantBeamSwirl());
 		Matrix4f matrix4f = p_229118_3_.last().pose();
 		float f4 = Mth.fastInvSqrt(f * f + f2 * f2) * 0.1F / 2.0F;
 		float f5 = f2 * f4;
@@ -92,9 +99,6 @@ public class ClientEventHandler {
 		p_229118_3_.popPose();
 	}
 
-	protected static float xOffset(float p_116683_) {
-		return p_116683_ * 0.01F;
-	}
 
 	public static void renderSide(VertexConsumer p_229119_0_, Matrix4f p_229119_1_, float p_229119_2_, float p_229119_3_, float p_229119_4_, int p_229119_5_, int p_229119_6_, int p_229119_7_, int p_229119_8_, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_) {
 		int i = 24;
@@ -141,5 +145,15 @@ public class ClientEventHandler {
 
 	protected static int getBlockLightLevel(Entity p_225624_1_, BlockPos p_225624_2_) {
 		return p_225624_1_.isOnFire() ? 15 : p_225624_1_.level.getBrightness(LightLayer.BLOCK, p_225624_2_);
+	}
+
+	private static void setupGlintTexturing(float p_110187_) {
+		long var1 = Util.getMillis() * 8L;
+		float var3 = (float) (var1 % 110000L) / 110000.0F;
+		float var4 = (float) (var1 % 30000L) / 30000.0F;
+		Matrix4f var5 = Matrix4f.createTranslateMatrix(-var3, var4, 0.0F);
+		var5.multiply(Vector3f.ZP.rotationDegrees(10.0F));
+		var5.multiply(Matrix4f.createScaleMatrix(p_110187_, p_110187_, p_110187_));
+		RenderSystem.setTextureMatrix(var5);
 	}
 }
