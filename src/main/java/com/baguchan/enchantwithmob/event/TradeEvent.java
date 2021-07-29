@@ -45,6 +45,10 @@ public class TradeEvent {
 			MobEnchantUtils.addMobEnchantToItemStack(itemstack, enchantment, i);
 			int j = 2 + rand.nextInt(5 + i * 10) + 3 * i;
 
+			if (enchantment.isTresureEnchant()) {
+				j += 4;
+			}
+
 			if (j > 64) {
 				j = 64;
 			}

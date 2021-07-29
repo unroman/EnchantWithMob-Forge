@@ -18,7 +18,9 @@ public class MobEnchants {
     public static final MobEnchant SPEEDY = new SpeedyMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.UNCOMMON, 2)).addAttributesModifier(Attributes.MOVEMENT_SPEED, "501f27a9-4a75-4c2e-a2ab-91eeed71d748", (double) 0.05F, AttributeModifier.Operation.ADDITION);
     public static final MobEnchant STRONG = new StrongMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 3));
     public static final MobEnchant THORN = new ThornEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3));
-    public static final MobEnchant HEALTH_BOOST = new HealthBoostMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 5)).addAttributesModifier(Attributes.MAX_HEALTH, "f5d32c9f-2a3d-4157-bbf7-469d348ce097", 2.0D, AttributeModifier.Operation.ADDITION);
+    public static final MobEnchant HEALTH_BOOST = new HealthBoostMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 5)).addAttributesModifier(Attributes.MAX_HEALTH, "f5d32c9f-2a3d-4157-bbf7-469d348ce097", 4.0D, AttributeModifier.Operation.ADDITION);
+    public static final MobEnchant POISON = new PoisonMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 3));
+
 
     private static ForgeRegistry<MobEnchant> registry;
 
@@ -39,7 +41,8 @@ public class MobEnchants {
                 SPEEDY.setRegistryName("speedy"),
                 STRONG.setRegistryName("strong"),
                 THORN.setRegistryName("thorn"),
-                HEALTH_BOOST.setRegistryName("health_boost"));
+                HEALTH_BOOST.setRegistryName("health_boost"),
+                POISON.setRegistryName("poison"));
     }
 
     public static ForgeRegistry<MobEnchant> getRegistry() {

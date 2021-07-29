@@ -14,6 +14,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
@@ -148,6 +150,14 @@ public class CommonEventHandler {
 						event.setAmount(getDamageAddition(event.getAmount(), cap));
 					}
 				}
+
+				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON)) {
+					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON);
+
+					if (attaker.getRandom().nextFloat() < i * 0.125F) {
+						livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 40 * i, 0), attaker);
+					}
+				}
 			});
 
 			livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
@@ -168,6 +178,15 @@ public class CommonEventHandler {
 				event.setAmount(getDamageReduction(event.getAmount(), cap));
 			}
 		});
+	}
+
+
+	public static float getDamageMortal(float damage, MobEnchantCapability cap) {
+		int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.MORTAL);
+		if (level > 0) {
+			damage += 1.0F + (float) Math.max(0, level - 1) * 1.0F;
+		}
+		return damage;
 	}
 
 	public static float getDamageAddition(float damage, MobEnchantCapability cap) {

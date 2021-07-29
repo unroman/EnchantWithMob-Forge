@@ -12,4 +12,9 @@ public class HealthBoostMobEnchant extends MobEnchant {
     public int getMaxEnchantability(int enchantmentLevel) {
         return this.getMinEnchantability(enchantmentLevel) + 50;
     }
+
+    @Override
+    public boolean isTresureEnchant() {
+        return true;
+    }
 }

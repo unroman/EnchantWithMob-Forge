@@ -58,23 +58,27 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
     }
 
 
-    public void tick(LivingEntity entity, int level) {
+	public void tick(LivingEntity entity, int level) {
 
-    }
+	}
 
-    public final boolean isCompatibleWith(MobEnchant enchantmentIn) {
-        return this.canApplyTogether(enchantmentIn) && enchantmentIn.canApplyTogether(this);
-    }
+	public final boolean isCompatibleWith(MobEnchant enchantmentIn) {
+		return this.canApplyTogether(enchantmentIn) && enchantmentIn.canApplyTogether(this);
+	}
 
-    public boolean isCompatibleMob(LivingEntity livingEntity) {
-        return true;
-    }
+	public boolean isTresureEnchant() {
+		return false;
+	}
 
-    /**
-     * Determines if the enchantment passed can be applyied together with this enchantment.
-     */
-    protected boolean canApplyTogether(MobEnchant ench) {
-        return this != ench;
+	public boolean isCompatibleMob(LivingEntity livingEntity) {
+		return true;
+	}
+
+	/**
+	 * Determines if the enchantment passed can be applyied together with this enchantment.
+	 */
+	protected boolean canApplyTogether(MobEnchant ench) {
+		return this != ench;
     }
 
     public MobEnchant addAttributesModifier(Attribute attributeIn, String uuid, double amount, AttributeModifier.Operation operation) {

@@ -326,19 +326,19 @@ public class MobEnchantUtils {
     }
 
     /*
-     * build MobEnchantment list like vanilla's enchantment
-     */
-    public static List<MobEnchantmentData> buildEnchantmentList(Random randomIn, int level, boolean allowRare) {
-        List<MobEnchantmentData> list = Lists.newArrayList();
-        int i = 1; //Enchantability
-        if (i <= 0) {
-            return list;
-        } else {
-            level = level + 1 + randomIn.nextInt(i / 4 + 1) + randomIn.nextInt(i / 4 + 1);
-            float f = (randomIn.nextFloat() + randomIn.nextFloat() - 1.0F) * 0.15F;
+	 * build MobEnchantment list like vanilla's enchantment
+	 */
+	public static List<MobEnchantmentData> buildEnchantmentList(Random randomIn, int level, boolean allowTresure) {
+		List<MobEnchantmentData> list = Lists.newArrayList();
+		int i = 1; //Enchantability
+		if (i <= 0) {
+			return list;
+		} else {
+			level = level + 1 + randomIn.nextInt(i / 4 + 1) + randomIn.nextInt(i / 4 + 1);
+			float f = (randomIn.nextFloat() + randomIn.nextFloat() - 1.0F) * 0.15F;
 			level = Mth.clamp(Math.round((float) level + (float) level * f), 1, Integer.MAX_VALUE);
-            List<MobEnchantmentData> list1 = makeMobEnchantmentDatas(level, allowRare);
-            if (!list1.isEmpty()) {
+			List<MobEnchantmentData> list1 = makeMobEnchantmentDatas(level, allowTresure);
+			if (!list1.isEmpty()) {
 				WeightedRandom.getRandomItem(randomIn, list1).ifPresent(list1::add);
 
                 while (randomIn.nextInt(50) <= level) {
@@ -358,22 +358,22 @@ public class MobEnchantUtils {
         }
     }
 
-    /*
-     * get MobEnchantment data.
-     * when not allow rare enchantment,Ignore rare enchantment
-     */
-    public static List<MobEnchantmentData> makeMobEnchantmentDatas(int p_185291_0_, boolean allowRare) {
-        List<MobEnchantmentData> list = Lists.newArrayList();
+	/*
+	 * get MobEnchantment data.
+	 * when not allow rare enchantment,Ignore rare enchantment
+	 */
+	public static List<MobEnchantmentData> makeMobEnchantmentDatas(int p_185291_0_, boolean allowTresure) {
+		List<MobEnchantmentData> list = Lists.newArrayList();
 
-        for (MobEnchant enchantment : MobEnchants.getRegistry().getValues()) {
-            if ((enchantment.getRarity() != MobEnchant.Rarity.RARE && enchantment.getRarity() != MobEnchant.Rarity.VERY_RARE || allowRare)) {
-                for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
-                    if (p_185291_0_ >= enchantment.getMinEnchantability(i) && p_185291_0_ <= enchantment.getMaxEnchantability(i)) {
-                        list.add(new MobEnchantmentData(enchantment, i));
-                        break;
-                    }
-                }
-            }
+		for (MobEnchant enchantment : MobEnchants.getRegistry().getValues()) {
+			if ((!enchantment.isTresureEnchant() || allowTresure)) {
+				for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
+					if (p_185291_0_ >= enchantment.getMinEnchantability(i) && p_185291_0_ <= enchantment.getMaxEnchantability(i)) {
+						list.add(new MobEnchantmentData(enchantment, i));
+						break;
+					}
+				}
+			}
         }
 
         return list;
