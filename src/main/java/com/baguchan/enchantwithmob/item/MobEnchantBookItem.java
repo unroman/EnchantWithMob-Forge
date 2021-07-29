@@ -112,8 +112,8 @@ public class MobEnchantBookItem extends Item {
 				if (mobEnchant != null) {
 					ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.AQUA};
 
-					tooltip.add(new TranslatableComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + enchantmentLevel).withStyle(textformatting)));
-                }
+					tooltip.add(new TranslatableComponent("mobenchant." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + enchantmentLevel).withStyle(textformatting)));
+				}
             }
 
             List<Pair<Attribute, AttributeModifier>> list1 = Lists.newArrayList();
