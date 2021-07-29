@@ -2,6 +2,8 @@ package com.baguchan.enchantwithmob.mobenchant;
 
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Bee;
+import net.minecraft.world.entity.monster.CaveSpider;
 
 public class PoisonMobEnchant extends MobEnchant {
 	public PoisonMobEnchant(Properties properties) {
@@ -21,5 +23,10 @@ public class PoisonMobEnchant extends MobEnchant {
 		super.tick(entity, level);
 
 		entity.level.addParticle(ParticleTypes.ENTITY_EFFECT, entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D), 0.4F, 0.8F, 0.4F);
+	}
+
+	@Override
+	public boolean isCompatibleMob(LivingEntity livingEntity) {
+		return !(livingEntity instanceof Bee) && !(livingEntity instanceof CaveSpider);
 	}
 }
