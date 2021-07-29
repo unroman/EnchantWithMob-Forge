@@ -180,15 +180,6 @@ public class CommonEventHandler {
 		});
 	}
 
-
-	public static float getDamageMortal(float damage, MobEnchantCapability cap) {
-		int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.MORTAL);
-		if (level > 0) {
-			damage += 1.0F + (float) Math.max(0, level - 1) * 1.0F;
-		}
-		return damage;
-	}
-
 	public static float getDamageAddition(float damage, MobEnchantCapability cap) {
 		int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.STRONG);
 		if (level > 0) {
