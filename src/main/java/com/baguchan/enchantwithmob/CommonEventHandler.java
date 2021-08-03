@@ -21,6 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.SnowGolem;
+import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
@@ -55,7 +56,7 @@ public class CommonEventHandler {
 
 			if (world.getLevelData().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
 				LivingEntity livingEntity = (LivingEntity) event.getEntity();
-				if (!(livingEntity instanceof Animal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
+				if (!(livingEntity instanceof Animal) && !(livingEntity instanceof WaterAnimal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
 					if (event.getSpawnReason() != MobSpawnType.BREEDING && event.getSpawnReason() != MobSpawnType.CONVERSION && event.getSpawnReason() != MobSpawnType.STRUCTURE && event.getSpawnReason() != MobSpawnType.MOB_SUMMONED) {
 						if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() * 0.025F) {
 							if (!world.isClientSide()) {
