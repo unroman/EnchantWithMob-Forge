@@ -21,7 +21,9 @@
       "conditions": {
         "items": [
           {
-            "item": "enchantwithmob:mob_enchant_book"
+            "items": [
+              "enchantwithmob:mob_enchant_book"
+            ]
           }
         ]
       }
@@ -29,7 +31,7 @@
   },
   "requirements": [
     [
-      "book"
+      "blaze_rod"
     ]
   ]
 }
