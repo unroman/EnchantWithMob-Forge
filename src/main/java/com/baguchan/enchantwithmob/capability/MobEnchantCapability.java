@@ -45,6 +45,8 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
+		//size changed like minecraft dungeons
+		entity.refreshDimensions();
 	}
 
 	/**
@@ -64,6 +66,8 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
+		//size changed like minecraft dungeons
+		entity.refreshDimensions();
 	}
 
 	public void addOwner(LivingEntity entity, @Nullable LivingEntity owner) {
@@ -99,6 +103,8 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
 		this.mobEnchants.removeAll(mobEnchants);
+		//size changed like minecraft dungeons
+		entity.refreshDimensions();
 	}
 
 	/*
@@ -115,7 +121,9 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		}
 		this.mobEnchants.removeAll(mobEnchants);
 		this.removeOwner(entity);
-    }
+		//size changed like minecraft dungeons
+		entity.refreshDimensions();
+	}
 
 
     /*

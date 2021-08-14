@@ -75,6 +75,9 @@ public class MobEnchantBookItem extends Item {
 				return InteractionResultHolder.success(stack);
 			} else {
 				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant_yourself"), true);
+
+				playerIn.getCooldowns().addCooldown(stack.getItem(), 20);
+
 				return InteractionResultHolder.fail(stack);
 			}
         }

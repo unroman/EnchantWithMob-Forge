@@ -155,8 +155,10 @@ public class CommonEventHandler {
 				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON)) {
 					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON);
 
-					if (attaker.getRandom().nextFloat() < i * 0.125F) {
-						livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 40 * i, 0), attaker);
+					if (event.getAmount() > 0) {
+						if (attaker.getRandom().nextFloat() < i * 0.125F) {
+							livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 40 * i, 0), attaker);
+						}
 					}
 				}
 			});
@@ -179,6 +181,14 @@ public class CommonEventHandler {
 				event.setAmount(getDamageReduction(event.getAmount(), cap));
 			}
 		});
+
+		//new mob enchant protection system like Minecraft Dungeons
+		livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+		{
+			if (cap.hasEnchant()) {
+				event.setAmount(getBonusMobEnchantDamageReduction(event.getAmount(), cap));
+			}
+		});
 	}
 
 	public static float getDamageAddition(float damage, MobEnchantCapability cap) {
@@ -193,6 +203,14 @@ public class CommonEventHandler {
 		int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION);
 		if (i > 0) {
 			damage -= (double) Mth.floor(damage * (double) ((float) i * 0.15F));
+		}
+		return damage;
+	}
+
+	public static float getBonusMobEnchantDamageReduction(float damage, MobEnchantCapability cap) {
+		int i = cap.getMobEnchants().size();
+		if (i > 0) {
+			damage -= (double) Mth.floor(damage * (double) ((float) i * 0.05F));
 		}
 		return damage;
 	}
@@ -232,7 +250,9 @@ public class CommonEventHandler {
 							event.setCanceled(true);
 						} else {
 							event.getPlayer().displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant"), true);
+							event.getPlayer().getCooldowns().addCooldown(stack.getItem(), 20);
 							event.setCancellationResult(InteractionResult.FAIL);
+							event.setCanceled(true);
 						}
 					});
 				}
