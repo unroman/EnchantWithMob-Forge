@@ -17,19 +17,19 @@ modId = "enchantwithmob" #mandatory
 # The version number of the mod - there's a few well known ${} variables useable here or just hardcode it
 version = "${file.jarVersion}" #mandatory
 # A display name for the mod
-displayName="Enchant With Mob" #mandatory
+displayName = "Enchant With Mob" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
 #updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
-displayURL="https://www.curseforge.com/minecraft/mc-mods/enchant-with-mob" #optional
+displayURL = "https://www.curseforge.com/minecraft/mc-mods/enchant-with-mob" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
-logoFile="logo.png" #optional
+logoFile = "logo.png" #optional
 # A text field displayed in the mod UI
-#credits="" #optional
+credits = "Edmord for contributing texture" #optional
 # A text field displayed in the mod UI
-authors="bagu_chan" #optional
+authors = "bagu_chan, Evo" #optional
 # The description text for the mod (multi line!) (#mandatory)
-description='''
+description = '''
 This mod is add Enchant (with Mob) from Minecraft Dungeons
 
 Enchanted Mob will make Harder for fighting...
