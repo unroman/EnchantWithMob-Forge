@@ -155,7 +155,7 @@ public class CommonEventHandler {
 				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON)) {
 					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON);
 
-					if (event.getAmount() > 0) {
+					if (event.getAmount() > 0 && event.getSource().getDirectEntity() == attaker) {
 						if (attaker.getRandom().nextFloat() < i * 0.125F) {
 							livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 40 * i, 0), attaker);
 						}
@@ -168,7 +168,7 @@ public class CommonEventHandler {
 				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.THORN)) {
 					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.THORN);
 
-					if (livingEntity.getRandom().nextFloat() < i * 0.1F) {
+					if (event.getSource().getDirectEntity() == attaker && !event.getSource().isExplosion() && livingEntity.getRandom().nextFloat() < i * 0.1F) {
 						attaker.hurt(DamageSource.thorns(livingEntity), getThornDamage(event.getAmount(), cap));
 					}
 				}
