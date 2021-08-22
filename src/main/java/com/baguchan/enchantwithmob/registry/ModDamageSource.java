@@ -8,6 +8,6 @@ import javax.annotation.Nullable;
 
 public class ModDamageSource {
 	public static DamageSource indirectMortal(Entity p_19368_, @Nullable Entity p_19369_) {
-		return (new IndirectEntityDamageSource("enchantwithmob.indirectMortal", p_19368_, p_19369_)).bypassInvul().bypassArmor();
+		return (new IndirectEntityDamageSource("enchantwithmob.indirectVoid", p_19368_, p_19369_)).bypassInvul().bypassArmor();
 	}
 }

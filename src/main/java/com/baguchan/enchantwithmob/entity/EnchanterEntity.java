@@ -135,7 +135,7 @@ public class EnchanterEntity extends SpellcasterIllager {
             if (this.raid != null && this.hasActiveRaid() && this.getWave() > 0) {
                 ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 
-                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20 + this.getWave() * 2, true));
+                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20 + this.getWave() * 4, true));
             } else {
                 ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
 

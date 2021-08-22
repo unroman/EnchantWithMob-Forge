@@ -339,9 +339,9 @@ public class MobEnchantUtils {
 			level = Mth.clamp(Math.round((float) level + (float) level * f), 1, Integer.MAX_VALUE);
 			List<MobEnchantmentData> list1 = makeMobEnchantmentDatas(level, allowTresure);
 			if (!list1.isEmpty()) {
-				WeightedRandom.getRandomItem(randomIn, list1).ifPresent(list1::add);
+				WeightedRandom.getRandomItem(randomIn, list1).ifPresent(list::add);
 
-                while (randomIn.nextInt(50) <= level) {
+				while (randomIn.nextInt(50) <= level) {
 					if (!list.isEmpty()) {
 						removeIncompatible(list1, Util.lastOf(list));
 					}
@@ -349,13 +349,13 @@ public class MobEnchantUtils {
 						break;
 					}
 
-					WeightedRandom.getRandomItem(randomIn, list1).ifPresent(list1::add);
+					WeightedRandom.getRandomItem(randomIn, list1).ifPresent(list::add);
 					level /= 2;
 				}
-            }
+			}
 
-			return list1;
-        }
+			return list;
+		}
     }
 
 	/*

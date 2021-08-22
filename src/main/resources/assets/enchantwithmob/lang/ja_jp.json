@@ -24,5 +24,6 @@
   "enchantwithmob.config.naturalSpawnEnchantedMob": "エンチャントされたmobをスポーンさせる",
   "enchantwithmob.config.spawnEnchantedAnimal": "エンチャントされた動物をスポーンさせる",
   "enchantwithmob.config.enchantedBoss": "エンチャントされたBossをスポーンさせる(上級者向け)",
-  "enchantwithmob.config.enchantYourSelf": "エンチャントを自分自身でできるようにする"
+  "enchantwithmob.config.enchantYourSelf": "エンチャントを自分自身でできるようにする",
+  "death.attack.enchantwithmob.indirectVoid": "%1$sは、%2$sによってvoidに包まれた"
 }

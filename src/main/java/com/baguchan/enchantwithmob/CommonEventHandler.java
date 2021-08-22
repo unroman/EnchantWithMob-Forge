@@ -23,19 +23,12 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.ProjectileImpactEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -134,6 +127,12 @@ public class CommonEventHandler {
 	}
 
 	@SubscribeEvent
+	public static void onEntityAttack(LivingAttackEvent event) {
+		LivingEntity livingEntity = event.getEntityLiving();
+
+	}
+
+	@SubscribeEvent
 	public static void onEntityHurt(LivingHurtEvent event) {
 		LivingEntity livingEntity = event.getEntityLiving();
 
@@ -154,7 +153,7 @@ public class CommonEventHandler {
 				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON)) {
 					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON);
 
-					if (event.getAmount() > 0 && event.getSource().getDirectEntity() == attacker) {
+					if (event.getAmount() > 0) {
 						if (attacker.getRandom().nextFloat() < i * 0.125F) {
 							livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 60 * i, 0), attacker);
 						}
@@ -188,33 +187,6 @@ public class CommonEventHandler {
 				event.setAmount(getBonusMobEnchantDamageReduction(event.getAmount(), cap));
 			}
 		});
-	}
-
-	@SubscribeEvent
-	public static void onProjectileAttack(ProjectileImpactEvent event) {
-		if (event.getRayTraceResult().getType() == HitResult.Type.ENTITY) {
-			EntityHitResult entityHitResult = (EntityHitResult) event.getRayTraceResult();
-
-			Entity entity = entityHitResult.getEntity();
-
-			Projectile projectile = event.getProjectile();
-
-			if (entity instanceof LivingEntity && projectile.getOwner() instanceof LivingEntity) {
-				LivingEntity livingEntity = (LivingEntity) entity;
-
-				LivingEntity attacker = (LivingEntity) projectile.getOwner();
-				projectile.getOwner().getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-				{
-					if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON)) {
-						int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON);
-
-						if (attacker.getRandom().nextFloat() < i * 0.125F) {
-							livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 40 * i, 0), attacker);
-						}
-					}
-				});
-			}
-		}
 	}
 
 	public static float getDamageAddition(float damage, MobEnchantCapability cap) {
