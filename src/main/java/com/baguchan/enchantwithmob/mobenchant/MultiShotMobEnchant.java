@@ -37,8 +37,6 @@ public class MultiShotMobEnchant extends MobEnchant {
 					compoundNBT = projectile.saveWithoutId(compoundNBT);
 					addProjectile(projectile, compoundNBT, 15.0F);
 					addProjectile(projectile, compoundNBT, -15.0F);
-					addProjectile(projectile, compoundNBT, 30.0F);
-					addProjectile(projectile, compoundNBT, -30.0F);
 					isAdding = false;
 				}
 			});
