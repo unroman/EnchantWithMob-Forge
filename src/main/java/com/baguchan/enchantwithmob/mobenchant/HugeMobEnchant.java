@@ -22,6 +22,6 @@ public class HugeMobEnchant extends MobEnchant {
 
     @Override
     public boolean isCompatibleMob(LivingEntity livingEntity) {
-        return livingEntity.getType().getWidth() < 0.85F && livingEntity.getType().getHeight() < 0.85F;
+        return livingEntity.getType().getWidth() < 1.0F && livingEntity.getType().getHeight() < 1.0F;
     }
 }

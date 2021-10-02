@@ -28,7 +28,10 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.living.*;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,6 +48,7 @@ public class CommonEventHandler {
 			event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
 		}
 	}
+
 
 	@SubscribeEvent
 	public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
@@ -126,11 +130,6 @@ public class CommonEventHandler {
 		});
 	}
 
-	@SubscribeEvent
-	public static void onEntityAttack(LivingAttackEvent event) {
-		LivingEntity livingEntity = event.getEntityLiving();
-
-	}
 
 	@SubscribeEvent
 	public static void onEntityHurt(LivingHurtEvent event) {

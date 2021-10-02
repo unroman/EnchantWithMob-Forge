@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.utils;
 
+import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
@@ -23,9 +24,20 @@ import java.util.Map;
 import java.util.Random;
 
 public class MobEnchantUtils {
-    public static final String TAG_MOBENCHANT = "MobEnchant";
-    public static final String TAG_ENCHANT_LEVEL = "EnchantLevel";
-    public static final String TAG_STORED_MOBENCHANTS = "StoredMobEnchants";
+	public static final String TAG_MOBENCHANT = "MobEnchant";
+	public static final String TAG_ENCHANT_LEVEL = "EnchantLevel";
+	public static final String TAG_STORED_MOBENCHANTS = "StoredMobEnchants";
+
+	//when projectile Shooter has mob enchant, start Runnable
+	public static void executeIfPresent(LivingEntity entity, MobEnchant mobEnchantment, Runnable runnable) {
+		if (entity != null) {
+			entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
+				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), mobEnchantment)) {
+					runnable.run();
+				}
+			});
+		}
+	}
 
 	/**
 	 * get MobEnchant From NBT
@@ -281,23 +293,21 @@ public class MobEnchantUtils {
     }
 
     public static boolean findMobEnchant(List<MobEnchant> list, MobEnchant findMobEnchant) {
-        for (MobEnchant mobEnchant : list) {
-            if (mobEnchant.equals(findMobEnchant)) {
-                return true;
-            }
-        }
-        return false;
+		if (list.contains(findMobEnchant)) {
+			return true;
+		}
+		return false;
     }
 
     public static boolean findMobEnchantFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
-        for (MobEnchantHandler mobEnchant : list) {
-            if (mobEnchant != null) {
-                if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+		for (MobEnchantHandler mobEnchant : list) {
+			if (mobEnchant != null) {
+				if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
+					return true;
+				}
+			}
+		}
+		return false;
     }
 
     public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, MobEnchantCapability capability) {
