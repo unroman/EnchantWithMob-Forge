@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.utils;
 
+import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
@@ -26,6 +27,17 @@ public class MobEnchantUtils {
     public static final String TAG_MOBENCHANT = "MobEnchant";
     public static final String TAG_ENCHANT_LEVEL = "EnchantLevel";
     public static final String TAG_STORED_MOBENCHANTS = "StoredMobEnchants";
+
+    //when projectile Shooter has mob enchant, start Runnable
+    public static void executeIfPresent(LivingEntity entity, MobEnchant mobEnchantment, Runnable runnable) {
+        if (entity != null) {
+            entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
+                if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), mobEnchantment)) {
+                    runnable.run();
+                }
+            });
+        }
+    }
 
     /**
      * get MobEnchant From NBT

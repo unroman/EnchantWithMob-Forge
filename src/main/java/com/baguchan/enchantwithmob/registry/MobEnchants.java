@@ -19,6 +19,7 @@ public class MobEnchants {
     public static final MobEnchant STRONG = new StrongMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.COMMON, 3));
     public static final MobEnchant THORN = new ThornEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3));
     public static final MobEnchant HEALTH_BOOST = new HealthBoostMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 5)).addAttributesModifier(Attributes.MAX_HEALTH, "f5d32c9f-2a3d-4157-bbf7-469d348ce097", 2.0D, AttributeModifier.Operation.ADDITION);
+    public static final MobEnchant MULTISHOT = new MultiShotMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 1));
 
     private static ForgeRegistry<MobEnchant> registry;
 
@@ -39,7 +40,8 @@ public class MobEnchants {
                 SPEEDY.setRegistryName("speedy"),
                 STRONG.setRegistryName("strong"),
                 THORN.setRegistryName("thorn"),
-                HEALTH_BOOST.setRegistryName("health_boost"));
+                HEALTH_BOOST.setRegistryName("health_boost"),
+                MULTISHOT.setRegistryName("multishot"));
     }
 
     public static ForgeRegistry<MobEnchant> getRegistry() {

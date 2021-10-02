@@ -123,9 +123,6 @@ public class CommonEventHandler {
 				for (MobEnchantHandler enchantHandler : cap.getMobEnchants()) {
 					enchantHandler.getMobEnchant().tick(livingEntity, enchantHandler.getEnchantLevel());
 				}
-
-				if (cap.hasOwner()) {
-				}
 			});
 		}
 	}
