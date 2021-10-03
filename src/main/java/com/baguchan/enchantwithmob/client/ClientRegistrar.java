@@ -4,11 +4,13 @@ import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.client.model.EnchanterModel;
 import com.baguchan.enchantwithmob.client.render.EnchanterRenderer;
 import com.baguchan.enchantwithmob.client.render.layer.EnchantLayer;
+import com.baguchan.enchantwithmob.client.render.layer.SlimeEnchantLayer;
 import com.baguchan.enchantwithmob.registry.ModEntities;
 import com.baguchan.enchantwithmob.registry.ModModelLayers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.SlimeRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -38,7 +40,9 @@ public class ClientRegistrar {
             event.getSkin(skins).addLayer(new EnchantLayer(event.getSkin(skins)));
         });
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(r -> {
-
+            if (r instanceof SlimeRenderer) {
+                ((SlimeRenderer) r).addLayer(new SlimeEnchantLayer<>((SlimeRenderer) r, event.getEntityModels()));
+            }
             if (r instanceof LivingEntityRenderer) {
                 ((LivingEntityRenderer) r).addLayer(new EnchantLayer((LivingEntityRenderer) r));
             }
