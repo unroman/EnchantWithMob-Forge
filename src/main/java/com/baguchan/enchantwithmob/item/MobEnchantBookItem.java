@@ -70,7 +70,7 @@ public class MobEnchantBookItem extends Item {
 
 				stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
 
-				playerIn.getCooldowns().addCooldown(stack.getItem(), 60);
+				playerIn.getCooldowns().addCooldown(stack.getItem(), 40);
 
 				return InteractionResultHolder.success(stack);
 			} else {
