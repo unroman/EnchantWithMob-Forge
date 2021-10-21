@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob.client.render;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
+import com.baguchan.enchantwithmob.client.ModModelLayers;
 import com.baguchan.enchantwithmob.client.model.EnchanterModel;
 import com.baguchan.enchantwithmob.entity.EnchanterEntity;
 import com.mojang.blaze3d.vertex.PoseStack;

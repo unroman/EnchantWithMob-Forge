@@ -6,7 +6,6 @@ import com.baguchan.enchantwithmob.client.render.EnchanterRenderer;
 import com.baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import com.baguchan.enchantwithmob.client.render.layer.SlimeEnchantLayer;
 import com.baguchan.enchantwithmob.registry.ModEntities;
-import com.baguchan.enchantwithmob.registry.ModModelLayers;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;

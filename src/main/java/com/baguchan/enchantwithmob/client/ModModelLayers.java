@@ -1,4 +1,4 @@
-package com.baguchan.enchantwithmob.registry;
+package com.baguchan.enchantwithmob.client;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import net.minecraft.client.model.geom.ModelLayerLocation;
