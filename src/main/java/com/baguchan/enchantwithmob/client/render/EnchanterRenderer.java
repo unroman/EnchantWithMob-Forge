@@ -3,7 +3,6 @@ package com.baguchan.enchantwithmob.client.render;
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.client.model.EnchanterModel;
 import com.baguchan.enchantwithmob.entity.EnchanterEntity;
-import com.baguchan.enchantwithmob.registry.ModModelLayers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;

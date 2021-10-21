@@ -4,7 +4,10 @@ import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.entity.EnchanterEntity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -22,6 +25,7 @@ public class ModEntities {
     public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
         event.getRegistry().register(ENCHANTER.setRegistryName("enchanter"));
         Raid.RaiderType.create("enchanter", ENCHANTER, new int[]{0, 0, 1, 0, 1, 1, 2, 1});
+        SpawnPlacements.register(ENCHANTER, SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
     }
 
     @SubscribeEvent
