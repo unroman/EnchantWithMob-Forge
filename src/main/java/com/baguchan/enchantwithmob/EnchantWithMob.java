@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob;
 
+import com.baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
@@ -35,6 +36,9 @@ public class EnchantWithMob {
 	public static final String NETWORK_PROTOCOL = "2";
 
 	public static Capability<MobEnchantCapability> MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
+	});
+
+	public static Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
 	});
 
 

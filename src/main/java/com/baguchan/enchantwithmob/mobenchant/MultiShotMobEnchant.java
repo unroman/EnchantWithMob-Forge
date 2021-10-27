@@ -10,6 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -62,7 +63,24 @@ public class MultiShotMobEnchant extends MobEnchant {
 
 			newDamagingProjectile.setDeltaMovement(newPower);
 		}
+
+		newProjectile.getCapability(EnchantWithMob.ITEM_MOB_ENCHANT_CAP).ifPresent(cap ->
+		{
+			cap.setHasEnchant(true);
+		});
+
 		projectile.level.addFreshEntity(newProjectile);
+	}
+
+	@SubscribeEvent
+	public static void onHit(ProjectileImpactEvent event) {
+		Projectile projectile = event.getProjectile();
+
+		projectile.getCapability(EnchantWithMob.ITEM_MOB_ENCHANT_CAP).ifPresent(cap -> {
+			if (cap.hasEnchant()) {
+				projectile.discard();
+			}
+		});
 	}
 
 	public static boolean shooterIsLiving(Projectile projectile) {
