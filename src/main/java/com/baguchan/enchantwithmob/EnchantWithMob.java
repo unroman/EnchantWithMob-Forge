@@ -8,8 +8,8 @@ import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -26,26 +26,26 @@ import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(EnchantWithMob.MODID)
-public class EnchantWithMob
-{
+public class EnchantWithMob {
 
-    // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
+	// Directly reference a log4j logger.
+	private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final String MODID = "enchantwithmob";
-    public static final String NETWORK_PROTOCOL = "2";
+	public static final String MODID = "enchantwithmob";
+	public static final String NETWORK_PROTOCOL = "2";
 
-    @CapabilityInject(MobEnchantCapability.class)
-    public static final Capability<MobEnchantCapability> MOB_ENCHANT_CAP = null;
+	public static Capability<MobEnchantCapability> MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
+	});
 
-    public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
-            .networkProtocolVersion(() -> NETWORK_PROTOCOL)
-            .clientAcceptedVersions(NETWORK_PROTOCOL::equals)
-            .serverAcceptedVersions(NETWORK_PROTOCOL::equals)
-            .simpleChannel();
 
-    public EnchantWithMob() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
+			.networkProtocolVersion(() -> NETWORK_PROTOCOL)
+			.clientAcceptedVersions(NETWORK_PROTOCOL::equals)
+			.serverAcceptedVersions(NETWORK_PROTOCOL::equals)
+			.simpleChannel();
+
+	public EnchantWithMob() {
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
 		this.setupMessages();
 		// Register the setup method for modloading
@@ -63,7 +63,6 @@ public class EnchantWithMob
 	}
 
     private void setup(final FMLCommonSetupEvent event) {
-		CapabilityManager.INSTANCE.register(MobEnchantCapability.class);
     }
 
     private void setupMessages() {
