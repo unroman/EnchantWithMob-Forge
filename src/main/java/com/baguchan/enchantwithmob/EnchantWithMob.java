@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob;
 
+import com.baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantStorage;
 import com.baguchan.enchantwithmob.client.ClientRegistrar;
@@ -33,26 +34,28 @@ import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(EnchantWithMob.MODID)
-public class EnchantWithMob
-{
+public class EnchantWithMob {
 
-    // Directly reference a log4j logger.
-    private static final Logger LOGGER = LogManager.getLogger();
+	// Directly reference a log4j logger.
+	private static final Logger LOGGER = LogManager.getLogger();
 
-    public static final String MODID = "enchantwithmob";
-    public static final String NETWORK_PROTOCOL = "2";
+	public static final String MODID = "enchantwithmob";
+	public static final String NETWORK_PROTOCOL = "2";
 
-    @CapabilityInject(MobEnchantCapability.class)
-    public static final Capability<MobEnchantCapability> MOB_ENCHANT_CAP = null;
+	@CapabilityInject(MobEnchantCapability.class)
+	public static final Capability<MobEnchantCapability> MOB_ENCHANT_CAP = null;
 
-    public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
-            .networkProtocolVersion(() -> NETWORK_PROTOCOL)
-            .clientAcceptedVersions(NETWORK_PROTOCOL::equals)
-            .serverAcceptedVersions(NETWORK_PROTOCOL::equals)
-            .simpleChannel();
+	@CapabilityInject(ItemMobEnchantCapability.class)
+	public static final Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = null;
 
-    public EnchantWithMob() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
+			.networkProtocolVersion(() -> NETWORK_PROTOCOL)
+			.clientAcceptedVersions(NETWORK_PROTOCOL::equals)
+			.serverAcceptedVersions(NETWORK_PROTOCOL::equals)
+			.simpleChannel();
+
+	public EnchantWithMob() {
+		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         this.setupMessages();
         // Register the setup method for modloading
@@ -74,7 +77,8 @@ public class EnchantWithMob
 	}
 
     private void setup(final FMLCommonSetupEvent event) {
-        CapabilityManager.INSTANCE.register(MobEnchantCapability.class, new MobEnchantStorage<>(), MobEnchantCapability::new);
+		CapabilityManager.INSTANCE.register(MobEnchantCapability.class, new MobEnchantStorage<>(), MobEnchantCapability::new);
+		CapabilityManager.INSTANCE.register(ItemMobEnchantCapability.class, new ItemMobEnchantCapability<>(), ItemMobEnchantCapability::new);
     }
 
     private void setupMessages() {

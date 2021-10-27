@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob;
 
+import com.baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
@@ -14,6 +15,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.SnowGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
@@ -42,6 +44,10 @@ public class CommonEventHandler {
 	public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
 		if (event.getObject() instanceof LivingEntity) {
 			event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
+		}
+
+		if (event.getObject() instanceof ProjectileEntity) {
+			event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "item_mob_enchant"), new ItemMobEnchantCapability());
 		}
 	}
 
