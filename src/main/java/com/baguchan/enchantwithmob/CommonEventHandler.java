@@ -23,8 +23,11 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.LevelAccessor;
@@ -69,7 +72,7 @@ public class CommonEventHandler {
 		if (event.getEntity() instanceof LivingEntity) {
 			LevelAccessor world = event.getWorld();
 
-			if (world.getLevelData().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get()) {
+			if (world.getLevelData().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get() && isSpawnEnchantableEntity(event.getEntity())) {
 				LivingEntity livingEntity = (LivingEntity) event.getEntity();
 				if (!(livingEntity instanceof Animal) && !(livingEntity instanceof WaterAnimal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
 					if (event.getSpawnReason() != MobSpawnType.BREEDING && event.getSpawnReason() != MobSpawnType.CONVERSION && event.getSpawnReason() != MobSpawnType.STRUCTURE && event.getSpawnReason() != MobSpawnType.MOB_SUMMONED) {
@@ -105,6 +108,10 @@ public class CommonEventHandler {
 				}
 			}
 		}
+	}
+
+	private static boolean isSpawnEnchantableEntity(Entity entity) {
+		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && !EnchantConfig.COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get().contains(entity.getType().getRegistryName().toString());
 	}
 
 	@SubscribeEvent

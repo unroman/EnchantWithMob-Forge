@@ -1,10 +1,13 @@
 package com.baguchan.enchantwithmob;
 
+import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class EnchantConfig {
@@ -19,6 +22,8 @@ public class EnchantConfig {
 
     public static boolean showEnchantedMobHud;
 
+    public static List<? extends String> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
+
     static {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
@@ -32,6 +37,7 @@ public class EnchantConfig {
         naturalSpawnEnchantedMob = COMMON.naturalSpawnEnchantedMob.get();
         spawnEnchantedAnimal = COMMON.spawnEnchantedAnimal.get();
         enchantYourSelf = COMMON.enchantYourSelf.get();
+        ENCHANT_ON_SPAWN_EXCLUSION_MOBS = COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get();
     }
 
     public static void bakeConfigClient() {
@@ -64,12 +70,16 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue naturalSpawnEnchantedMob;
         public final ForgeConfigSpec.BooleanValue spawnEnchantedAnimal;
         public final ForgeConfigSpec.BooleanValue enchantYourSelf;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
 
         public Common(ForgeConfigSpec.Builder builder) {
             naturalSpawnEnchantedMob = builder
                     .comment("Enable the the spawning of enchanted mobs. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.naturalSpawnEnchantedMob")
                     .define("Enchanted Mob can Spawn Natural", true);
+            ENCHANT_ON_SPAWN_EXCLUSION_MOBS = builder
+                    .comment("Disables specific mob from receiveing enchantments on spawn. Use the full name, eg: dungeons_mobs:protection.")
+                    .define("enchantOnSpawnExclusionMobs", Lists.newArrayList("minecraft:wither", "minecraft:ender_dragon"));
             spawnEnchantedAnimal = builder
                     .comment("Enable the the spawning of enchanted animal mobs. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.spawnEnchantedAnimal")
