@@ -65,7 +65,7 @@ public class CommonEventHandler {
 
 
 	@SubscribeEvent
-	public static void onSpawnEntity(LivingSpawnEvent.CheckSpawn event) {
+	public static void onSpawnEntity(LivingSpawnEvent.SpecialSpawn event) {
 		if (event.getEntity() instanceof LivingEntity) {
 			LevelAccessor world = event.getWorld();
 

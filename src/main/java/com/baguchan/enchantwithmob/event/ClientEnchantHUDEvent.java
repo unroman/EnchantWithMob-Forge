@@ -35,7 +35,7 @@ public class ClientEnchantHUDEvent {
 
 						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.AQUA};
 
-						MutableComponent s = new TranslatableComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + mobEnchantLevel)).withStyle(textformatting);
+						MutableComponent s = new TranslatableComponent("mobenchant." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + mobEnchantLevel)).withStyle(textformatting);
 
 						int xOffset = 20;
 						int yOffset = cap.getMobEnchants().indexOf(mobEnchantHandler) * 10 + 60;
