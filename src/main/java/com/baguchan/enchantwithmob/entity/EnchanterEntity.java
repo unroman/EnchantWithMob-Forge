@@ -17,7 +17,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.entity.npc.AbstractVillager;
@@ -212,11 +211,11 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     public class SpellGoal extends SpellcasterIllager.SpellcasterUseSpellGoal {
         private final Predicate<LivingEntity> fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof Enemy && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity instanceof AbstractIllager && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
         };
 
         private final Predicate<LivingEntity> enchanted_fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof Enemy && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity instanceof AbstractIllager && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
         };
 
         /**
@@ -237,7 +236,7 @@ public class EnchanterEntity extends SpellcasterIllager {
                 } else {
                     List<LivingEntity> enchanted_list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.enchanted_fillter);
 
-                    if (enchanted_list.size() < 4) {
+                    if (enchanted_list.size() < 5) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
                         if (target != EnchanterEntity.this.getTarget()) {
                             EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
