@@ -10,6 +10,8 @@ import org.apache.commons.lang3.tuple.Pair;
 public class EnchantConfig {
     public static final Common COMMON;
     public static final ForgeConfigSpec COMMON_SPEC;
+    public static final Client CLIENT;
+    public static final ForgeConfigSpec CLIENT_SPEC;
 
     public static boolean naturalSpawnEnchantedMob;
     public static boolean spawnEnchantedAnimal;
@@ -21,6 +23,9 @@ public class EnchantConfig {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
         COMMON = specPair.getLeft();
+        Pair<Client, ForgeConfigSpec> specPair2 = new ForgeConfigSpec.Builder().configure(Client::new);
+        CLIENT_SPEC = specPair2.getRight();
+        CLIENT = specPair2.getLeft();
     }
 
     public static void bakeConfig() {
@@ -29,18 +34,29 @@ public class EnchantConfig {
         enchantYourSelf = COMMON.enchantYourSelf.get();
     }
 
+    public static void bakeConfigClient() {
+        showEnchantedMobHud = CLIENT.showEnchantedMobHud.get();
+    }
+
 
     @SubscribeEvent
     public static void onModConfigEvent(final ModConfigEvent.Loading configEvent) {
         if (configEvent.getConfig().getSpec() == EnchantConfig.COMMON_SPEC) {
             bakeConfig();
         }
+
+        if (configEvent.getConfig().getSpec() == EnchantConfig.CLIENT_SPEC) {
+            bakeConfigClient();
+        }
     }
 
-    @SubscribeEvent
-    public static void onModConfigEvent(final ModConfigEvent.Reloading configEvent) {
-        if (configEvent.getConfig().getSpec() == EnchantConfig.COMMON_SPEC) {
-            bakeConfig();
+    public static class Client {
+        public final ForgeConfigSpec.BooleanValue showEnchantedMobHud;
+
+        public Client(ForgeConfigSpec.Builder builder) {
+            showEnchantedMobHud = builder
+                    .translation(EnchantWithMob.MODID + ".config.showEnchantedMobHud")
+                    .define("Show Enchanted Mob Hud", true);
         }
     }
 
@@ -52,13 +68,13 @@ public class EnchantConfig {
         public Common(ForgeConfigSpec.Builder builder) {
             naturalSpawnEnchantedMob = builder
                     .translation(EnchantWithMob.MODID + ".config.naturalSpawnEnchantedMob")
-                    .define("make Enchanted Mob can Spawn Natural", true);
+                    .define("Enchanted Mob can Spawn Natural", true);
             spawnEnchantedAnimal = builder
                     .translation(EnchantWithMob.MODID + ".config.spawnEnchantedAnimal")
-                    .define("make Enchanted Animal can Spawn Natural", false);
+                    .define("Enchanted Animal can Spawn Natural", false);
             enchantYourSelf = builder
                     .translation(EnchantWithMob.MODID + ".config.enchantYourSelf")
-                    .define("when this config turn on,you can enchant yourself", true);
+                    .define("Enchant yourself", true);
         }
     }
 
