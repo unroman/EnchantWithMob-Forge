@@ -67,12 +67,15 @@ public class EnchantConfig {
 
         public Common(ForgeConfigSpec.Builder builder) {
             naturalSpawnEnchantedMob = builder
+                    .comment("Enable the the spawning of enchanted mobs. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.naturalSpawnEnchantedMob")
                     .define("Enchanted Mob can Spawn Natural", true);
             spawnEnchantedAnimal = builder
+                    .comment("Enable the the spawning of enchanted animal mobs. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.spawnEnchantedAnimal")
                     .define("Enchanted Animal can Spawn Natural", false);
             enchantYourSelf = builder
+                    .comment("Enable enchanting yourself. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.enchantYourSelf")
                     .define("Enchant yourself", true);
         }
