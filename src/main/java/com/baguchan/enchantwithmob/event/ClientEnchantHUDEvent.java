@@ -1,15 +1,25 @@
 package com.baguchan.enchantwithmob.event;
 
+import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.EnchantWithMob;
+import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
+import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, value = Dist.CLIENT)
 public class ClientEnchantHUDEvent {
 
-	/*@SubscribeEvent
+	@SubscribeEvent
 	public static void renderHudEvent(RenderGameOverlayEvent.Post event) {
-		PoseStack stack = event.getPoseStack();
+		PoseStack stack = event.getMatrixStack();
 
 		Minecraft mc = Minecraft.getInstance();
 
@@ -23,9 +33,9 @@ public class ClientEnchantHUDEvent {
 						MobEnchant mobEnchant = mobEnchantHandler.getMobEnchant();
 						int mobEnchantLevel = mobEnchantHandler.getEnchantLevel();
 
-						TextFormatting[] textformatting = new TextFormatting[]{TextFormatting.AQUA};
+						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.AQUA};
 
-						ITextComponent s = new TranslationTextComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslationTextComponent("enchantment.level." + mobEnchantLevel)).withStyle(textformatting);
+						MutableComponent s = new TranslatableComponent("mobenchant.enchantwithmob.name." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + mobEnchantLevel)).withStyle(textformatting);
 
 						int xOffset = 20;
 						int yOffset = cap.getMobEnchants().indexOf(mobEnchantHandler) * 10 + 60;
@@ -36,5 +46,5 @@ public class ClientEnchantHUDEvent {
 			});
 			stack.popPose();
 		}
-	}*/
+	}
 }
