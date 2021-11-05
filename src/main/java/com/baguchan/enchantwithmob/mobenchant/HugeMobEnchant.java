@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 
 public class HugeMobEnchant extends MobEnchant {
     public HugeMobEnchant(Properties properties) {
@@ -22,6 +23,6 @@ public class HugeMobEnchant extends MobEnchant {
 
     @Override
     public boolean isCompatibleMob(LivingEntity livingEntity) {
-        return livingEntity.getType().getWidth() < 1.0F && livingEntity.getType().getHeight() < 1.0F;
+        return !(livingEntity instanceof Player);
     }
 }

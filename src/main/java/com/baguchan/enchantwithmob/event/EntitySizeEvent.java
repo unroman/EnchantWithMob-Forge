@@ -38,10 +38,10 @@ public class EntitySizeEvent {
 					event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * (1.0F + level * 0.15F));
 					event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
 				} else {
-					float totalWidth = entity.getDimensions(entity.getPose()).width * 1.05F;
-					float totalHeight = entity.getDimensions(entity.getPose()).height * 1.05F;
+					float totalWidth = entity.getDimensions(entity.getPose()).width * 1.025F;
+					float totalHeight = entity.getDimensions(entity.getPose()).height * 1.025F;
 
-					event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * 1.05F);
+					event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * 1.025F);
 					event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
 				}
 			}
