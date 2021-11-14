@@ -19,10 +19,6 @@ public class ModItems {
     public static final Item ENCHANTER_SPAWNEGG = new SpawnEggItem(ModEntities.ENCHANTER, 9804699, 0x81052d, (new Item.Properties()).tab(CreativeModeTab.TAB_MISC));
 
     public static void register(RegistryEvent.Register<Item> registry, Item item, String id) {
-        if (item instanceof BlockItem) {
-            Item.BY_BLOCK.put(((BlockItem) item).getBlock(), item);
-        }
-
         item.setRegistryName(new ResourceLocation(EnchantWithMob.MODID, id));
 
         registry.getRegistry().register(item);
@@ -32,8 +28,6 @@ public class ModItems {
 
         if (item instanceof BlockItem && item.getRegistryName() == null) {
             item.setRegistryName(((BlockItem) item).getBlock().getRegistryName());
-
-            Item.BY_BLOCK.put(((BlockItem) item).getBlock(), item);
         }
 
         registry.getRegistry().register(item);
