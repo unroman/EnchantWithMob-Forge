@@ -10,6 +10,7 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -37,25 +38,26 @@ public class MultiShotMobEnchant extends MobEnchant {
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         Entity entity = event.getEntity();
+        World world = event.getWorld();
         if (entity instanceof ProjectileEntity) {
             ProjectileEntity projectile = (ProjectileEntity) entity;
             if (!shooterIsLiving(projectile)) return;
             LivingEntity owner = (LivingEntity) projectile.getOwner();
             MobEnchantUtils.executeIfPresent(owner, MobEnchants.MULTISHOT, () -> {
-                if (!projectile.level.isClientSide && projectile.tickCount == 0 && !isAdding) {
+                if (!world.isClientSide && projectile.tickCount == 0 && !isAdding) {
                     isAdding = true;
                     CompoundNBT compoundNBT = new CompoundNBT();
                     compoundNBT = projectile.saveWithoutId(compoundNBT);
-                    addProjectile(projectile, compoundNBT, 15.0F);
-                    addProjectile(projectile, compoundNBT, -15.0F);
+                    addProjectile(projectile, compoundNBT, world, 15.0F);
+                    addProjectile(projectile, compoundNBT, world, -15.0F);
                     isAdding = false;
                 }
             });
         }
     }
 
-    private static void addProjectile(ProjectileEntity projectile, CompoundNBT compoundNBT, float rotation) {
-        ProjectileEntity newProjectile = (ProjectileEntity) projectile.getType().create(projectile.level);
+    private static void addProjectile(ProjectileEntity projectile, CompoundNBT compoundNBT, World world, float rotation) {
+        ProjectileEntity newProjectile = (ProjectileEntity) projectile.getType().create(world);
         UUID uuid = newProjectile.getUUID();
         newProjectile.load(compoundNBT);
         newProjectile.setUUID(uuid);
@@ -77,7 +79,7 @@ public class MultiShotMobEnchant extends MobEnchant {
             cap.setHasEnchant(true);
         });
 
-        projectile.level.addFreshEntity(newProjectile);
+        world.addFreshEntity(newProjectile);
     }
 
     @SubscribeEvent
