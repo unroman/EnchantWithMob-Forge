@@ -104,6 +104,9 @@ public class MobEnchantBookItem extends Item {
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag p_41424_) {
 		super.appendHoverText(stack, level, tooltip, p_41424_);
+		ChatFormatting[] textformatting2 = new ChatFormatting[]{ChatFormatting.DARK_PURPLE};
+
+		tooltip.add(new TranslatableComponent("mobenchant.enchantwithmob.mob_enchant_book.tooltip").withStyle(textformatting2));
 		if (MobEnchantUtils.hasMobEnchant(stack)) {
 			ListTag listnbt = MobEnchantUtils.getEnchantmentListForNBT(stack.getTag());
 

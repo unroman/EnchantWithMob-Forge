@@ -2,13 +2,20 @@ package com.baguchan.enchantwithmob.item;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 public class MobUnEnchantBookItem extends Item {
 	public MobUnEnchantBookItem(Properties group) {
@@ -29,6 +36,14 @@ public class MobUnEnchantBookItem extends Item {
 		playerIn.getCooldowns().addCooldown(stack.getItem(), 80);
 
 		return InteractionResultHolder.success(stack);
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag p_41424_) {
+		super.appendHoverText(stack, level, tooltip, p_41424_);
+		ChatFormatting[] textformatting2 = new ChatFormatting[]{ChatFormatting.DARK_PURPLE};
+
+		tooltip.add(new TranslatableComponent("mobenchant.enchantwithmob.mob_unenchant_book.tooltip").withStyle(textformatting2));
 	}
 
 	@Override
