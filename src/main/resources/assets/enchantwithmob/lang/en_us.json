@@ -1,5 +1,6 @@
 {
   "item.enchantwithmob.enchanter_spawn_egg": "Enchanter Spawn Egg",
+  "item.enchantwithmob.enchanters_book": "Enchanters Book",
   "item.enchantwithmob.mob_enchant_book": "Mob Enchant Book",
   "item.enchantwithmob.mob_unenchant_book": "Mob UnEnchant Book",
   "entity.enchantwithmob.enchanter": "Enchanter",
@@ -17,6 +18,7 @@
   "mobenchant.enchantwithmob.when_ehcnanted": "When Enchanted",
   "enchantwithmob.cannot.enchant": "This mob cannot grant that enchantment or already have",
   "enchantwithmob.cannot.enchant_yourself": "you cannot grant that enchantment or already have",
+  "enchantwithmob.cannot.no_enchantable_ally": "you cannot enchant. because enchantable ally is not here",
   "subtitles.entity.enchanter.ambient": "Enchanter murmur",
   "subtitles.entity.enchanter.hurt": "Enchanter Hurt",
   "subtitles.entity.enchanter.death": "Enchanter Death",

@@ -1,5 +1,6 @@
 {
   "item.enchantwithmob.enchanter_spawn_egg": "エンチャンターのスポーンエッグ",
+  "item.enchantwithmob.enchanters_book": "エンチャンターの本",
   "item.enchantwithmob.mob_enchant_book": "モブエンチャントブック",
   "item.enchantwithmob.mob_unenchant_book": "モブアンエンチャントブック",
   "entity.enchantwithmob.enchanter": "エンチャンター",
@@ -17,6 +18,7 @@
   "mobenchant.enchantwithmob.when_ehcnanted": "エンチャントした時",
   "enchantwithmob.cannot.enchant": "このmobはそのエンチャントを付与できない、または既に持っています",
   "enchantwithmob.cannot.enchant_yourself": "あなたはそのエンチャントを付与できない、または既に持っています",
+  "enchantwithmob.cannot.no_enchantable_ally": "あなたはエンチャントできる仲間を持っていないため、エンチャントできません",
   "subtitles.entity.enchanter.ambient": "エンチャンターがつぶやく",
   "subtitles.entity.enchanter.hurt": "エンチャンターがダメージを受ける",
   "subtitles.entity.enchanter.death": "エンチャンターが死ぬ",

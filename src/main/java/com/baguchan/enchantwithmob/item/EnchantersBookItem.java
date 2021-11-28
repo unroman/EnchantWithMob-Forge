@@ -1,6 +1,5 @@
 package com.baguchan.enchantwithmob.item;
 
-import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
@@ -16,8 +15,10 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -29,61 +30,65 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public class MobEnchantBookItem extends Item {
-	public MobEnchantBookItem(Item.Properties group) {
-		super(group);
+public class EnchantersBookItem extends Item {
+	private final TargetingConditions enchantTargeting = TargetingConditions.forNonCombat().range(16.0D).ignoreLineOfSight().ignoreInvisibilityTesting();
+	private final TargetingConditions alreadyEnchantTargeting = TargetingConditions.forNonCombat().range(16.0D).ignoreLineOfSight().ignoreInvisibilityTesting().selector((entity) -> {
+		return entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
+	});
+
+	public EnchantersBookItem(Properties properties) {
+		super(properties);
 	}
-
-
-    /*
-     * Implemented onRightClick (method) inside CommonEventHandler instead of this method
-     */
-    /*@Override
-    public ActionResultType itemInteractionForEntity(ItemStack stack, PlayerEntity playerIn, LivingEntity target, Hand hand) {
-        if (MobEnchantUtils.hasMobEnchant(stack)) {
-            target.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-            {
-                MobEnchantUtils.addMobEnchantToEntityFromItem(stack, target, cap);
-            });
-            playerIn.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
-
-            stack.damageItem(1, playerIn, (entity) -> entity.sendBreakAnimation(hand));
-
-            return ActionResultType.SUCCESS;
-        }
-
-        return super.itemInteractionForEntity(stack, playerIn, target, hand);
-    }*/
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
-		if (EnchantConfig.COMMON.enchantYourSelf.get() && MobEnchantUtils.hasMobEnchant(stack)) {
-			final boolean[] flag = {false};
-			playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-			{
-				flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
-			});
+		if (MobEnchantUtils.hasMobEnchant(stack)) {
+			List<LivingEntity> list = level.getNearbyEntities(LivingEntity.class, this.enchantTargeting, playerIn, playerIn.getBoundingBox().inflate(16.0D));
+			List<LivingEntity> hasEnchantedMoblist = level.getNearbyEntities(LivingEntity.class, this.alreadyEnchantTargeting, playerIn, playerIn.getBoundingBox().inflate(16.0D));
 
-			//When flag is true, enchanting is success.
-			if (flag[0]) {
-				playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+			if (hasEnchantedMoblist.isEmpty() || hasEnchantedMoblist.size() < 5) {
+				if (!list.isEmpty()) {
+					int size = list.size();
+					final boolean[] flag = {false};
+					for (int i = 0; i < size; ++i) {
+						LivingEntity enchantedMob = list.get(i);
 
-				stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
+						if (hasEnchantedMoblist.size() < 5 && !enchantedMob.canAttack(playerIn) && playerIn != enchantedMob) {
+							enchantedMob.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+							{
+								if (flag[0]) {
+									MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+								} else {
+									flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+								}
+								//add Enchanting Owner
+								cap.addOwner(enchantedMob, playerIn);
+							});
+						}
+					}
 
-				playerIn.getCooldowns().addCooldown(stack.getItem(), 40);
+					//When flag is true, enchanting is success.
+					if (flag[0]) {
+						playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-				return InteractionResultHolder.success(stack);
+						stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
+
+						playerIn.getCooldowns().addCooldown(stack.getItem(), 40);
+
+						return InteractionResultHolder.success(stack);
+					}
+				}
 			} else {
-				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant_yourself"), true);
+				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.no_enchantable_ally"), true);
 
 				playerIn.getCooldowns().addCooldown(stack.getItem(), 20);
 
 				return InteractionResultHolder.fail(stack);
 			}
-        }
+		}
 		return super.use(level, playerIn, handIn);
-    }
+	}
 
 	@Override
 	public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
@@ -118,30 +123,30 @@ public class MobEnchantBookItem extends Item {
 
 					tooltip.add(new TranslatableComponent("mobenchant." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + enchantmentLevel).withStyle(textformatting)));
 				}
-            }
+			}
 
-            List<Pair<Attribute, AttributeModifier>> list1 = Lists.newArrayList();
+			List<Pair<Attribute, AttributeModifier>> list1 = Lists.newArrayList();
 
-            for (int i = 0; i < listnbt.size(); ++i) {
+			for (int i = 0; i < listnbt.size(); ++i) {
 				CompoundTag compoundnbt = listnbt.getCompound(i);
 
-                MobEnchant mobEnchant = MobEnchantUtils.getEnchantFromNBT(compoundnbt);
-                int mobEnchantLevel = MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt);
+				MobEnchant mobEnchant = MobEnchantUtils.getEnchantFromNBT(compoundnbt);
+				int mobEnchantLevel = MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt);
 
-                if (mobEnchant != null) {
-                    Map<Attribute, AttributeModifier> map = mobEnchant.getAttributeModifierMap();
-                    if (!map.isEmpty()) {
-                        for (Map.Entry<Attribute, AttributeModifier> entry : map.entrySet()) {
-                            AttributeModifier attributemodifier = entry.getValue();
-                            AttributeModifier attributemodifier1 = new AttributeModifier(attributemodifier.getName(), mobEnchant.getAttributeModifierAmount(mobEnchantLevel, attributemodifier), attributemodifier.getOperation());
-                            list1.add(new Pair<>(entry.getKey(), attributemodifier1));
-                        }
-                    }
-                }
-            }
+				if (mobEnchant != null) {
+					Map<Attribute, AttributeModifier> map = mobEnchant.getAttributeModifierMap();
+					if (!map.isEmpty()) {
+						for (Map.Entry<Attribute, AttributeModifier> entry : map.entrySet()) {
+							AttributeModifier attributemodifier = entry.getValue();
+							AttributeModifier attributemodifier1 = new AttributeModifier(attributemodifier.getName(), mobEnchant.getAttributeModifierAmount(mobEnchantLevel, attributemodifier), attributemodifier.getOperation());
+							list1.add(new Pair<>(entry.getKey(), attributemodifier1));
+						}
+					}
+				}
+			}
 
 
-            if (!list1.isEmpty()) {
+			if (!list1.isEmpty()) {
 				//tooltip.add(StringTextComponent.EMPTY);
 				tooltip.add((new TranslatableComponent("mobenchant.enchantwithmob.when_ehcnanted")).withStyle(ChatFormatting.DARK_PURPLE));
 
@@ -155,19 +160,19 @@ public class MobEnchantBookItem extends Item {
 						d1 = attributemodifier2.getAmount() * 100.0D;
 					}
 
-                    if (d0 > 0.0D) {
+					if (d0 > 0.0D) {
 						tooltip.add((new TranslatableComponent("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslatableComponent(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
-                    } else if (d0 < 0.0D) {
+					} else if (d0 < 0.0D) {
 						d1 = d1 * -1.0D;
 						tooltip.add((new TranslatableComponent("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslatableComponent(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.RED));
-                    }
-                }
-            }
-        }
-    }
+					}
+				}
+			}
+		}
+	}
 
-    @Override
-    public boolean isFoil(ItemStack p_77636_1_) {
-        return true;
-    }
+	@Override
+	public boolean isFoil(ItemStack p_77636_1_) {
+		return true;
+	}
 }

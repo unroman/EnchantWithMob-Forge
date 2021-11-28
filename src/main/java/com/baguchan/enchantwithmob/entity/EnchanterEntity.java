@@ -130,13 +130,22 @@ public class EnchanterEntity extends SpellcasterIllager {
     protected void dropCustomDeathLoot(DamageSource source, int looting, boolean recentlyHitIn) {
         super.dropCustomDeathLoot(source, looting, recentlyHitIn);
 
-        if (this.random.nextFloat() < 0.15F + 0.025F * looting) {
+        //when raid is active, reward is more bigger
+        if (this.random.nextFloat() < 0.25F + 0.025F * looting) {
             if (this.raid != null && this.hasActiveRaid() && this.getWave() > 0) {
-                ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+                ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK);
+
+                if (this.random.nextFloat() < 0.2F) {
+                    itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+                }
 
                 this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20 + this.getWave() * 4, true));
             } else {
-                ItemStack itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+                ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK);
+
+                if (this.random.nextFloat() < 0.2F) {
+                    itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+                }
 
                 this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20, true));
             }
@@ -211,11 +220,11 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     public class SpellGoal extends SpellcasterIllager.SpellcasterUseSpellGoal {
         private final Predicate<LivingEntity> fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof AbstractIllager && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
         };
 
         private final Predicate<LivingEntity> enchanted_fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof AbstractIllager && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
         };
 
         /**
@@ -236,9 +245,10 @@ public class EnchanterEntity extends SpellcasterIllager {
                 } else {
                     List<LivingEntity> enchanted_list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.enchanted_fillter);
 
+                    //set enchant limit
                     if (enchanted_list.size() < 5) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
-                        if (target != EnchanterEntity.this.getTarget()) {
+                        if (target != EnchanterEntity.this.getTarget() && target.canAttack(EnchanterEntity.this)) {
                             EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
                             return true;
                         } else {
