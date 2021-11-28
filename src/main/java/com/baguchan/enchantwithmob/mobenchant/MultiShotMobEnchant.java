@@ -8,6 +8,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -27,25 +28,26 @@ public class MultiShotMobEnchant extends MobEnchant {
 	@SubscribeEvent
 	public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		Entity entity = event.getEntity();
+		Level level = event.getWorld();
 		if (entity instanceof Projectile) {
 			Projectile projectile = (Projectile) entity;
 			if (!shooterIsLiving(projectile)) return;
 			LivingEntity owner = (LivingEntity) projectile.getOwner();
 			MobEnchantUtils.executeIfPresent(owner, MobEnchants.MULTISHOT, () -> {
-				if (!projectile.level.isClientSide && projectile.tickCount == 0 && !isAdding) {
+				if (!level.isClientSide && projectile.tickCount == 0 && !isAdding) {
 					isAdding = true;
 					CompoundTag compoundNBT = new CompoundTag();
 					compoundNBT = projectile.saveWithoutId(compoundNBT);
-					addProjectile(projectile, compoundNBT, 15.0F);
-					addProjectile(projectile, compoundNBT, -15.0F);
+					addProjectile(projectile, compoundNBT, level, 15.0F);
+					addProjectile(projectile, compoundNBT, level, -15.0F);
 					isAdding = false;
 				}
 			});
 		}
 	}
 
-	private static void addProjectile(Projectile projectile, CompoundTag compoundNBT, float rotation) {
-		Projectile newProjectile = (Projectile) projectile.getType().create(projectile.level);
+	private static void addProjectile(Projectile projectile, CompoundTag compoundNBT, Level level, float rotation) {
+		Projectile newProjectile = (Projectile) projectile.getType().create(level);
 		UUID uuid = newProjectile.getUUID();
 		newProjectile.load(compoundNBT);
 		newProjectile.setUUID(uuid);
@@ -69,7 +71,7 @@ public class MultiShotMobEnchant extends MobEnchant {
 			cap.setHasEnchant(true);
 		});
 
-		projectile.level.addFreshEntity(newProjectile);
+		level.addFreshEntity(newProjectile);
 	}
 
 	@SubscribeEvent
