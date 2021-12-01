@@ -54,16 +54,22 @@ public class EnchantersBookItem extends Item {
 					for (int i = 0; i < size; ++i) {
 						LivingEntity enchantedMob = list.get(i);
 
-						if (hasEnchantedMoblist.size() < 5 && !enchantedMob.canAttack(playerIn) && playerIn != enchantedMob) {
+						if (i >= 5) {
+							break;
+						}
+
+						if (!enchantedMob.canAttack(playerIn) && playerIn != enchantedMob) {
 							enchantedMob.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 							{
-								if (flag[0]) {
-									MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
-								} else {
-									flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+								if (!cap.hasEnchant()) {
+									if (flag[0]) {
+										MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+									} else {
+										flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+									}
+									//add Enchanting Owner
+									cap.addOwner(enchantedMob, playerIn);
 								}
-								//add Enchanting Owner
-								cap.addOwner(enchantedMob, playerIn);
 							});
 						}
 					}
@@ -78,6 +84,12 @@ public class EnchantersBookItem extends Item {
 
 						return InteractionResultHolder.success(stack);
 					}
+				} else {
+					playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.no_enchantable_ally"), true);
+
+					playerIn.getCooldowns().addCooldown(stack.getItem(), 20);
+
+					return InteractionResultHolder.fail(stack);
 				}
 			} else {
 				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.no_enchantable_ally"), true);
