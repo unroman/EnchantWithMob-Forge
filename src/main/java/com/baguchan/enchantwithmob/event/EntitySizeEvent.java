@@ -12,8 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,16 +50,16 @@ public class EntitySizeEvent {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void onRenderWorld(RenderWorldLastEvent event) {
+	public static void onRenderWorld(RenderLevelLastEvent event) {
 		Player player = Minecraft.getInstance().player;
 		float scale = player.getBbHeight() / 1.8F;
 
 		switch (Minecraft.getInstance().options.getCameraType()) {
 			case THIRD_PERSON_BACK:
-				if (player.getBbHeight() > 1.8F) event.getMatrixStack().translate(0, 0, -scale * 2);
+				if (player.getBbHeight() > 1.8F) event.getPoseStack().translate(0, 0, -scale * 2);
 				break;
 			case THIRD_PERSON_FRONT:
-				if (player.getBbHeight() > 1.8F) event.getMatrixStack().translate(0, 0, scale * 2);
+				if (player.getBbHeight() > 1.8F) event.getPoseStack().translate(0, 0, scale * 2);
 				break;
 		}
 	}
@@ -72,12 +72,12 @@ public class EntitySizeEvent {
 		LazyOptional<MobEnchantCapability> capLazy = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP);
 		capLazy.ifPresent(cap -> {
 			if (cap.hasEnchant()) {
-				event.getMatrixStack().pushPose();
+				event.getPoseStack().pushPose();
 				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE)) {
 					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE);
-					event.getMatrixStack().scale(1.0F + 0.15F * level, 1.0F + 0.15F * level, 1.0F + 0.15F * level);
+					event.getPoseStack().scale(1.0F + 0.15F * level, 1.0F + 0.15F * level, 1.0F + 0.15F * level);
 				} else {
-					event.getMatrixStack().scale(1.05F, 1.05F, 1.05F);
+					event.getPoseStack().scale(1.05F, 1.05F, 1.05F);
 				}
 
 
@@ -94,7 +94,7 @@ public class EntitySizeEvent {
 		LazyOptional<MobEnchantCapability> capLazy = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP);
 		capLazy.ifPresent(cap -> {
 			if (cap.hasEnchant()) {
-				event.getMatrixStack().popPose();
+				event.getPoseStack().popPose();
 			}
 		});
 

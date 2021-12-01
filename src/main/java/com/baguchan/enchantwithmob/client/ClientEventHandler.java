@@ -50,9 +50,9 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void renderEnchantBeam(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
-		PoseStack matrixStack = event.getMatrixStack();
-		MultiBufferSource bufferBuilder = event.getBuffers();
-		float particalTick = event.getPartialRenderTick();
+		PoseStack matrixStack = event.getPoseStack();
+		MultiBufferSource bufferBuilder = event.getMultiBufferSource();
+		float particalTick = event.getPartialTick();
 		event.getEntity().getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
 			if (cap.hasOwner()) {
 				LivingEntity entity = cap.getEnchantOwner().get();
