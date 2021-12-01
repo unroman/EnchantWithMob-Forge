@@ -61,13 +61,15 @@ public class EnchantersBookItem extends Item {
 						if (!enchantedMob.canAttack(playerIn) && playerIn != enchantedMob) {
 							enchantedMob.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 							{
-								if (flag[0]) {
-									MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
-								} else {
-									flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+								if (!cap.hasEnchant()) {
+									if (flag[0]) {
+										MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+									} else {
+										flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
+									}
+									//add Enchanting Owner
+									cap.addOwner(enchantedMob, playerIn);
 								}
-								//add Enchanting Owner
-								cap.addOwner(enchantedMob, playerIn);
 							});
 						}
 					}
