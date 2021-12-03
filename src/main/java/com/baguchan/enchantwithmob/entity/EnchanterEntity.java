@@ -220,11 +220,11 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     public class SpellGoal extends SpellcasterIllager.SpellcasterUseSpellGoal {
         private final Predicate<LivingEntity> fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity instanceof Raider && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> !mob.hasEnchant()).orElse(false);
         };
 
         private final Predicate<LivingEntity> enchanted_fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
+            return !(entity instanceof EnchanterEntity) && entity instanceof Raider && entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
         };
 
         /**
@@ -248,7 +248,7 @@ public class EnchanterEntity extends SpellcasterIllager {
                     //set enchant limit
                     if (enchanted_list.size() < 5) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
-                        if (target != EnchanterEntity.this.getTarget() && target.canAttack(EnchanterEntity.this)) {
+                        if (target != EnchanterEntity.this.getTarget()) {
                             EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
                             return true;
                         } else {
