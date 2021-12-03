@@ -248,7 +248,7 @@ public class EnchanterEntity extends SpellcasterIllager {
                     //set enchant limit
                     if (enchanted_list.size() < 5) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
-                        if (target != EnchanterEntity.this.getTarget() && target.canAttack(EnchanterEntity.this)) {
+                        if (target != EnchanterEntity.this.getTarget() && !target.canAttack(EnchanterEntity.this)) {
                             EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
                             return true;
                         } else {
