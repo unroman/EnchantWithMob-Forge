@@ -32,5 +32,6 @@
   "enchantwithmob.config.spawnEnchantedAnimal": "Spawn Enchanted Animal",
   "enchantwithmob.config.enchantedBoss": "Enchanted Boss(Harder)",
   "enchantwithmob.config.enchantYourSelf": "Enchant YourSelf",
+  "enchantwithmob.config.changeSizeWhenEnchant": "Change Size When Enchant",
   "death.attack.enchantwithmob.indirectVoid": "%1$s was wrapped in void by %2$s"
 }

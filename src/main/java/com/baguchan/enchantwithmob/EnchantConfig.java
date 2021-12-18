@@ -19,6 +19,7 @@ public class EnchantConfig {
     public static boolean naturalSpawnEnchantedMob;
     public static boolean spawnEnchantedAnimal;
     public static boolean enchantYourSelf;
+    public static boolean changeSizeWhenEnchant;
 
     public static boolean showEnchantedMobHud;
 
@@ -37,6 +38,7 @@ public class EnchantConfig {
         naturalSpawnEnchantedMob = COMMON.naturalSpawnEnchantedMob.get();
         spawnEnchantedAnimal = COMMON.spawnEnchantedAnimal.get();
         enchantYourSelf = COMMON.enchantYourSelf.get();
+        changeSizeWhenEnchant = COMMON.changeSizeWhenEnchant.get();
         ENCHANT_ON_SPAWN_EXCLUSION_MOBS = COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get();
     }
 
@@ -70,6 +72,7 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue naturalSpawnEnchantedMob;
         public final ForgeConfigSpec.BooleanValue spawnEnchantedAnimal;
         public final ForgeConfigSpec.BooleanValue enchantYourSelf;
+        public final ForgeConfigSpec.BooleanValue changeSizeWhenEnchant;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
 
         public Common(ForgeConfigSpec.Builder builder) {
@@ -88,6 +91,10 @@ public class EnchantConfig {
                     .comment("Enable enchanting yourself. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.enchantYourSelf")
                     .define("Enchant yourself", true);
+            changeSizeWhenEnchant = builder
+                    .comment("Change Size When Enchanted. [true / false]")
+                    .translation(EnchantWithMob.MODID + ".config.changeSizeWhenEnchant")
+                    .define("Change Size When Enchanted", true);
         }
     }
 

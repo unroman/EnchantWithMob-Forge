@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.event;
 
+import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
@@ -37,7 +38,7 @@ public class EntitySizeEvent {
 
 					event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * (1.0F + level * 0.15F));
 					event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
-				} else {
+				} else if (EnchantConfig.COMMON.changeSizeWhenEnchant.get()) {
 					float totalWidth = entity.getDimensions(entity.getPose()).width * 1.025F;
 					float totalHeight = entity.getDimensions(entity.getPose()).height * 1.025F;
 
@@ -76,7 +77,7 @@ public class EntitySizeEvent {
 				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE)) {
 					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE);
 					event.getPoseStack().scale(1.0F + 0.15F * level, 1.0F + 0.15F * level, 1.0F + 0.15F * level);
-				} else {
+				} else if (EnchantConfig.COMMON.changeSizeWhenEnchant.get()) {
 					event.getPoseStack().scale(1.05F, 1.05F, 1.05F);
 				}
 
