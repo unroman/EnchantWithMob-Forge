@@ -88,7 +88,7 @@ public class EnchantConfig {
                     .define("enchantOnSpawnExclusionMobs", Lists.newArrayList("minecraft:wither", "minecraft:ender_dragon"));
             ALWAY_ENCHANTABLE_MOBS = builder
                     .comment("Allow the specific mob from alway receiveing enchantments on spawn. Use the full name, eg: minecraft:zombie.")
-                    .define("alwayEnchantableMobs", Lists.newArrayList("minecraft:evoker"));
+                    .define("alwayEnchantableMobs", Lists.newArrayList());
 
             spawnEnchantedAnimal = builder
                     .comment("Enable the the spawning of enchanted animal mobs. [true / false]")
