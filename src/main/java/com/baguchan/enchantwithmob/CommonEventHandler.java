@@ -34,6 +34,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -72,8 +73,41 @@ public class CommonEventHandler {
 		if (event.getEntity() instanceof LivingEntity) {
 			LevelAccessor world = event.getWorld();
 
+			LivingEntity livingEntity = (LivingEntity) event.getEntity();
+
+			// On add MobEnchant Alway Enchantable Mob
+			if (isSpawnAlwayEnchantableEntity(livingEntity)) {
+				if (!world.isClientSide()) {
+					livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+					{
+						int i = 0;
+						float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
+						switch (world.getDifficulty()) {
+							case EASY:
+								i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
+
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+								break;
+							case NORMAL:
+								i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
+
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+								break;
+							case HARD:
+								i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
+
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+								break;
+						}
+
+						livingEntity.setHealth(livingEntity.getMaxHealth());
+					});
+				}
+			}
+
+
 			if (world.getLevelData().getGameRules().getBoolean(GameRules.RULE_MOBGRIEFING) && EnchantConfig.COMMON.naturalSpawnEnchantedMob.get() && isSpawnEnchantableEntity(event.getEntity())) {
-				LivingEntity livingEntity = (LivingEntity) event.getEntity();
+
 				if (!(livingEntity instanceof Animal) && !(livingEntity instanceof WaterAnimal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
 					if (event.getSpawnReason() != MobSpawnType.BREEDING && event.getSpawnReason() != MobSpawnType.CONVERSION && event.getSpawnReason() != MobSpawnType.STRUCTURE && event.getSpawnReason() != MobSpawnType.MOB_SUMMONED) {
 						if (world.getRandom().nextFloat() < (0.005F * world.getDifficulty().getId()) + world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() * 0.025F) {
@@ -110,14 +144,22 @@ public class CommonEventHandler {
 		}
 	}
 
+	private static boolean isSpawnAlwayEnchantableEntity(Entity entity) {
+		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && EnchantConfig.COMMON.ALWAY_ENCHANTABLE_MOBS.get().contains(entity.getType().getRegistryName().toString());
+	}
+
 	private static boolean isSpawnEnchantableEntity(Entity entity) {
 		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && !EnchantConfig.COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get().contains(entity.getType().getRegistryName().toString());
 	}
 
 	@SubscribeEvent
+	public static void onEntityJoin(EntityJoinWorldEvent event) {
+
+	}
+
+	@SubscribeEvent
 	public static void onEntitySpawn(LivingSpawnEvent event) {
 		LivingEntity livingEntity = (LivingEntity) event.getEntityLiving();
-
 
 		if (!livingEntity.level.isClientSide) {
 			livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->

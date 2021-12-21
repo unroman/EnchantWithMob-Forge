@@ -24,6 +24,7 @@ public class EnchantConfig {
     public static boolean showEnchantedMobHud;
 
     public static List<? extends String> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
+    public static List<? extends String> ALWAY_ENCHANTABLE_MOBS;
 
     static {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
@@ -40,6 +41,7 @@ public class EnchantConfig {
         enchantYourSelf = COMMON.enchantYourSelf.get();
         changeSizeWhenEnchant = COMMON.changeSizeWhenEnchant.get();
         ENCHANT_ON_SPAWN_EXCLUSION_MOBS = COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get();
+        ALWAY_ENCHANTABLE_MOBS = COMMON.ALWAY_ENCHANTABLE_MOBS.get();
     }
 
     public static void bakeConfigClient() {
@@ -74,6 +76,7 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue enchantYourSelf;
         public final ForgeConfigSpec.BooleanValue changeSizeWhenEnchant;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_MOBS;
 
         public Common(ForgeConfigSpec.Builder builder) {
             naturalSpawnEnchantedMob = builder
@@ -81,8 +84,12 @@ public class EnchantConfig {
                     .translation(EnchantWithMob.MODID + ".config.naturalSpawnEnchantedMob")
                     .define("Enchanted Mob can Spawn Natural", true);
             ENCHANT_ON_SPAWN_EXCLUSION_MOBS = builder
-                    .comment("Disables specific mob from receiveing enchantments on spawn. Use the full name, eg: dungeons_mobs:protection.")
+                    .comment("Disables specific mob from receiveing enchantments on spawn. Use the full name, eg: minecraft:ender_dragon.")
                     .define("enchantOnSpawnExclusionMobs", Lists.newArrayList("minecraft:wither", "minecraft:ender_dragon"));
+            ALWAY_ENCHANTABLE_MOBS = builder
+                    .comment("Allow the specific mob from alway receiveing enchantments on spawn. Use the full name, eg: minecraft:zombie.")
+                    .define("alwayEnchantableMobs", Lists.newArrayList("minecraft:evoker"));
+
             spawnEnchantedAnimal = builder
                     .comment("Enable the the spawning of enchanted animal mobs. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.spawnEnchantedAnimal")
