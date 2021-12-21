@@ -34,7 +34,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
@@ -150,11 +149,6 @@ public class CommonEventHandler {
 
 	private static boolean isSpawnEnchantableEntity(Entity entity) {
 		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && !EnchantConfig.COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get().contains(entity.getType().getRegistryName().toString());
-	}
-
-	@SubscribeEvent
-	public static void onEntityJoin(EntityJoinWorldEvent event) {
-
 	}
 
 	@SubscribeEvent
