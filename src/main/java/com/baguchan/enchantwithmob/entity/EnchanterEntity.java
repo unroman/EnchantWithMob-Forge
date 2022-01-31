@@ -135,7 +135,7 @@ public class EnchanterEntity extends SpellcasterIllager {
             if (this.raid != null && this.hasActiveRaid() && this.getWave() > 0) {
                 ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK);
 
-                if (this.random.nextFloat() < 0.2F) {
+                if (this.random.nextFloat() < 0.5F) {
                     itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
                 }
 
@@ -143,7 +143,7 @@ public class EnchanterEntity extends SpellcasterIllager {
             } else {
                 ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK);
 
-                if (this.random.nextFloat() < 0.2F) {
+                if (this.random.nextFloat() < 0.5F) {
                     itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
                 }
 
