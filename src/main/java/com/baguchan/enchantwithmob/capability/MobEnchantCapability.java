@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.capability;
 
+import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
@@ -12,6 +13,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -22,8 +26,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public class MobEnchantCapability implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+	private static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("6699a403-e2cc-31e6-195e-4757200e0935");
+
+	private static final AttributeModifier HEALTH_MODIFIER = new AttributeModifier(HEALTH_MODIFIER_UUID, "Health boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
+
+
 	private List<MobEnchantHandler> mobEnchants = Lists.newArrayList();
 	private Optional<LivingEntity> enchantOwner = Optional.empty();
 	private boolean fromOwner;
@@ -132,6 +142,15 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 	public void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
 		if (!entity.level.isClientSide) {
 			enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
+
+			if (EnchantConfig.dungeonsLikeHealth) {
+				AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
+				if (modifiableattributeinstance != null && !modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
+					modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
+					modifiableattributeinstance.addPermanentModifier(HEALTH_MODIFIER);
+					entity.setHealth(entity.getHealth() * 1.5F);
+				}
+			}
 		}
 	}
 
@@ -149,7 +168,15 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
      */
     protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant) {
         if (!entity.level.isClientSide()) {
-            enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
+			enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
+
+			AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
+			if (modifiableattributeinstance != null) {
+				if (modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
+					entity.setHealth(entity.getHealth() / 1.5F);
+					modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
+				}
+			}
 		}
 	}
 

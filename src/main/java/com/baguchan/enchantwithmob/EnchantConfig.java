@@ -20,6 +20,7 @@ public class EnchantConfig {
     public static boolean spawnEnchantedAnimal;
     public static boolean enchantYourSelf;
     public static boolean changeSizeWhenEnchant;
+    public static boolean dungeonsLikeHealth;
 
     public static boolean showEnchantedMobHud;
 
@@ -42,6 +43,7 @@ public class EnchantConfig {
         changeSizeWhenEnchant = COMMON.changeSizeWhenEnchant.get();
         ENCHANT_ON_SPAWN_EXCLUSION_MOBS = COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get();
         ALWAY_ENCHANTABLE_MOBS = COMMON.ALWAY_ENCHANTABLE_MOBS.get();
+        dungeonsLikeHealth = COMMON.dungeonsLikeHealth.get();
     }
 
     public static void bakeConfigClient() {
@@ -75,6 +77,7 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue spawnEnchantedAnimal;
         public final ForgeConfigSpec.BooleanValue enchantYourSelf;
         public final ForgeConfigSpec.BooleanValue changeSizeWhenEnchant;
+        public final ForgeConfigSpec.BooleanValue dungeonsLikeHealth;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_MOBS;
 
@@ -99,9 +102,13 @@ public class EnchantConfig {
                     .translation(EnchantWithMob.MODID + ".config.enchantYourSelf")
                     .define("Enchant yourself", true);
             changeSizeWhenEnchant = builder
-                    .comment("Change Size When Enchanted. [true / false]")
+                    .comment("Enable Change Size When Enchanted. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.changeSizeWhenEnchant")
-                    .define("Change Size When Enchanted", true);
+                    .define("Change Size", true);
+            dungeonsLikeHealth = builder
+                    .comment("Enable Increase Health like Dungeons When Enchanted. [true / false]")
+                    .translation(EnchantWithMob.MODID + ".config.dungeonsLikeHealth")
+                    .define("Increase Health like Dungeons", false);
         }
     }
 
