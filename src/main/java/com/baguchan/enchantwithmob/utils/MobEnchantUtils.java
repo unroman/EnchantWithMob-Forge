@@ -376,7 +376,7 @@ public class MobEnchantUtils {
 		List<MobEnchantmentData> list = Lists.newArrayList();
 
 		for (MobEnchant enchantment : MobEnchants.getRegistry().getValues()) {
-			if ((!enchantment.isTresureEnchant() || allowTresure)) {
+			if ((!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest()) {
 				for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
 					if (p_185291_0_ >= enchantment.getMinEnchantability(i) && p_185291_0_ <= enchantment.getMaxEnchantability(i)) {
 						list.add(new MobEnchantmentData(enchantment, i));

@@ -20,7 +20,8 @@ public class MobEnchants {
     public static final MobEnchant THORN = new ThornEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3));
     public static final MobEnchant HEALTH_BOOST = new HealthBoostMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 5)).addAttributesModifier(Attributes.MAX_HEALTH, "f5d32c9f-2a3d-4157-bbf7-469d348ce097", 2.0D, AttributeModifier.Operation.ADDITION);
     public static final MobEnchant POISON = new PoisonMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 3));
-    public static final MobEnchant HUGE = new HugeMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 2)).addAttributesModifier(Attributes.MAX_HEALTH, "c988bca7-7fa9-4fea-bb44-c3625ac74241", 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL);
+	public static final MobEnchant POISON_CLOUD = new PoisonCloudMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 1));
+	public static final MobEnchant HUGE = new HugeMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 2)).addAttributesModifier(Attributes.MAX_HEALTH, "c988bca7-7fa9-4fea-bb44-c3625ac74241", 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL);
     public static final MobEnchant MULTISHOT = new MultiShotMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 1));
 
 
@@ -39,14 +40,15 @@ public class MobEnchants {
     @SubscribeEvent
     public static void onRegisterEnchant(RegistryEvent.Register<MobEnchant> event) {
         event.getRegistry().registerAll(PROTECTION.setRegistryName("protection"),
-                TOUGH.setRegistryName("tough"),
-                SPEEDY.setRegistryName("speedy"),
-                STRONG.setRegistryName("strong"),
-                THORN.setRegistryName("thorn"),
-                HEALTH_BOOST.setRegistryName("health_boost"),
-                POISON.setRegistryName("poison"),
-                HUGE.setRegistryName("huge"),
-                MULTISHOT.setRegistryName("multishot"));
+				TOUGH.setRegistryName("tough"),
+				SPEEDY.setRegistryName("speedy"),
+				STRONG.setRegistryName("strong"),
+				THORN.setRegistryName("thorn"),
+				HEALTH_BOOST.setRegistryName("health_boost"),
+				POISON.setRegistryName("poison"),
+				POISON_CLOUD.setRegistryName("poison_cloud"),
+				HUGE.setRegistryName("huge"),
+				MULTISHOT.setRegistryName("multishot"));
     }
 
     public static ForgeRegistry<MobEnchant> getRegistry() {

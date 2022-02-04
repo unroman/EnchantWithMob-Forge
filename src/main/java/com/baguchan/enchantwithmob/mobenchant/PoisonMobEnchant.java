@@ -1,9 +1,11 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
+import com.baguchan.enchantwithmob.registry.MobEnchants;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Bee;
 import net.minecraft.world.entity.monster.CaveSpider;
+import net.minecraft.world.entity.monster.RangedAttackMob;
 
 public class PoisonMobEnchant extends MobEnchant {
 	public PoisonMobEnchant(Properties properties) {
@@ -27,6 +29,11 @@ public class PoisonMobEnchant extends MobEnchant {
 
 	@Override
 	public boolean isCompatibleMob(LivingEntity livingEntity) {
-		return !(livingEntity instanceof Bee) && !(livingEntity instanceof CaveSpider);
+		return !(livingEntity instanceof RangedAttackMob) && !(livingEntity instanceof Bee) && !(livingEntity instanceof CaveSpider);
+	}
+
+	@Override
+	protected boolean canApplyTogether(MobEnchant ench) {
+		return ench != MobEnchants.POISON_CLOUD && super.canApplyTogether(ench);
 	}
 }

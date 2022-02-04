@@ -70,6 +70,10 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
 		return false;
 	}
 
+	public boolean isOnlyChest() {
+		return false;
+	}
+
 	public boolean isCompatibleMob(LivingEntity livingEntity) {
 		return true;
 	}
