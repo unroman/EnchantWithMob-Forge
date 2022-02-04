@@ -61,7 +61,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 			MobEnchantUtils.executeIfPresent(owner, MobEnchants.POISON_CLOUD, () -> {
 				if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
 					AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
-					areaeffectcloud.setRadius(1.0F);
+					areaeffectcloud.setRadius(0.5F);
 					areaeffectcloud.setRadiusOnUse(-0.25F);
 					areaeffectcloud.setWaitTime(10);
 					areaeffectcloud.setDuration(100);
