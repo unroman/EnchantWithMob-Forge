@@ -6,6 +6,7 @@ import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
 import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
 import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
+import com.baguchan.enchantwithmob.registry.ModLootItemFunctions;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
@@ -68,6 +69,7 @@ public class EnchantWithMob {
 	}
 
     private void setup(final FMLCommonSetupEvent event) {
+		ModLootItemFunctions.init();
     }
 
     private void setupMessages() {
