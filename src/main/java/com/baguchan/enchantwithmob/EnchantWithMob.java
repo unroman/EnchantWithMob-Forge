@@ -6,8 +6,14 @@ import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
 import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
 import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
+import com.baguchan.enchantwithmob.registry.ModEntities;
+import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.registry.ModLootItemFunctions;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.raid.Raid;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -62,6 +68,10 @@ public class EnchantWithMob {
 		// Register the doClientStuff method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
+		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		ModEntities.ENTITIES_REGISTRY.register(bus);
+		ModItems.ITEM_REGISTRY.register(bus);
+
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EnchantConfig.COMMON_SPEC);
@@ -70,7 +80,9 @@ public class EnchantWithMob {
 
     private void setup(final FMLCommonSetupEvent event) {
 		ModLootItemFunctions.init();
-    }
+		Raid.RaiderType.create("enchanter", ModEntities.ENCHANTER.get(), new int[]{0, 0, 1, 0, 1, 1, 2, 1});
+		SpawnPlacements.register(ModEntities.ENCHANTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
+	}
 
     private void setupMessages() {
 		CHANNEL.messageBuilder(MobEnchantedMessage.class, 0)

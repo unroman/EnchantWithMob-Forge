@@ -133,18 +133,18 @@ public class EnchanterEntity extends SpellcasterIllager {
         //when raid is active, reward is more bigger
         if (this.random.nextFloat() < 0.25F + 0.025F * looting) {
             if (this.raid != null && this.hasActiveRaid() && this.getWave() > 0) {
-                ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK);
+                ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK.get());
 
                 if (this.random.nextFloat() < 0.5F) {
-                    itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+                    itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
                 }
 
                 this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20 + this.getWave() * 4, true));
             } else {
-                ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK);
+                ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK.get());
 
                 if (this.random.nextFloat() < 0.5F) {
-                    itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+                    itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
                 }
 
                 this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20, true));

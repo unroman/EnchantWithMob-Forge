@@ -43,7 +43,7 @@ public class TradeEvent {
 			}).collect(Collectors.toList());
 			MobEnchant enchantment = list.get(rand.nextInt(list.size()));
 			int i = Mth.nextInt(rand, enchantment.getMinLevel(), enchantment.getMaxLevel());
-			ItemStack itemstack = new ItemStack(ModItems.MOB_ENCHANT_BOOK);
+			ItemStack itemstack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
 			MobEnchantUtils.addMobEnchantToItemStack(itemstack, enchantment, i);
 			int j = 2 + rand.nextInt(5 + i * 10) + 3 * i;
 

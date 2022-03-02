@@ -24,7 +24,7 @@ public class ClientRegistrar {
 
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ModEntities.ENCHANTER, EnchanterRenderer::new);
+        event.registerEntityRenderer(ModEntities.ENCHANTER.get(), EnchanterRenderer::new);
     }
 
     @SubscribeEvent

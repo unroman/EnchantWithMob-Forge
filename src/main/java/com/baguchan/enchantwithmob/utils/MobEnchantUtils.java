@@ -135,9 +135,9 @@ public class MobEnchantUtils {
                 compoundnbt.putString(TAG_MOBENCHANT, String.valueOf((Object) MobEnchants.getRegistry().getKey(enchantment)));
                 compoundnbt.putShort(TAG_ENCHANT_LEVEL, (short) i);
                 listnbt.add(compoundnbt);
-                if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK) {
-                    addMobEnchantToItemStack(stack, enchantment, i);
-                }
+                if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK.get()) {
+					addMobEnchantToItemStack(stack, enchantment, i);
+				}
             }
         }
 

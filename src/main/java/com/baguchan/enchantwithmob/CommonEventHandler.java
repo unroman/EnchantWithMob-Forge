@@ -283,7 +283,7 @@ public class CommonEventHandler {
 		ItemStack stack = event.getItemStack();
 		Entity entityTarget = event.getTarget();
 
-		if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK && !event.getPlayer().getCooldowns().isOnCooldown(stack.getItem())) {
+		if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK.get() && !event.getPlayer().getCooldowns().isOnCooldown(stack.getItem())) {
 			if (entityTarget instanceof LivingEntity) {
 				LivingEntity target = (LivingEntity) entityTarget;
 				if (MobEnchantUtils.hasMobEnchant(stack)) {
@@ -313,7 +313,7 @@ public class CommonEventHandler {
 			}
 		}
 
-		if (stack.getItem() == ModItems.MOB_UNENCHANT_BOOK && !event.getPlayer().getCooldowns().isOnCooldown(stack.getItem())) {
+		if (stack.getItem() == ModItems.MOB_UNENCHANT_BOOK.get() && !event.getPlayer().getCooldowns().isOnCooldown(stack.getItem())) {
 			if (entityTarget instanceof LivingEntity) {
 				LivingEntity target = (LivingEntity) entityTarget;
 
@@ -339,7 +339,7 @@ public class CommonEventHandler {
 		ItemStack stack1 = event.getLeft();
 		ItemStack stack2 = event.getRight();
 
-		if (stack1.getItem() == ModItems.MOB_ENCHANT_BOOK && stack2.getItem() == ModItems.MOB_ENCHANT_BOOK) {
+		if (stack1.getItem() == ModItems.MOB_ENCHANT_BOOK.get() && stack2.getItem() == ModItems.MOB_ENCHANT_BOOK.get()) {
 			Map<MobEnchant, Integer> map = MobEnchantUtils.getEnchantments(stack1);
 
 			Map<MobEnchant, Integer> map1 = MobEnchantUtils.getEnchantments(stack2);
