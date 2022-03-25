@@ -33,7 +33,7 @@ public class MultiShotMobEnchant extends MobEnchant {
 			Projectile projectile = (Projectile) entity;
 			if (!shooterIsLiving(projectile)) return;
 			LivingEntity owner = (LivingEntity) projectile.getOwner();
-			MobEnchantUtils.executeIfPresent(owner, MobEnchants.MULTISHOT, () -> {
+			MobEnchantUtils.executeIfPresent(owner, MobEnchants.MULTISHOT.get(), () -> {
 				if (!level.isClientSide && projectile.tickCount == 0 && !isAdding) {
 					isAdding = true;
 					CompoundTag compoundNBT = new CompoundTag();

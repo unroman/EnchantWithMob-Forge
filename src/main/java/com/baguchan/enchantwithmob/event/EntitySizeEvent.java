@@ -30,8 +30,8 @@ public class EntitySizeEvent {
 		LazyOptional<MobEnchantCapability> capLazy = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP);
 		capLazy.ifPresent(cap -> {
 			if (cap.hasEnchant()) {
-				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE)) {
-					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE);
+				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get())) {
+					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get());
 
 					float totalWidth = entity.getDimensions(entity.getPose()).width * (1.0F + level * 0.15F);
 					float totalHeight = entity.getDimensions(entity.getPose()).height * (1.0F + level * 0.15F);
@@ -74,8 +74,8 @@ public class EntitySizeEvent {
 		capLazy.ifPresent(cap -> {
 			if (cap.hasEnchant()) {
 				event.getPoseStack().pushPose();
-				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE)) {
-					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE);
+				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get())) {
+					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get());
 					event.getPoseStack().scale(1.0F + 0.15F * level, 1.0F + 0.15F * level, 1.0F + 0.15F * level);
 				} else if (EnchantConfig.COMMON.changeSizeWhenEnchant.get()) {
 					event.getPoseStack().scale(1.05F, 1.05F, 1.05F);

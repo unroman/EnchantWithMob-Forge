@@ -33,7 +33,7 @@ public class HugeMobEnchant extends MobEnchant {
 
             attacker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
             {
-                if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE)) {
+                if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get())) {
                     if (event.getAmount() > 0) {
                         event.setAmount(getDamageIncrease(event.getAmount(), cap));
                     }
@@ -43,7 +43,7 @@ public class HugeMobEnchant extends MobEnchant {
     }
 
     public static float getDamageIncrease(float damage, MobEnchantCapability cap) {
-        int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.STRONG);
+        int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.STRONG.get());
         if (level > 0) {
             damage *= 1.0F + level * 0.15F;
         }

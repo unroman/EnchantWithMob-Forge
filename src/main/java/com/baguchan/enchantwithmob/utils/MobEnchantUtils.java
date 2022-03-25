@@ -46,8 +46,8 @@ public class MobEnchantUtils {
 	 */
 	@Nullable
 	public static MobEnchant getEnchantFromNBT(@Nullable CompoundTag tag) {
-		if (tag != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)))) {
-			return MobEnchants.getRegistry().getValue(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)));
+		if (tag != null && MobEnchants.getRegistry().get().containsKey(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)))) {
+			return MobEnchants.getRegistry().get().getValue(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)));
 		} else {
 			return null;
 		}
@@ -73,21 +73,21 @@ public class MobEnchantUtils {
      */
     @Nullable
     public static MobEnchant getEnchantFromString(@Nullable String id) {
-        if (id != null && MobEnchants.getRegistry().containsKey(ResourceLocation.tryParse(id))) {
-            return MobEnchants.getRegistry().getValue(ResourceLocation.tryParse(id));
-        } else {
-            return null;
-        }
-    }
+		if (id != null && MobEnchants.getRegistry().get().containsKey(ResourceLocation.tryParse(id))) {
+			return MobEnchants.getRegistry().get().getValue(ResourceLocation.tryParse(id));
+		} else {
+			return null;
+		}
+	}
 
     @Nullable
     public static MobEnchant getEnchantFromResourceLocation(@Nullable ResourceLocation id) {
-        if (id != null && MobEnchants.getRegistry().containsKey(id)) {
-            return MobEnchants.getRegistry().getValue(id);
-        } else {
-            return null;
-        }
-    }
+		if (id != null && MobEnchants.getRegistry().get().containsKey(id)) {
+			return MobEnchants.getRegistry().get().getValue(id);
+		} else {
+			return null;
+		}
+	}
 
     /**
      * check ItemStack has Mob Enchant
@@ -132,8 +132,8 @@ public class MobEnchantUtils {
             if (enchantment != null) {
 				int i = entry.getValue();
 				CompoundTag compoundnbt = new CompoundTag();
-                compoundnbt.putString(TAG_MOBENCHANT, String.valueOf((Object) MobEnchants.getRegistry().getKey(enchantment)));
-                compoundnbt.putShort(TAG_ENCHANT_LEVEL, (short) i);
+				compoundnbt.putString(TAG_MOBENCHANT, String.valueOf((Object) MobEnchants.getRegistry().get().getKey(enchantment)));
+				compoundnbt.putShort(TAG_ENCHANT_LEVEL, (short) i);
                 listnbt.add(compoundnbt);
                 if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK.get()) {
 					addMobEnchantToItemStack(stack, enchantment, i);
@@ -163,8 +163,8 @@ public class MobEnchantUtils {
     public static void addMobEnchantToItemStack(ItemStack itemIn, MobEnchant mobenchant, int level) {
 		ListTag listnbt = getEnchantmentListForNBT(itemIn.getTag());
 
-        boolean flag = true;
-        ResourceLocation resourcelocation = MobEnchants.getRegistry().getKey(mobenchant);
+		boolean flag = true;
+		ResourceLocation resourcelocation = MobEnchants.getRegistry().get().getKey(mobenchant);
 
 
         for (int i = 0; i < listnbt.size(); ++i) {
@@ -375,7 +375,7 @@ public class MobEnchantUtils {
 	public static List<MobEnchantmentData> makeMobEnchantmentDatas(int p_185291_0_, boolean allowTresure) {
 		List<MobEnchantmentData> list = Lists.newArrayList();
 
-		for (MobEnchant enchantment : MobEnchants.getRegistry().getValues()) {
+		for (MobEnchant enchantment : MobEnchants.getRegistry().get().getValues()) {
 			if ((!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest()) {
 				for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
 					if (p_185291_0_ >= enchantment.getMinEnchantability(i) && p_185291_0_ <= enchantment.getMaxEnchantability(i)) {
@@ -384,7 +384,7 @@ public class MobEnchantUtils {
 					}
 				}
 			}
-        }
+		}
 
         return list;
     }

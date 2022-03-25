@@ -6,6 +6,7 @@ import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
 import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
 import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
+import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModEntities;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.registry.ModLootItemFunctions;
@@ -69,6 +70,7 @@ public class EnchantWithMob {
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
 
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		MobEnchants.MOB_ENCHANT.register(bus);
 		ModEntities.ENTITIES_REGISTRY.register(bus);
 		ModItems.ITEM_REGISTRY.register(bus);
 

@@ -43,7 +43,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 
 	@Override
 	protected boolean canApplyTogether(MobEnchant ench) {
-		return ench != MobEnchants.POISON && super.canApplyTogether(ench);
+		return ench != MobEnchants.POISON.get() && super.canApplyTogether(ench);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 			Projectile projectile = (Projectile) entity;
 			if (!shooterIsLiving(projectile)) return;
 			LivingEntity owner = (LivingEntity) projectile.getOwner();
-			MobEnchantUtils.executeIfPresent(owner, MobEnchants.POISON_CLOUD, () -> {
+			MobEnchantUtils.executeIfPresent(owner, MobEnchants.POISON_CLOUD.get(), () -> {
 				if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
 					AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
 					areaeffectcloud.setRadius(0.5F);

@@ -197,7 +197,7 @@ public class CommonEventHandler {
 
 			attacker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 			{
-				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.STRONG)) {
+				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.STRONG.get())) {
 					//make snowman stronger
 					if (event.getSource().getEntity() != null && event.getSource().getEntity() instanceof SnowGolem && event.getAmount() == 0) {
 						event.setAmount(getDamageAddition(1, cap));
@@ -206,8 +206,8 @@ public class CommonEventHandler {
 					}
 				}
 
-				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON)) {
-					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON);
+				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON.get())) {
+					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON.get());
 
 					if (event.getAmount() > 0) {
 						if (attacker.getRandom().nextFloat() < i * 0.125F) {
@@ -219,8 +219,8 @@ public class CommonEventHandler {
 
 			livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 			{
-				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.THORN)) {
-					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.THORN);
+				if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.THORN.get())) {
+					int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.THORN.get());
 
 					if (event.getSource().getDirectEntity() == attacker && !event.getSource().isExplosion() && livingEntity.getRandom().nextFloat() < i * 0.1F) {
 						attacker.hurt(DamageSource.thorns(livingEntity), getThornDamage(event.getAmount(), cap));
@@ -231,7 +231,7 @@ public class CommonEventHandler {
 
 		livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
-			if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION)) {
+			if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION.get())) {
 				event.setAmount(getDamageReduction(event.getAmount(), cap));
 			}
 		});
@@ -246,7 +246,7 @@ public class CommonEventHandler {
 	}
 
 	public static float getDamageAddition(float damage, MobEnchantCapability cap) {
-		int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.STRONG);
+		int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.STRONG.get());
 		if (level > 0) {
 			damage += 1.0F + (float) Math.max(0, level - 1) * 1.0F;
 		}
@@ -254,7 +254,7 @@ public class CommonEventHandler {
 	}
 
 	public static float getDamageReduction(float damage, MobEnchantCapability cap) {
-		int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION);
+		int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION.get());
 		if (i > 0) {
 			damage -= (double) Mth.floor(damage * (double) ((float) i * 0.15F));
 		}
@@ -270,7 +270,7 @@ public class CommonEventHandler {
 	}
 
 	public static float getThornDamage(float damage, MobEnchantCapability cap) {
-		int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.THORN);
+		int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.THORN.get());
 		if (i > 0) {
 			damage = (float) Mth.floor(damage * (double) ((float) i * 0.15F));
 		}

@@ -88,7 +88,7 @@ public class MobEnchantBookItem extends Item {
 	@Override
 	public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
 		if (this.allowdedIn(p_41391_)) {
-			for (MobEnchant enchant : MobEnchants.getRegistry()) {
+			for (MobEnchant enchant : MobEnchants.getRegistry().get()) {
 				ItemStack stack = new ItemStack(this);
 				MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
 				p_41392_.add(stack);

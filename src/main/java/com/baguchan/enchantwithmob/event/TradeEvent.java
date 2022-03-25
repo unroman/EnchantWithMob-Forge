@@ -38,7 +38,7 @@ public class TradeEvent {
 		@Nullable
 		@Override
 		public MerchantOffer getOffer(Entity trader, Random rand) {
-			List<MobEnchant> list = MobEnchants.getRegistry().getValues().stream().filter(mobEnchant -> {
+			List<MobEnchant> list = MobEnchants.getRegistry().get().getValues().stream().filter(mobEnchant -> {
 				return !mobEnchant.isOnlyChest();
 			}).collect(Collectors.toList());
 			MobEnchant enchantment = list.get(rand.nextInt(list.size()));
