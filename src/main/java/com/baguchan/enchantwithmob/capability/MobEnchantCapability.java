@@ -231,7 +231,11 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		for (int i = 0; i < list.size(); ++i) {
 			CompoundTag compoundnbt = list.getCompound(i);
 
-			mobEnchants.add(new MobEnchantHandler(MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt)));
+			MobEnchant mobEnchant = MobEnchantUtils.getEnchantFromNBT(compoundnbt);
+			//check mob enchant is not null
+			if (mobEnchant != null) {
+				mobEnchants.add(new MobEnchantHandler(mobEnchant, MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt)));
+			}
 		}
 
 		fromOwner = nbt.getBoolean("FromOwner");

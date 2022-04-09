@@ -311,18 +311,19 @@ public class MobEnchantUtils {
     }
 
     public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, MobEnchantCapability capability) {
-        if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity)) {
-            return false;
-        }
+		if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity)) {
+			return false;
+		}
 
-        for (MobEnchantHandler enchantHandler : capability.getMobEnchants()) {
-            if (mobEnchant != null && enchantHandler.getMobEnchant() != null && !enchantHandler.getMobEnchant().isCompatibleWith(mobEnchant)) {
-                return false;
-            }
-        }
+		for (MobEnchantHandler enchantHandler : capability.getMobEnchants()) {
+			if (mobEnchant != null && enchantHandler.getMobEnchant() != null && !enchantHandler.getMobEnchant().isCompatibleWith(mobEnchant)) {
+				return false;
+			}
+		}
 
-        return true;
-    }
+		//check mob enchant is not null
+		return mobEnchant != null;
+	}
 
     public static int getMobEnchantLevelFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
         for (MobEnchantHandler mobEnchant : list) {
