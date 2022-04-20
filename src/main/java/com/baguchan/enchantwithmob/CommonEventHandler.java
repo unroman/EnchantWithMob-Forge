@@ -184,6 +184,11 @@ public class CommonEventHandler {
 			for (MobEnchantHandler enchantHandler : cap.getMobEnchants()) {
 				enchantHandler.getMobEnchant().tick(livingEntity, enchantHandler.getEnchantLevel());
 			}
+
+			if (cap.isFromOwner() && (!cap.hasOwner() || cap.hasOwner() && livingEntity.distanceToSqr(cap.getEnchantOwner().get()) > 512)) {
+				cap.removeMobEnchantFromOwner(livingEntity);
+				livingEntity.playSound(SoundEvents.ITEM_BREAK, 1.5F, 1.6F);
+			}
 		});
 	}
 
@@ -418,8 +423,9 @@ public class CommonEventHandler {
 	public static void onExpDropped(LivingExperienceDropEvent event) {
 		LivingEntity entity = event.getEntityLiving();
 		entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-			if (cap.hasEnchant())
+			if (cap.hasEnchant()) {
 				event.setDroppedExperience(event.getDroppedExperience() + MobEnchantUtils.getExperienceFromMob(cap));
+			}
 		});
 	}
 
