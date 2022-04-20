@@ -231,7 +231,7 @@ public class CommonEventHandler {
 
 		livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
-			if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION.get())) {
+			if (event.getSource() != DamageSource.STARVE && cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.PROTECTION.get())) {
 				event.setAmount(getDamageReduction(event.getAmount(), cap));
 			}
 		});
