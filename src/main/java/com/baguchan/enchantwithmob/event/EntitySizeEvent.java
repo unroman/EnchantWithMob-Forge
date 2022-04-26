@@ -73,7 +73,6 @@ public class EntitySizeEvent {
 		LazyOptional<MobEnchantCapability> capLazy = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP);
 		capLazy.ifPresent(cap -> {
 			if (cap.hasEnchant()) {
-				event.getPoseStack().pushPose();
 				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get())) {
 					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get());
 					event.getPoseStack().scale(1.0F + 0.15F * level, 1.0F + 0.15F * level, 1.0F + 0.15F * level);
@@ -82,20 +81,6 @@ public class EntitySizeEvent {
 				}
 
 
-			}
-		});
-
-	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void onLivingRenderPost(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
-		final LivingEntity entity = event.getEntity();
-
-		LazyOptional<MobEnchantCapability> capLazy = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP);
-		capLazy.ifPresent(cap -> {
-			if (cap.hasEnchant()) {
-				event.getPoseStack().popPose();
 			}
 		});
 
