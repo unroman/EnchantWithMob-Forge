@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
+import com.baguchan.enchantwithmob.EnchantConfig;
 import com.google.common.collect.Maps;
 import net.minecraft.Util;
 import net.minecraft.world.entity.LivingEntity;
@@ -116,19 +117,23 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
 		}
 	}
 
-    public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
-        return modifier.getAmount() * (double) (amplifier);
-    }
+	public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
+		return modifier.getAmount() * (double) (amplifier);
+	}
+
+	public boolean isDisabled() {
+		return EnchantConfig.COMMON.DISABLE_ENCHANTS.get().contains(this.getRegistryName().toString());
+	}
 
 
-    public static class Properties {
-        private final Rarity enchantType;
-        private final int level;
+	public static class Properties {
+		private final Rarity enchantType;
+		private final int level;
 
-        public Properties(Rarity enchantType, int level) {
-            this.enchantType = enchantType;
-            this.level = level;
-        }
+		public Properties(Rarity enchantType, int level) {
+			this.enchantType = enchantType;
+			this.level = level;
+		}
     }
 
     public static enum Rarity {

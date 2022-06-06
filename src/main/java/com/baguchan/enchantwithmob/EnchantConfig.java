@@ -13,8 +13,6 @@ public class EnchantConfig {
     public static final ForgeConfigSpec COMMON_SPEC;
     public static final Client CLIENT;
     public static final ForgeConfigSpec CLIENT_SPEC;
-
-    public static boolean showEnchantedMobHud;
     static {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
@@ -42,6 +40,7 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue dungeonsLikeHealth;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_MOBS;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ENCHANTS;
 
         public Common(ForgeConfigSpec.Builder builder) {
             naturalSpawnEnchantedMob = builder
@@ -54,6 +53,9 @@ public class EnchantConfig {
             ALWAY_ENCHANTABLE_MOBS = builder
                     .comment("Allow the specific mob from alway receiveing enchantments on spawn. Use the full name, eg: minecraft:zombie.")
                     .define("alwayEnchantableMobs", Lists.newArrayList());
+            DISABLE_ENCHANTS = builder
+                    .comment("Disables the specific mob enchant. Use the full name(This config only disabled mob enchant when mob spawn. not mean delete complete, eg: enchantwithmob:thorn.")
+                    .define("disableMobEnchants", Lists.newArrayList());
 
             spawnEnchantedAnimal = builder
                     .comment("Enable the the spawning of enchanted animal mobs. [true / false]")

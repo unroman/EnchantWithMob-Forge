@@ -23,7 +23,7 @@ public class ClientEnchantHUDEvent {
 
 		Minecraft mc = Minecraft.getInstance();
 
-		if (EnchantConfig.showEnchantedMobHud && mc.crosshairPickEntity != null && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
+		if (EnchantConfig.CLIENT.showEnchantedMobHud.get() && mc.crosshairPickEntity != null && event.getType() == RenderGameOverlayEvent.ElementType.ALL) {
 			stack.pushPose();
 			mc.crosshairPickEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent((cap) -> {
 				if (cap.hasEnchant()) {

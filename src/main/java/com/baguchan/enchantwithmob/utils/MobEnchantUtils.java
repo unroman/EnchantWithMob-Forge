@@ -301,7 +301,7 @@ public class MobEnchantUtils {
 
     public static boolean findMobEnchantFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
 		for (MobEnchantHandler mobEnchant : list) {
-			if (mobEnchant != null) {
+			if (mobEnchant != null && !findMobEnchant.isDisabled()) {
 				if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
 					return true;
 				}
@@ -377,7 +377,7 @@ public class MobEnchantUtils {
 		List<MobEnchantmentData> list = Lists.newArrayList();
 
 		for (MobEnchant enchantment : MobEnchants.getRegistry().get().getValues()) {
-			if ((!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest()) {
+			if ((!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest() && !enchantment.isDisabled()) {
 				for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
 					if (p_185291_0_ >= enchantment.getMinEnchantability(i) && p_185291_0_ <= enchantment.getMaxEnchantability(i)) {
 						list.add(new MobEnchantmentData(enchantment, i));
