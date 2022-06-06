@@ -38,6 +38,7 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue enchantYourSelf;
         public final ForgeConfigSpec.BooleanValue changeSizeWhenEnchant;
         public final ForgeConfigSpec.BooleanValue dungeonsLikeHealth;
+        public final ForgeConfigSpec.BooleanValue bigYourSelf;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ENCHANTS;
@@ -73,6 +74,10 @@ public class EnchantConfig {
                     .comment("Enable Increase Health like Dungeons When Enchanted. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.dungeonsLikeHealth")
                     .define("Increase Health like Dungeons", false);
+            bigYourSelf = builder
+                    .comment("Enable Player More Bigger When You have Huge Enchant. [true / false]")
+                    .translation(EnchantWithMob.MODID + ".config.bigYourSelf")
+                    .define("Big Your Self", false);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
+import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
@@ -57,6 +58,6 @@ public class HugeMobEnchant extends MobEnchant {
 
     @Override
     public boolean isCompatibleMob(LivingEntity livingEntity) {
-        return !(livingEntity instanceof Player);
+        return !(livingEntity instanceof Player) || EnchantConfig.COMMON.bigYourSelf.get();
     }
 }
