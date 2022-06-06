@@ -2,9 +2,7 @@ package com.baguchan.enchantwithmob;
 
 import com.google.common.collect.Lists;
 import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -16,17 +14,7 @@ public class EnchantConfig {
     public static final Client CLIENT;
     public static final ForgeConfigSpec CLIENT_SPEC;
 
-    public static boolean naturalSpawnEnchantedMob;
-    public static boolean spawnEnchantedAnimal;
-    public static boolean enchantYourSelf;
-    public static boolean changeSizeWhenEnchant;
-    public static boolean dungeonsLikeHealth;
-
     public static boolean showEnchantedMobHud;
-
-    public static List<? extends String> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
-    public static List<? extends String> ALWAY_ENCHANTABLE_MOBS;
-
     static {
         Pair<Common, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(Common::new);
         COMMON_SPEC = specPair.getRight();
@@ -34,32 +22,6 @@ public class EnchantConfig {
         Pair<Client, ForgeConfigSpec> specPair2 = new ForgeConfigSpec.Builder().configure(Client::new);
         CLIENT_SPEC = specPair2.getRight();
         CLIENT = specPair2.getLeft();
-    }
-
-    public static void bakeConfig() {
-        naturalSpawnEnchantedMob = COMMON.naturalSpawnEnchantedMob.get();
-        spawnEnchantedAnimal = COMMON.spawnEnchantedAnimal.get();
-        enchantYourSelf = COMMON.enchantYourSelf.get();
-        changeSizeWhenEnchant = COMMON.changeSizeWhenEnchant.get();
-        ENCHANT_ON_SPAWN_EXCLUSION_MOBS = COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get();
-        ALWAY_ENCHANTABLE_MOBS = COMMON.ALWAY_ENCHANTABLE_MOBS.get();
-        dungeonsLikeHealth = COMMON.dungeonsLikeHealth.get();
-    }
-
-    public static void bakeConfigClient() {
-        showEnchantedMobHud = CLIENT.showEnchantedMobHud.get();
-    }
-
-
-    @SubscribeEvent
-    public static void onModConfigEvent(final ModConfigEvent.Loading configEvent) {
-        if (configEvent.getConfig().getSpec() == EnchantConfig.COMMON_SPEC) {
-            bakeConfig();
-        }
-
-        if (configEvent.getConfig().getSpec() == EnchantConfig.CLIENT_SPEC) {
-            bakeConfigClient();
-        }
     }
 
     public static class Client {

@@ -143,7 +143,7 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		if (!entity.level.isClientSide) {
 			enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
 
-			if (EnchantConfig.dungeonsLikeHealth) {
+			if (EnchantConfig.COMMON.dungeonsLikeHealth.get()) {
 				AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
 				if (modifiableattributeinstance != null && !modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
 					modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
