@@ -6,10 +6,7 @@ import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
 import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
 import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
-import com.baguchan.enchantwithmob.registry.MobEnchants;
-import com.baguchan.enchantwithmob.registry.ModEntities;
-import com.baguchan.enchantwithmob.registry.ModItems;
-import com.baguchan.enchantwithmob.registry.ModLootItemFunctions;
+import com.baguchan.enchantwithmob.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
@@ -73,6 +70,7 @@ public class EnchantWithMob {
 		MobEnchants.MOB_ENCHANT.register(bus);
 		ModEntities.ENTITIES_REGISTRY.register(bus);
 		ModItems.ITEM_REGISTRY.register(bus);
+		ModSoundEvents.SOUND_EVENTS.register(bus);
 
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);

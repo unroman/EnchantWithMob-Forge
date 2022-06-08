@@ -8,7 +8,7 @@ import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -43,6 +43,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 
@@ -144,11 +145,11 @@ public class CommonEventHandler {
 	}
 
 	private static boolean isSpawnAlwayEnchantableEntity(Entity entity) {
-		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && EnchantConfig.COMMON.ALWAY_ENCHANTABLE_MOBS.get().contains(entity.getType().getRegistryName().toString());
+		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && EnchantConfig.COMMON.ALWAY_ENCHANTABLE_MOBS.get().contains(ForgeRegistries.ENTITIES.getKey(entity.getType()).toString());
 	}
 
 	private static boolean isSpawnEnchantableEntity(Entity entity) {
-		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && !EnchantConfig.COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get().contains(entity.getType().getRegistryName().toString());
+		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && !EnchantConfig.COMMON.ENCHANT_ON_SPAWN_EXCLUSION_MOBS.get().contains(ForgeRegistries.ENTITIES.getKey(entity.getType()).toString());
 	}
 
 	@SubscribeEvent
@@ -308,7 +309,7 @@ public class CommonEventHandler {
 							event.setCancellationResult(InteractionResult.SUCCESS);
 							event.setCanceled(true);
 						} else {
-							event.getPlayer().displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.enchant"), true);
+							event.getPlayer().displayClientMessage(Component.translatable("enchantwithmob.cannot.enchant"), true);
 							event.getPlayer().getCooldowns().addCooldown(stack.getItem(), 20);
 							event.setCancellationResult(InteractionResult.FAIL);
 							event.setCanceled(true);

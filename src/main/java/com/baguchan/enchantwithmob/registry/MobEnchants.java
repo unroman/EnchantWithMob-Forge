@@ -2,6 +2,8 @@ package com.baguchan.enchantwithmob.registry;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.mobenchant.*;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -13,6 +15,10 @@ import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
+	public static final ResourceKey<Registry<MobEnchant>> MOB_ENCHNAT_KEY = ResourceKey.createRegistryKey(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"));
+
+	public static final IForgeRegistry<MobEnchant> MOB_ENCHANT_REGISTRY = RegistryManager.ACTIVE.getRegistry(MOB_ENCHNAT_KEY);
+
 	public static final DeferredRegister<MobEnchant> MOB_ENCHANT = DeferredRegister.create(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), EnchantWithMob.MODID);
 
 
@@ -33,7 +39,7 @@ public class MobEnchants {
 	@SubscribeEvent
 	public static void onNewRegistry(NewRegistryEvent event) {
 		registry = event.create(new RegistryBuilder<MobEnchant>()
-				.setType(MobEnchant.class)
+				.addCallback(MobEnchant.class)
 				.setName(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"))
 				.setDefaultKey(new ResourceLocation(EnchantWithMob.MODID, "protection")));
 	}

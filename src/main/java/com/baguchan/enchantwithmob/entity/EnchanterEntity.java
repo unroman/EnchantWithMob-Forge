@@ -159,34 +159,34 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     @Override
     public boolean doHurtTarget(Entity p_70652_1_) {
-        this.playSound(ModSoundEvents.ENCHANTER_ATTACK, this.getSoundVolume(), this.getVoicePitch());
+        this.playSound(ModSoundEvents.ENCHANTER_ATTACK.get(), this.getSoundVolume(), this.getVoicePitch());
 
         return super.doHurtTarget(p_70652_1_);
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return ModSoundEvents.ENCHANTER_AMBIENT;
+		return ModSoundEvents.ENCHANTER_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return ModSoundEvents.ENCHANTER_DEATH;
+		return ModSoundEvents.ENCHANTER_DEATH.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        return ModSoundEvents.ENCHANTER_HURT;
+		return ModSoundEvents.ENCHANTER_HURT.get();
     }
 
 
     protected SoundEvent getCastingSoundEvent() {
-        return ModSoundEvents.ENCHANTER_SPELL;
+		return ModSoundEvents.ENCHANTER_SPELL.get();
     }
 
     @Override
     public SoundEvent getCelebrateSound() {
-        return ModSoundEvents.ENCHANTER_AMBIENT;
+		return ModSoundEvents.ENCHANTER_AMBIENT.get();
     }
 
     public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {

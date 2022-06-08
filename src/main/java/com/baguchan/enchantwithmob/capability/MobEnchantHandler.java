@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob.capability;
 
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
+import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.nbt.CompoundTag;
 
@@ -26,7 +27,7 @@ public class MobEnchantHandler {
 		CompoundTag nbt = new CompoundTag();
 
 		if (mobEnchant != null) {
-			nbt.putString("MobEnchant", mobEnchant.getRegistryName().toString());
+			nbt.putString("MobEnchant", MobEnchants.getRegistry().get().getKey(mobEnchant).toString());
 			nbt.putInt("EnchantLevel", enchantLevel);
 		}
 

@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
 import com.baguchan.enchantwithmob.EnchantConfig;
+import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.google.common.collect.Maps;
 import net.minecraft.Util;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,22 +9,20 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 
 import java.util.Map;
 import java.util.UUID;
 
-public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
-    private final Map<Attribute, AttributeModifier> attributeModifierMap = Maps.newHashMap();
-    protected final Rarity enchantType;
-    private final int level;
-    private int minlevel = 1;
+public class MobEnchant {
+	private final Map<Attribute, AttributeModifier> attributeModifierMap = Maps.newHashMap();
+	protected final Rarity enchantType;
+	private final int level;
+	private int minlevel = 1;
 
-
-    public MobEnchant(Properties properties) {
-        this.enchantType = properties.enchantType;
-        this.level = properties.level;
-    }
+	public MobEnchant(Properties properties) {
+		this.enchantType = properties.enchantType;
+		this.level = properties.level;
+	}
 
     public Rarity getRarity() {
         return enchantType;
@@ -87,7 +86,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
     }
 
     public MobEnchant addAttributesModifier(Attribute attributeIn, String uuid, double amount, AttributeModifier.Operation operation) {
-        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), Util.makeDescriptionId("mobenchant", this.getRegistryName()), amount, operation);
+		AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), Util.makeDescriptionId("mobenchant", MobEnchants.getRegistry().get().getKey(this)), amount, operation);
         this.attributeModifierMap.put(attributeIn, attributemodifier);
         return this;
     }
@@ -112,7 +111,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
 			if (modifiableattributeinstance != null) {
 				AttributeModifier attributemodifier = entry.getValue();
 				modifiableattributeinstance.removeModifier(attributemodifier);
-				modifiableattributeinstance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), this.getRegistryName().toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
+				modifiableattributeinstance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), MobEnchants.getRegistry().get().getKey(this).toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
 			}
 		}
 	}
@@ -122,7 +121,7 @@ public class MobEnchant extends ForgeRegistryEntry<MobEnchant> {
 	}
 
 	public boolean isDisabled() {
-		return EnchantConfig.COMMON.DISABLE_ENCHANTS.get().contains(this.getRegistryName().toString());
+		return EnchantConfig.COMMON.DISABLE_ENCHANTS.get().contains(MobEnchants.getRegistry().get().getKey(this).toString());
 	}
 
 

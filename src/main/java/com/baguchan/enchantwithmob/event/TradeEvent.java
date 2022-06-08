@@ -6,6 +6,7 @@ import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +18,6 @@ import net.minecraftforge.fml.common.Mod;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
@@ -37,7 +37,7 @@ public class TradeEvent {
 
 		@Nullable
 		@Override
-		public MerchantOffer getOffer(Entity trader, Random rand) {
+		public MerchantOffer getOffer(Entity trader, RandomSource rand) {
 			List<MobEnchant> list = MobEnchants.getRegistry().get().getValues().stream().filter(mobEnchant -> {
 				return !mobEnchant.isOnlyChest();
 			}).collect(Collectors.toList());

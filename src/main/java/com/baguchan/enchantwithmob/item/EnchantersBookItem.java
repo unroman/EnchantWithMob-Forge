@@ -11,7 +11,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -85,14 +84,14 @@ public class EnchantersBookItem extends Item {
 						return InteractionResultHolder.success(stack);
 					}
 				} else {
-					playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.no_enchantable_ally"), true);
+					playerIn.displayClientMessage(Component.translatable("enchantwithmob.cannot.no_enchantable_ally"), true);
 
 					playerIn.getCooldowns().addCooldown(stack.getItem(), 20);
 
 					return InteractionResultHolder.fail(stack);
 				}
 			} else {
-				playerIn.displayClientMessage(new TranslatableComponent("enchantwithmob.cannot.no_enchantable_ally"), true);
+				playerIn.displayClientMessage(Component.translatable("enchantwithmob.cannot.no_enchantable_ally"), true);
 
 				playerIn.getCooldowns().addCooldown(stack.getItem(), 20);
 
@@ -104,7 +103,7 @@ public class EnchantersBookItem extends Item {
 
 	@Override
 	public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
-		if (this.allowdedIn(p_41391_)) {
+		if (this.allowedIn(p_41391_)) {
 			for (MobEnchant enchant : MobEnchants.getRegistry().get().getValues()) {
 				ItemStack stack = new ItemStack(this);
 				MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
@@ -123,8 +122,8 @@ public class EnchantersBookItem extends Item {
 		super.appendHoverText(stack, level, tooltip, p_41424_);
 		ChatFormatting[] textformatting2 = new ChatFormatting[]{ChatFormatting.DARK_PURPLE};
 
-		tooltip.add(new TranslatableComponent("mobenchant.enchantwithmob.enchanter_book.tooltip").withStyle(textformatting2));
-		tooltip.add(new TranslatableComponent("mobenchant.enchantwithmob.enchanter_book.tooltip2").withStyle(textformatting2));
+		tooltip.add(Component.translatable("mobenchant.enchantwithmob.enchanter_book.tooltip").withStyle(textformatting2));
+		tooltip.add(Component.translatable("mobenchant.enchantwithmob.enchanter_book.tooltip2").withStyle(textformatting2));
 		if (MobEnchantUtils.hasMobEnchant(stack)) {
 			ListTag listnbt = MobEnchantUtils.getEnchantmentListForNBT(stack.getTag());
 
@@ -137,7 +136,7 @@ public class EnchantersBookItem extends Item {
 				if (mobEnchant != null) {
 					ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.AQUA};
 
-					tooltip.add(new TranslatableComponent("mobenchant." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + enchantmentLevel).withStyle(textformatting)));
+					tooltip.add(Component.translatable("mobenchant." + MobEnchants.getRegistry().get().getKey(mobEnchant).getNamespace() + "." + MobEnchants.getRegistry().get().getKey(mobEnchant).getPath()).withStyle(textformatting).append(" ").append(Component.translatable("enchantment.level." + enchantmentLevel).withStyle(textformatting)));
 				}
 			}
 
@@ -164,7 +163,7 @@ public class EnchantersBookItem extends Item {
 
 			if (!list1.isEmpty()) {
 				//tooltip.add(StringTextComponent.EMPTY);
-				tooltip.add((new TranslatableComponent("mobenchant.enchantwithmob.when_ehcnanted")).withStyle(ChatFormatting.DARK_PURPLE));
+				tooltip.add((Component.translatable("mobenchant.enchantwithmob.when_ehcnanted")).withStyle(ChatFormatting.DARK_PURPLE));
 
 				for (Pair<Attribute, AttributeModifier> pair : list1) {
 					AttributeModifier attributemodifier2 = pair.getSecond();
@@ -177,10 +176,10 @@ public class EnchantersBookItem extends Item {
 					}
 
 					if (d0 > 0.0D) {
-						tooltip.add((new TranslatableComponent("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslatableComponent(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
+						tooltip.add((Component.translatable("attribute.modifier.plus." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.BLUE));
 					} else if (d0 < 0.0D) {
 						d1 = d1 * -1.0D;
-						tooltip.add((new TranslatableComponent("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), new TranslatableComponent(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.RED));
+						tooltip.add((Component.translatable("attribute.modifier.take." + attributemodifier2.getOperation().toValue(), ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(d1), Component.translatable(pair.getFirst().getDescriptionId()))).withStyle(ChatFormatting.RED));
 					}
 				}
 			}

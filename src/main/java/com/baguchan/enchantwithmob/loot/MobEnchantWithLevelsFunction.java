@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializationContext;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
@@ -15,7 +16,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 
-import java.util.Random;
 import java.util.Set;
 
 public class MobEnchantWithLevelsFunction extends LootItemConditionalFunction {
@@ -37,7 +37,7 @@ public class MobEnchantWithLevelsFunction extends LootItemConditionalFunction {
 	}
 
 	public ItemStack run(ItemStack p_80483_, LootContext p_80484_) {
-		Random random = p_80484_.getRandom();
+		RandomSource random = p_80484_.getRandom();
 		return MobEnchantUtils.addRandomEnchantmentToItemStack(random, p_80483_, this.levels.getInt(p_80484_), this.treasure);
 	}
 

@@ -4,11 +4,12 @@ import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.baguchan.enchantwithmob.mobenchant.MobEnchant;
+import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,7 +20,7 @@ public class ClientEnchantHUDEvent {
 
 	@SubscribeEvent
 	public static void renderHudEvent(RenderGameOverlayEvent.Post event) {
-		PoseStack stack = event.getMatrixStack();
+		PoseStack stack = event.getPoseStack();
 
 		Minecraft mc = Minecraft.getInstance();
 
@@ -35,7 +36,7 @@ public class ClientEnchantHUDEvent {
 
 						ChatFormatting[] textformatting = new ChatFormatting[]{ChatFormatting.AQUA};
 
-						MutableComponent s = new TranslatableComponent("mobenchant." + mobEnchant.getRegistryName().getNamespace() + "." + mobEnchant.getRegistryName().getPath()).withStyle(textformatting).append(" ").append(new TranslatableComponent("enchantment.level." + mobEnchantLevel)).withStyle(textformatting);
+						MutableComponent s = Component.translatable("mobenchant." + MobEnchants.getRegistry().get().getKey(mobEnchant).getNamespace() + "." + MobEnchants.getRegistry().get().getKey(mobEnchant).getPath()).withStyle(textformatting).append(" ").append(Component.translatable("enchantment.level." + mobEnchantLevel)).withStyle(textformatting);
 
 						int xOffset = 20;
 						int yOffset = cap.getMobEnchants().indexOf(mobEnchantHandler) * 10 + 60;
