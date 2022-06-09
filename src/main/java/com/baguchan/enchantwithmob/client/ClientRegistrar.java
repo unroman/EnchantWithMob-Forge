@@ -34,10 +34,10 @@ public class ClientRegistrar {
 
     @SubscribeEvent
     public static void registerEntityRenders(EntityRenderersEvent.AddLayers event) {
-        event.getSkins().stream().forEach(skins ->
-        {
-            event.getSkin(skins).addLayer(new EnchantLayer(event.getSkin(skins)));
-        });
+        event.getSkins().forEach(skins ->
+		{
+			event.getSkin(skins).addLayer(new EnchantLayer(event.getSkin(skins)));
+		});
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(r -> {
             if (r instanceof SlimeRenderer) {
                 ((SlimeRenderer) r).addLayer(new SlimeEnchantLayer<>((SlimeRenderer) r, event.getEntityModels()));
