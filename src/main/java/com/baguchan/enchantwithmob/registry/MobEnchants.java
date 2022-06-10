@@ -33,6 +33,8 @@ public class MobEnchants {
 	public static final RegistryObject<MobEnchant> HUGE = MOB_ENCHANT.register("huge", () -> new HugeMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 2)).addAttributesModifier(Attributes.MAX_HEALTH, "c988bca7-7fa9-4fea-bb44-c3625ac74241", 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL));
 	public static final RegistryObject<MobEnchant> MULTISHOT = MOB_ENCHANT.register("multishot", () -> new MultiShotMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 1)));
 
+	public static final RegistryObject<MobEnchant> SOUL_STEAL = MOB_ENCHANT.register("soul_steal", () -> new SoulStealMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 2)));
+
 
 	private static Supplier<IForgeRegistry<MobEnchant>> registry;
 
