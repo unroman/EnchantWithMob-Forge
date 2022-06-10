@@ -2,10 +2,7 @@ package com.baguchan.enchantwithmob;
 
 import com.baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
-import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
-import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
-import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
-import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
+import com.baguchan.enchantwithmob.message.*;
 import com.baguchan.enchantwithmob.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -100,6 +97,10 @@ public class EnchantWithMob {
 		CHANNEL.messageBuilder(RemoveMobEnchantOwnerMessage.class, 3)
 				.encoder(RemoveMobEnchantOwnerMessage::serialize).decoder(RemoveMobEnchantOwnerMessage::deserialize)
 				.consumer(RemoveMobEnchantOwnerMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(SoulParticleMessage.class, 4)
+				.encoder(SoulParticleMessage::serialize).decoder(SoulParticleMessage::deserialize)
+				.consumer(SoulParticleMessage::handle)
 				.add();
 	}
 

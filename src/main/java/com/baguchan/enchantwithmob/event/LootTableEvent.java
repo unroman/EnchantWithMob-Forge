@@ -5,10 +5,13 @@ import com.baguchan.enchantwithmob.loot.MobEnchantRandomlyFunction;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.registry.ModItems;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootTableReference;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -36,7 +39,7 @@ public class LootTableEvent {
 		}
 
 		if (event.getName().equals(ANCIENT_CITY)) {
-			event.getTable().addPool(LootPool.lootPool().add(LootItem.lootTableItem(ModItems.MOB_ENCHANT_BOOK.get()).setWeight(3).apply(new MobEnchantRandomlyFunction.Builder().withMobEnchant(MobEnchants.SOUL_STEAL.get()))).build());
+			event.getTable().addPool(LootPool.lootPool().apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))).add(LootItem.lootTableItem(ModItems.MOB_ENCHANT_BOOK.get()).setWeight(1).apply(new MobEnchantRandomlyFunction.Builder().withMobEnchant(MobEnchants.SOUL_STEAL.get()))).add(LootItem.lootTableItem(Items.AIR).setWeight(4)).build());
 		}
 	}
 }

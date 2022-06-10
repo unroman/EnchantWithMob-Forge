@@ -1,6 +1,7 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
+import com.baguchan.enchantwithmob.message.SoulParticleMessage;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.util.Mth;
@@ -10,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
 public class SoulStealMobEnchant extends MobEnchant {
@@ -37,6 +39,10 @@ public class SoulStealMobEnchant extends MobEnchant {
                 if (cap.hasEnchant() && enchantLevel > 0 && !attacker.hasEffect(MobEffects.ABSORPTION)) {
                     if (attacker.getAbsorptionAmount() < 6) {
                         attacker.setAbsorptionAmount(Mth.clamp(attacker.getAbsorptionAmount() + enchantLevel, 0, 6));
+                    }
+                    if (!entity.level.isClientSide()) {
+                        SoulParticleMessage message = new SoulParticleMessage(entity);
+                        EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
                     }
                 }
             });
