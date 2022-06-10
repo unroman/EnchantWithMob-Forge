@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.loot;
 
+import com.baguchan.enchantwithmob.registry.ModLootItemFunctions;
 import com.baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
@@ -11,7 +12,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctions;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParam;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
@@ -29,7 +29,7 @@ public class MobEnchantWithLevelsFunction extends LootItemConditionalFunction {
 	}
 
 	public LootItemFunctionType getType() {
-		return LootItemFunctions.ENCHANT_WITH_LEVELS;
+		return ModLootItemFunctions.MOB_ENCHANT_WITH_LEVELS;
 	}
 
 	public Set<LootContextParam<?>> getReferencedContextParams() {
