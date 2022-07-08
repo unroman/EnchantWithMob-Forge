@@ -2,6 +2,7 @@ package com.baguchan.enchantwithmob.client;
 
 import com.baguchan.enchantwithmob.EnchantWithMob;
 import com.baguchan.enchantwithmob.client.model.EnchanterModel;
+import com.baguchan.enchantwithmob.client.overlay.MobEnchantOverlay;
 import com.baguchan.enchantwithmob.client.render.EnchanterRenderer;
 import com.baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import com.baguchan.enchantwithmob.client.render.layer.SlimeEnchantLayer;
@@ -14,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -37,7 +39,7 @@ public class ClientRegistrar {
         event.getSkins().forEach(skins ->
 		{
 			event.getSkin(skins).addLayer(new EnchantLayer(event.getSkin(skins)));
-		});
+        });
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(r -> {
             if (r instanceof SlimeRenderer) {
                 ((SlimeRenderer) r).addLayer(new SlimeEnchantLayer<>((SlimeRenderer) r, event.getEntityModels()));
@@ -46,5 +48,10 @@ public class ClientRegistrar {
                 ((LivingEntityRenderer) r).addLayer(new EnchantLayer((LivingEntityRenderer) r));
             }
         });
+    }
+
+    @SubscribeEvent
+    public static void registerOverlay(RegisterGuiOverlaysEvent event) {
+        event.registerAboveAll("mobenchant", new MobEnchantOverlay());
     }
 }
