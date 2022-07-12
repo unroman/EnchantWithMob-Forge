@@ -29,7 +29,7 @@ public class SoulStealMobEnchant extends MobEnchant {
 
     @SubscribeEvent
     public static void onLivingDeathAndStealEvent(LivingDeathEvent event) {
-        LivingEntity entity = event.getEntityLiving();
+        LivingEntity entity = event.getEntity();
         DamageSource damageSource = event.getSource();
         if (damageSource != null && damageSource.getDirectEntity() instanceof LivingEntity) {
             LivingEntity attacker = (LivingEntity) damageSource.getDirectEntity();

@@ -5,7 +5,7 @@ import com.baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.google.common.collect.Maps;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.living.LivingConversionEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -18,7 +18,7 @@ public class MobEnchantMargeEvent {
 
 	@SubscribeEvent
 	public static void onPreEntityConversion(LivingConversionEvent.Pre event) {
-		LivingEntity livingEntity = event.getEntityLiving();
+		LivingEntity livingEntity = event.getEntity();
 		livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(mobEnchantCapability -> {
 			if (mobEnchantCapability.hasEnchant()) {
 				maps.put(livingEntity, mobEnchantCapability.getMobEnchants());
@@ -28,7 +28,7 @@ public class MobEnchantMargeEvent {
 
 	@SubscribeEvent
 	public static void onEntityConversion(LivingConversionEvent.Post event) {
-		LivingEntity livingEntity = event.getEntityLiving();
+		LivingEntity livingEntity = event.getEntity();
 		LivingEntity outcome = event.getOutcome();
 
 		if (maps.containsKey(livingEntity)) {
@@ -42,7 +42,7 @@ public class MobEnchantMargeEvent {
 	}
 
 	@SubscribeEvent
-	public static void onWorldUnload(WorldEvent.Unload event) {
+	public static void onWorldUnload(LevelEvent.Unload event) {
 		maps.clear();
 	}
 }

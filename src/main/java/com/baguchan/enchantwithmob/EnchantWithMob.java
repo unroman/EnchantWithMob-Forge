@@ -84,23 +84,23 @@ public class EnchantWithMob {
     private void setupMessages() {
 		CHANNEL.messageBuilder(MobEnchantedMessage.class, 0)
 				.encoder(MobEnchantedMessage::serialize).decoder(MobEnchantedMessage::deserialize)
-				.consumer(MobEnchantedMessage::handle)
+				.consumerMainThread(MobEnchantedMessage::handle)
 				.add();
 		CHANNEL.messageBuilder(RemoveAllMobEnchantMessage.class, 1)
 				.encoder(RemoveAllMobEnchantMessage::serialize).decoder(RemoveAllMobEnchantMessage::deserialize)
-				.consumer(RemoveAllMobEnchantMessage::handle)
+				.consumerMainThread(RemoveAllMobEnchantMessage::handle)
 				.add();
 		CHANNEL.messageBuilder(MobEnchantFromOwnerMessage.class, 2)
 				.encoder(MobEnchantFromOwnerMessage::serialize).decoder(MobEnchantFromOwnerMessage::deserialize)
-				.consumer(MobEnchantFromOwnerMessage::handle)
+				.consumerMainThread(MobEnchantFromOwnerMessage::handle)
 				.add();
 		CHANNEL.messageBuilder(RemoveMobEnchantOwnerMessage.class, 3)
 				.encoder(RemoveMobEnchantOwnerMessage::serialize).decoder(RemoveMobEnchantOwnerMessage::deserialize)
-				.consumer(RemoveMobEnchantOwnerMessage::handle)
+				.consumerMainThread(RemoveMobEnchantOwnerMessage::handle)
 				.add();
 		CHANNEL.messageBuilder(SoulParticleMessage.class, 4)
 				.encoder(SoulParticleMessage::serialize).decoder(SoulParticleMessage::deserialize)
-				.consumer(SoulParticleMessage::handle)
+				.consumerMainThread(SoulParticleMessage::handle)
 				.add();
 	}
 

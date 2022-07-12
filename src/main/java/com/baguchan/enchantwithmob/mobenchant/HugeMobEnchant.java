@@ -27,7 +27,7 @@ public class HugeMobEnchant extends MobEnchant {
 
     @SubscribeEvent
     public static void onEntityHurt(LivingHurtEvent event) {
-        LivingEntity livingEntity = event.getEntityLiving();
+        LivingEntity livingEntity = event.getEntity();
 
         if (event.getSource().getEntity() instanceof LivingEntity) {
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();

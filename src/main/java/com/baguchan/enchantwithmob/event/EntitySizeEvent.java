@@ -13,7 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.EntityEvent;
@@ -51,17 +51,19 @@ public class EntitySizeEvent {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void onRenderWorld(RenderLevelLastEvent event) {
-		Player player = Minecraft.getInstance().player;
-		float scale = player.getBbHeight() / 1.8F;
+	public static void onRenderWorld(RenderLevelStageEvent event) {
+		if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_PARTICLES) {
+			Player player = Minecraft.getInstance().player;
+			float scale = player.getBbHeight() / 1.8F;
 
-		switch (Minecraft.getInstance().options.getCameraType()) {
-			case THIRD_PERSON_BACK:
-				if (player.getBbHeight() > 1.8F) event.getPoseStack().translate(0, 0, -scale * 2);
-				break;
-			case THIRD_PERSON_FRONT:
-				if (player.getBbHeight() > 1.8F) event.getPoseStack().translate(0, 0, scale * 2);
-				break;
+			switch (Minecraft.getInstance().options.getCameraType()) {
+				case THIRD_PERSON_BACK:
+					if (player.getBbHeight() > 1.8F) event.getPoseStack().translate(0, 0, -scale * 2);
+					break;
+				case THIRD_PERSON_FRONT:
+					if (player.getBbHeight() > 1.8F) event.getPoseStack().translate(0, 0, scale * 2);
+					break;
+			}
 		}
 	}
 
