@@ -1,5 +1,6 @@
 package com.baguchan.enchantwithmob.mobenchant;
 
+import com.baguchan.enchantwithmob.EnchantConfig;
 import com.baguchan.enchantwithmob.registry.MobEnchants;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,7 +24,9 @@ public class PoisonMobEnchant extends MobEnchant {
 	public void tick(LivingEntity entity, int level) {
 		super.tick(entity, level);
 
-		entity.level.addParticle(ParticleTypes.ENTITY_EFFECT, entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D), 0.4F, 0.8F, 0.4F);
+		if (entity.level.isClientSide() && EnchantConfig.CLIENT.disablePoisonParticle.get()) {
+			entity.level.addParticle(ParticleTypes.ENTITY_EFFECT, entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D), 0.4F, 0.8F, 0.4F);
+		}
 	}
 
 	@Override

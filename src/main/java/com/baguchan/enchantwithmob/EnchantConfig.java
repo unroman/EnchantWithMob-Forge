@@ -24,11 +24,16 @@ public class EnchantConfig {
 
     public static class Client {
         public final ForgeConfigSpec.BooleanValue showEnchantedMobHud;
+        public final ForgeConfigSpec.BooleanValue disablePoisonParticle;
 
         public Client(ForgeConfigSpec.Builder builder) {
             showEnchantedMobHud = builder
                     .translation(EnchantWithMob.MODID + ".config.showEnchantedMobHud")
                     .define("Show Enchanted Mob Hud", true);
+            disablePoisonParticle = builder
+                    .comment("Disable Poison Mob Enchant Particle. [true / false]")
+                    .translation(EnchantWithMob.MODID + ".config.disablePoisonParticle")
+                    .define("Disable Poison Particle", true);
         }
     }
 
@@ -39,6 +44,8 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue changeSizeWhenEnchant;
         public final ForgeConfigSpec.BooleanValue dungeonsLikeHealth;
         public final ForgeConfigSpec.BooleanValue bigYourSelf;
+
+
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ENCHANTS;

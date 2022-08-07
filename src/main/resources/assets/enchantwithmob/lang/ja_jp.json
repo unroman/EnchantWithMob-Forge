@@ -36,5 +36,6 @@
   "enchantwithmob.config.enchantYourSelf": "エンチャントを自分自身でできるようにする",
   "enchantwithmob.config.changeSizeWhenEnchant": "エンチャントされた時、サイズを大きくする",
   "enchantwithmob.config.dungeonsLikeHealth": "マインクラフトダンジョンズのように、体力を増やす",
+  "enchantwithmob.config.disablePoisonPatricle": "毒パーティクルを無効化する",
   "death.attack.enchantwithmob.indirectVoid": "%1$sは、%2$sによってvoidに包まれた"
 }
