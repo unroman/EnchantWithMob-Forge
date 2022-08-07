@@ -8,9 +8,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.monster.Witch;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
@@ -38,7 +36,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 
 	@Override
 	public boolean isCompatibleMob(LivingEntity livingEntity) {
-		return (livingEntity instanceof Player || livingEntity instanceof RangedAttackMob) && !(livingEntity instanceof Witch);
+		return !(livingEntity instanceof Witch);
 	}
 
 	@Override
