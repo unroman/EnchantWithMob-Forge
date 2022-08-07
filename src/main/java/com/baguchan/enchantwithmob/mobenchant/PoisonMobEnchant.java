@@ -24,7 +24,7 @@ public class PoisonMobEnchant extends MobEnchant {
 	public void tick(LivingEntity entity, int level) {
 		super.tick(entity, level);
 
-		if (entity.level.isClientSide() && EnchantConfig.CLIENT.disablePoisonParticle.get()) {
+		if (entity.level.isClientSide() && !EnchantConfig.CLIENT.disablePoisonParticle.get()) {
 			entity.level.addParticle(ParticleTypes.ENTITY_EFFECT, entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D), 0.4F, 0.8F, 0.4F);
 		}
 	}
