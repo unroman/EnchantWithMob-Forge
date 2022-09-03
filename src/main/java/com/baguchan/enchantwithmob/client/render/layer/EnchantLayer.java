@@ -51,13 +51,15 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
             if (cap.hasEnchant() && !entitylivingbaseIn.isInvisible()) {
+                float intensity = cap.getMobEnchants().size() < 3 ? ((float) cap.getMobEnchants().size() / 3) : 3;
+
                 float f = (float) entitylivingbaseIn.tickCount + partialTicks;
                 EntityModel<T> entitymodel = this.getParentModel();
                 entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
                 this.getParentModel().copyPropertiesTo(entitymodel);
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(this.enchantBeamSwirl());
                 entitymodel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-                entitymodel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
+                entitymodel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, intensity, intensity, intensity, 1.0F);
             }
         });
     }
