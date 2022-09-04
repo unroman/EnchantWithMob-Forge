@@ -37,5 +37,12 @@
   "enchantwithmob.config.changeSizeWhenEnchant": "エンチャントされた時、サイズを大きくする",
   "enchantwithmob.config.dungeonsLikeHealth": "マインクラフトダンジョンズのように、体力を増やす",
   "enchantwithmob.config.disablePoisonPatricle": "毒パーティクルを無効化する",
-  "death.attack.enchantwithmob.indirectVoid": "%1$sは、%2$sによってvoidに包まれた"
+  "death.attack.enchantwithmob.indirectVoid": "%1$sは、%2$sによってvoidに包まれた",
+  "commands.enchantwithmob.mob_enchanting.set_enchant": "%2$sを%1$sへの付与が成功しました。",
+  "commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_mobenchant": "そのモブエンチャントは存在しません",
+  "commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_living_entity": "%1$sは、生き物ではないので付与できません",
+  "commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_entity": "ターゲットのエンティティは存在しません",
+  "commands.enchantwithmob.mob_enchanting.clear": "%1$sにあるモブエンチャントの消去が成功しました。",
+  "commands.enchantwithmob.mob_enchanting.clear.fail.no_living_entity": "%1$sは、生き物ではないので付与できません",
+  "commands.enchantwithmob.mob_enchanting.clear.fail.no_entity": "ターゲットのエンティティは存在しません"
 }

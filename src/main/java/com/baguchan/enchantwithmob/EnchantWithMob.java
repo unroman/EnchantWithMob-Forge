@@ -2,8 +2,18 @@ package com.baguchan.enchantwithmob;
 
 import com.baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import com.baguchan.enchantwithmob.capability.MobEnchantCapability;
-import com.baguchan.enchantwithmob.message.*;
-import com.baguchan.enchantwithmob.registry.*;
+import com.baguchan.enchantwithmob.command.MobEnchantingCommand;
+import com.baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
+import com.baguchan.enchantwithmob.message.MobEnchantedMessage;
+import com.baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
+import com.baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
+import com.baguchan.enchantwithmob.message.SoulParticleMessage;
+import com.baguchan.enchantwithmob.registry.MobEnchants;
+import com.baguchan.enchantwithmob.registry.ModArgumentTypeInfos;
+import com.baguchan.enchantwithmob.registry.ModEntities;
+import com.baguchan.enchantwithmob.registry.ModItems;
+import com.baguchan.enchantwithmob.registry.ModLootItemFunctions;
+import com.baguchan.enchantwithmob.registry.ModSoundEvents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.monster.Monster;
@@ -13,6 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -65,12 +76,16 @@ public class EnchantWithMob {
 
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 		MobEnchants.MOB_ENCHANT.register(bus);
+		ModArgumentTypeInfos.COMMAND_ARGUMENT_TYPES.register(bus);
 		ModEntities.ENTITIES_REGISTRY.register(bus);
 		ModItems.ITEM_REGISTRY.register(bus);
 		ModSoundEvents.SOUND_EVENTS.register(bus);
 
 		// Register ourselves for server and other game events we are interested in
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.addListener(this::registerCommands);
+
+
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, EnchantConfig.COMMON_SPEC);
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, EnchantConfig.CLIENT_SPEC);
 	}
@@ -104,13 +119,16 @@ public class EnchantWithMob {
 				.add();
 	}
 
-    private void doClientStuff(final FMLClientSetupEvent event) {
-    }
+	private void doClientStuff(final FMLClientSetupEvent event) {
+	}
 
-    private void enqueueIMC(final InterModEnqueueEvent event) {
-    }
+	private void enqueueIMC(final InterModEnqueueEvent event) {
+	}
 
-    private void processIMC(final InterModProcessEvent event)
-    {
-    }
+	private void processIMC(final InterModProcessEvent event) {
+	}
+
+	private void registerCommands(RegisterCommandsEvent evt) {
+		MobEnchantingCommand.register(evt.getDispatcher());
+	}
 }
