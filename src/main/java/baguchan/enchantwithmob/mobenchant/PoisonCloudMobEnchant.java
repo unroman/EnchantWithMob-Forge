@@ -1,5 +1,6 @@
 package baguchan.enchantwithmob.mobenchant;
 
+import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
 public class PoisonCloudMobEnchant extends MobEnchant {
@@ -36,7 +38,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 
 	@Override
 	public boolean isCompatibleMob(LivingEntity livingEntity) {
-		return !(livingEntity instanceof Witch);
+		return EnchantConfig.COMMON.WHITELIST_SHOOT_ENTITY.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(livingEntity.getType()).toString()) && !(livingEntity instanceof Witch);
 	}
 
 	@Override
@@ -54,7 +56,8 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 		Entity entity = event.getEntity();
 		if (entity instanceof Projectile) {
 			Projectile projectile = (Projectile) entity;
-			if (!shooterIsLiving(projectile)) return;
+			if (!shooterIsLiving(projectile) || !EnchantConfig.COMMON.DISABLE_POISON_CLOUD_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()))
+				return;
 			LivingEntity owner = (LivingEntity) projectile.getOwner();
 			MobEnchantUtils.executeIfPresent(owner, MobEnchants.POISON_CLOUD.get(), () -> {
 				if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {

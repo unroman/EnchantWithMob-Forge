@@ -1,5 +1,6 @@
 package baguchan.enchantwithmob.mobenchant;
 
+import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
@@ -14,6 +15,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.UUID;
 
@@ -31,8 +33,10 @@ public class MultiShotMobEnchant extends MobEnchant {
 		Level level = event.getLevel();
 		if (entity instanceof Projectile) {
 			Projectile projectile = (Projectile) entity;
-			if (!shooterIsLiving(projectile)) return;
+			if (!shooterIsLiving(projectile) || !EnchantConfig.COMMON.DISABLE_MULTISHOT_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()))
+				return;
 			LivingEntity owner = (LivingEntity) projectile.getOwner();
+
 			MobEnchantUtils.executeIfPresent(owner, MobEnchants.MULTISHOT.get(), () -> {
 				if (!level.isClientSide && projectile.tickCount == 0 && !isAdding) {
 					isAdding = true;
@@ -95,5 +99,10 @@ public class MultiShotMobEnchant extends MobEnchant {
 
 	public int getMaxEnchantability(int enchantmentLevel) {
 		return this.getMinEnchantability(enchantmentLevel) + 40;
+	}
+
+	@Override
+	public boolean isCompatibleMob(LivingEntity livingEntity) {
+		return EnchantConfig.COMMON.WHITELIST_SHOOT_ENTITY.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(livingEntity.getType()).toString()) && super.isCompatibleMob(livingEntity);
 	}
 }

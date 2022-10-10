@@ -15,6 +15,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedRandom;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
@@ -33,6 +34,16 @@ public class MobEnchantUtils {
 		if (entity != null) {
 			entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
 				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), mobEnchantment)) {
+					runnable.run();
+				}
+			});
+		}
+	}
+
+	public static void executeIfPresent(Entity entity, Runnable runnable) {
+		if (entity != null) {
+			entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
+				if (cap.hasEnchant()) {
 					runnable.run();
 				}
 			});
