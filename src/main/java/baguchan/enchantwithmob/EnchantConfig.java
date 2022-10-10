@@ -80,7 +80,7 @@ public class EnchantConfig {
             WHITELIST_SHOOT_ENTITY = builder
                     .comment("Whitelist the projectile mob enchant for mob. Use the full name(eg: minecraft:zombie.")
                     .define("whitelistShootEntity", Lists.newArrayList("minecraft:skeleton", "minecraft:pillager", "minecraft:shulker", "minecraft:llama", "conjurer_illager:conjurer", "earthmobsmod:bone_spider", "earthmobsmod:lobber_zombie", "earthmobsmod:lobber_drowned"
-                            , "earthmobsmod:melon_golem"));
+                            , "earthmobsmod:melon_golem", "minecraft:piglin", "minecraft:snow_golem"));
 
 
             spawnEnchantedAnimal = builder
