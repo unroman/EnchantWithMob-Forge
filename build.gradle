@@ -22,7 +22,7 @@ mixin {
 
 version = '1.19.2-6.4.0'
 group = 'baguchan.enchantwithmob' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = 'EarthMobs'
+archivesBaseName = 'EnchantWithMob'
 
 // Mojang ships Java 16 to end users in 1.17+ instead of Java 8 in 1.16 or lower, so your mod should target Java 16.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
