@@ -12,7 +12,7 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-version = '1.19.2-6.4.0'
+version = '1.19.2-6.4.1'
 group = 'baguchan.enchantwithmob' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'EnchantWithMob'
 
