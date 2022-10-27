@@ -48,7 +48,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         super(p_i50947_1_);
     }
 
-    public void render(PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
+    public void render(PoseStack poseStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         float tick = (float) entitylivingbaseIn.tickCount + partialTicks;
         entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
         {
@@ -61,7 +61,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
                 this.getParentModel().copyPropertiesTo(entitymodel);
                 VertexConsumer ivertexbuilder = bufferIn.getBuffer(enchantSwirl());
                 entitymodel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-                entitymodel.renderToBuffer(matrixStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, intensity, intensity, intensity, 1.0F);
+                entitymodel.renderToBuffer(poseStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, intensity, intensity, intensity, 1.0F);
             }
         });
     }
