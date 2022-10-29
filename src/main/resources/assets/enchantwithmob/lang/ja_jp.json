@@ -37,6 +37,7 @@
   "enchantwithmob.config.changeSizeWhenEnchant": "エンチャントされた時、サイズを大きくする",
   "enchantwithmob.config.dungeonsLikeHealth": "マインクラフトダンジョンズのように、体力を増やす",
   "enchantwithmob.config.disablePoisonPatricle": "毒パーティクルを無効化する",
+  "enchantwithmob.config.disablePatreonRewardRender": "Patreonのコスメティックを表示しない",
   "death.attack.enchantwithmob.indirectVoid": "%1$sは、%2$sによってvoidに包まれた",
   "commands.enchantwithmob.mob_enchanting.set_enchant": "%2$sを%1$sへの付与が成功しました。",
   "commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_mobenchant": "そのモブエンチャントは存在しません",

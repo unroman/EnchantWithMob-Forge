@@ -25,16 +25,21 @@ public class EnchantConfig {
     public static class Client {
         public final ForgeConfigSpec.BooleanValue showEnchantedMobHud;
         public final ForgeConfigSpec.BooleanValue disablePoisonParticle;
+		public final ForgeConfigSpec.BooleanValue disablePatreonRewardRender;
 
         public Client(ForgeConfigSpec.Builder builder) {
-            showEnchantedMobHud = builder
-                    .translation(EnchantWithMob.MODID + ".config.showEnchantedMobHud")
-                    .define("Show Enchanted Mob Hud", true);
-            disablePoisonParticle = builder
-                    .comment("Disable Poison Mob Enchant Particle. [true / false]")
-                    .translation(EnchantWithMob.MODID + ".config.disablePoisonParticle")
-                    .define("Disable Poison Particle", true);
-        }
+			showEnchantedMobHud = builder
+					.translation(EnchantWithMob.MODID + ".config.showEnchantedMobHud")
+					.define("Show Enchanted Mob Hud", true);
+			disablePoisonParticle = builder
+					.comment("Disable Poison Mob Enchant Particle. [true / false]")
+					.translation(EnchantWithMob.MODID + ".config.disablePoisonParticle")
+					.define("Disable Poison Particle", true);
+			disablePatreonRewardRender = builder
+					.comment("Disable Patreon Reward Render. [true / false]")
+					.translation(EnchantWithMob.MODID + ".config.disablePatreonRewardRender")
+					.define("Disable Patreon Reward Render", false);
+		}
     }
 
     public static class Common {

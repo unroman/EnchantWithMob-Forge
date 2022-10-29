@@ -37,6 +37,7 @@
   "enchantwithmob.config.changeSizeWhenEnchant": "Change Size When Enchant",
   "enchantwithmob.config.dungeonsLikeHealth": "Dungeons Like Health",
   "enchantwithmob.config.disablePoisonPatricle": "Disable Poison Particle",
+  "enchantwithmob.config.disablePatreonRewardRender": "Disable Patreon Reward Render",
   "death.attack.enchantwithmob.indirectVoid": "%1$s was wrapped in void by %2$s",
   "commands.enchantwithmob.mob_enchanting.set_enchant": "Success MobEnchant %1$s For %2$s",
   "commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_mobenchant": "%1$s mob enchant is does not exist",
@@ -44,5 +45,6 @@
   "commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_entity": "target entity does not exist",
   "commands.enchantwithmob.mob_enchanting.clear": "Success Remove MobEnchant For %1$s",
   "commands.enchantwithmob.mob_enchanting.clear.fail.no_living_entity": "%1$s is not Living Entity. you cannot mob enchanting for non Living Entity",
-  "commands.enchantwithmob.mob_enchanting.clear.fail.no_entity": "target entity does not exist"
+  "commands.enchantwithmob.mob_enchanting.clear.fail.no_entity": "target entity does not exist",
+  "enchantwithmob.gui.patreon_rewards_option": "EnchantWithMob Patreon Reward"
 }
