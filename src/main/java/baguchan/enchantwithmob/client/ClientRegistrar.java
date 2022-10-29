@@ -6,9 +6,9 @@ import baguchan.enchantwithmob.client.overlay.MobEnchantOverlay;
 import baguchan.enchantwithmob.client.render.EnchanterRenderer;
 import baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import baguchan.enchantwithmob.client.render.layer.EnchantedEyesLayer;
-import baguchan.enchantwithmob.client.render.layer.GeoEnchantLayer;
 import baguchan.enchantwithmob.client.render.layer.SlimeEnchantLayer;
 import baguchan.enchantwithmob.compat.GeckoLibCompat;
+import baguchan.enchantwithmob.compat.GeckoLibCompatClient;
 import baguchan.enchantwithmob.registry.ModEntities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -22,7 +22,6 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import software.bernie.geckolib3.renderers.geo.GeoEntityRenderer;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -66,9 +65,7 @@ public class ClientRegistrar {
 
 			}
 			if (GeckoLibCompat.isLoaded) {
-				if (r instanceof GeoEntityRenderer) {
-					((GeoEntityRenderer) r).addLayer(new GeoEnchantLayer((GeoEntityRenderer) r));
-				}
+				GeckoLibCompatClient.addLayer(r);
 			}
 
 
