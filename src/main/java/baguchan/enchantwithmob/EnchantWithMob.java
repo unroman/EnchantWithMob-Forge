@@ -38,18 +38,6 @@ import net.minecraftforge.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(EnchantWithMob.MODID)
 public class EnchantWithMob {
@@ -65,9 +53,6 @@ public class EnchantWithMob {
 
 	public static Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
 	});
-
-	public static List<String> PATREONS = new ArrayList<>();
-
 	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
 			.networkProtocolVersion(() -> NETWORK_PROTOCOL)
 			.clientAcceptedVersions(NETWORK_PROTOCOL::equals)
@@ -108,39 +93,6 @@ public class EnchantWithMob {
 		Raid.RaiderType.create("enchanter", ModEntities.ENCHANTER.get(), new int[]{0, 0, 1, 0, 1, 1, 2, 1});
 		SpawnPlacements.register(ModEntities.ENCHANTER.get(), SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Monster::checkMonsterSpawnRules);
 
-		BufferedReader urlContents = getURLContents("https://raw.githubusercontent.com/baguchan/enchantwithmob/master/src/main/resources/assets/enchantwithmob/patreon.txt", "assets/enchantwithmob/patreon.txt");
-		if (urlContents != null) {
-			try {
-				String line;
-				while ((line = urlContents.readLine()) != null) {
-					PATREONS.add(line);
-				}
-			} catch (IOException e) {
-				LOGGER.warn("Failed to load patreon contributor perks");
-			}
-		} else LOGGER.warn("Failed to load patreon contributor perks");
-	}
-
-	@Nullable
-	public static BufferedReader getURLContents(@Nonnull String urlString, @Nonnull String backupFileLoc) {
-		try {
-			URL url = new URL(urlString);
-			URLConnection connection = url.openConnection();
-			InputStream stream = connection.getInputStream();
-			InputStreamReader reader = new InputStreamReader(stream);
-
-			return new BufferedReader(reader);
-		} catch (Exception e) { // Malformed URL, Offline, etc.
-			e.printStackTrace();
-		}
-
-		try { // Backup
-			return new BufferedReader(new InputStreamReader(EnchantWithMob.class.getClass().getClassLoader().getResourceAsStream(backupFileLoc), StandardCharsets.UTF_8));
-		} catch (NullPointerException e) { // Can't parse backupFileLoc
-			e.printStackTrace();
-		}
-
-		return null;
 	}
 
 	private void setupMessages() {

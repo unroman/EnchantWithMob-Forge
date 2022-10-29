@@ -4,30 +4,24 @@ import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.client.model.EnchanterModel;
 import baguchan.enchantwithmob.client.overlay.MobEnchantOverlay;
 import baguchan.enchantwithmob.client.render.EnchanterRenderer;
+import baguchan.enchantwithmob.client.render.layer.BaguLayer;
 import baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import baguchan.enchantwithmob.client.render.layer.EnchantedEyesLayer;
-import baguchan.enchantwithmob.client.render.layer.PatreonRewardLayer;
 import baguchan.enchantwithmob.client.render.layer.SlimeEnchantLayer;
-import baguchan.enchantwithmob.client.screen.GuiPatreonConfig;
 import baguchan.enchantwithmob.compat.GeckoLibCompat;
 import baguchan.enchantwithmob.compat.GeckoLibCompatClient;
 import baguchan.enchantwithmob.registry.ModEntities;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.SkinCustomizationScreen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.SlimeRenderer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -58,31 +52,12 @@ public class ClientRegistrar {
 	}
 
 	@SubscribeEvent
-	public void screenOpen(ScreenEvent.Init event) {
-		if (event.getScreen() instanceof SkinCustomizationScreen && Minecraft.getInstance().player != null) {
-			try {
-				String username = Minecraft.getInstance().player.getName().getString();
-				int height = -20;
-				if (EnchantWithMob.PATREONS.contains(username)) {
-					event.addListener(new Button(event.getScreen().width / 2 - 100, event.getScreen().height / 6 + 150 + height, 200, 20, Component.translatable("enchantwithmob.gui.patreon_rewards_option").withStyle(ChatFormatting.LIGHT_PURPLE), (p_213080_2_) -> {
-						Minecraft.getInstance().setScreen(new GuiPatreonConfig(event.getScreen(), Minecraft.getInstance().options));
-					}));
-					height += 25;
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@SubscribeEvent
 	public static void registerEntityRenders(EntityRenderersEvent.AddLayers event) {
 		event.getSkins().forEach(skins ->
 		{
 			event.getSkin(skins).addLayer(new EnchantLayer(event.getSkin(skins)));
 			if (event.getSkin(skins) instanceof PlayerRenderer) {
-				((PlayerRenderer) event.getSkin(skins)).addLayer(new PatreonRewardLayer((((PlayerRenderer) event.getSkin(skins))), event.getEntityModels()));
+				((PlayerRenderer) event.getSkin(skins)).addLayer(new BaguLayer((((PlayerRenderer) event.getSkin(skins))), event.getEntityModels()));
 			}
 		});
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(r -> {

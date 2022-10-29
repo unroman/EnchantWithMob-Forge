@@ -1,6 +1,5 @@
 package baguchan.enchantwithmob.client.render.layer;
 
-import baguchan.enchantwithmob.EnchantWithMob;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
@@ -18,17 +17,17 @@ import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 
-public class PatreonRewardLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
+public class BaguLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
 	protected final BookModel bookModel;
 
-	public PatreonRewardLayer(RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> p_i50947_1_, EntityModelSet context) {
+	public BaguLayer(RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> p_i50947_1_, EntityModelSet context) {
 		super(p_i50947_1_);
 		bookModel = new BookModel(context.bakeLayer(ModelLayers.BOOK));
 	}
 
 	public void render(PoseStack poseStackIn, MultiBufferSource bufferIn, int packedLightIn, AbstractClientPlayer entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		String username = Minecraft.getInstance().player.getName().getString();
-		if (EnchantWithMob.PATREONS.contains(username)) {
+		if (true) {
 			float bookAnimation = 1.0F;
 			poseStackIn.pushPose();
 			poseStackIn.translate(0.0D, 1.1625D, 0.0F);
