@@ -4,7 +4,6 @@ import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.client.model.EnchanterModel;
 import baguchan.enchantwithmob.client.overlay.MobEnchantOverlay;
 import baguchan.enchantwithmob.client.render.EnchanterRenderer;
-import baguchan.enchantwithmob.client.render.layer.BaguLayer;
 import baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import baguchan.enchantwithmob.client.render.layer.EnchantedEyesLayer;
 import baguchan.enchantwithmob.client.render.layer.SlimeEnchantLayer;
@@ -15,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.SlimeRenderer;
-import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -56,9 +54,6 @@ public class ClientRegistrar {
 		event.getSkins().forEach(skins ->
 		{
 			event.getSkin(skins).addLayer(new EnchantLayer(event.getSkin(skins)));
-			if (event.getSkin(skins) instanceof PlayerRenderer) {
-				((PlayerRenderer) event.getSkin(skins)).addLayer(new BaguLayer((((PlayerRenderer) event.getSkin(skins))), event.getEntityModels()));
-			}
 		});
         Minecraft.getInstance().getEntityRenderDispatcher().renderers.values().forEach(r -> {
 			if (r instanceof SlimeRenderer) {

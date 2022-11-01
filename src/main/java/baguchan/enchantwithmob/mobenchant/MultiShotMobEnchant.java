@@ -33,7 +33,7 @@ public class MultiShotMobEnchant extends MobEnchant {
 		Level level = event.getLevel();
 		if (entity instanceof Projectile) {
 			Projectile projectile = (Projectile) entity;
-			if (!shooterIsLiving(projectile) || !EnchantConfig.COMMON.DISABLE_MULTISHOT_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()))
+			if (!shooterIsLiving(projectile) || EnchantConfig.COMMON.DISABLE_MULTISHOT_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()))
 				return;
 			LivingEntity owner = (LivingEntity) projectile.getOwner();
 
