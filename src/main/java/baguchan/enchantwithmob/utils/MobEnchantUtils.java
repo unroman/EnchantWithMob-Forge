@@ -30,7 +30,7 @@ public class MobEnchantUtils {
 	public static final String TAG_STORED_MOBENCHANTS = "StoredMobEnchants";
 
 	//when projectile Shooter has mob enchant, start Runnable
-	public static void executeIfPresent(LivingEntity entity, MobEnchant mobEnchantment, Runnable runnable) {
+	public static void executeIfPresent(Entity entity, MobEnchant mobEnchantment, Runnable runnable) {
 		if (entity != null) {
 			entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
 				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), mobEnchantment)) {

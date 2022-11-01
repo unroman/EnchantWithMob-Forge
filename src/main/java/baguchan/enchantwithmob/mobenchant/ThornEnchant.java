@@ -1,6 +1,7 @@
 package baguchan.enchantwithmob.mobenchant;
 
 
+import baguchan.enchantwithmob.registry.MobEnchants;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Guardian;
 
@@ -13,12 +14,17 @@ public class ThornEnchant extends MobEnchant {
 		return 10 + 20 * (enchantmentLevel - 1);
 	}
 
-    public int getMaxEnchantability(int enchantmentLevel) {
-        return this.getMinEnchantability(enchantmentLevel) + 50;
-    }
+	public int getMaxEnchantability(int enchantmentLevel) {
+		return this.getMinEnchantability(enchantmentLevel) + 50;
+	}
 
-    @Override
-    public boolean isCompatibleMob(LivingEntity livingEntity) {
+	@Override
+	public boolean isCompatibleMob(LivingEntity livingEntity) {
 		return !(livingEntity instanceof Guardian);
-    }
+	}
+
+	@Override
+	protected boolean canApplyTogether(MobEnchant ench) {
+		return super.canApplyTogether(ench) && ench != MobEnchants.DEFLECT.get();
+	}
 }

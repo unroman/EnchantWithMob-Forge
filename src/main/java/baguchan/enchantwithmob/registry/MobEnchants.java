@@ -1,6 +1,7 @@
 package baguchan.enchantwithmob.registry;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.mobenchant.DeflectMobEnchant;
 import baguchan.enchantwithmob.mobenchant.HealthBoostMobEnchant;
 import baguchan.enchantwithmob.mobenchant.HugeMobEnchant;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
@@ -50,6 +51,7 @@ public class MobEnchants {
 	public static final RegistryObject<MobEnchant> MULTISHOT = MOB_ENCHANT.register("multishot", () -> new MultiShotMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 1)));
 
 	public static final RegistryObject<MobEnchant> SOUL_STEAL = MOB_ENCHANT.register("soul_steal", () -> new SoulStealMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 2)));
+	public static final RegistryObject<MobEnchant> DEFLECT = MOB_ENCHANT.register("deflect", () -> new DeflectMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 1)));
 
 
 	private static Supplier<IForgeRegistry<MobEnchant>> registry;
