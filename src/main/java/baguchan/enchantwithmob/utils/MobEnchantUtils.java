@@ -243,10 +243,10 @@ public class MobEnchantUtils {
 	 * @param capability   MobEnchant Capability
 	 * @param random       Random
 	 * @param level        max limit level MobEnchant
-	 * @param allowRare    setting is allow rare enchant
+	 * @param allowTresure setting is allow rare enchant
 	 */
-	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowRare) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowTresure) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
 
 		boolean flag = false;
 		for (MobEnchantmentData enchantmentdata : list) {
@@ -265,10 +265,10 @@ public class MobEnchantUtils {
 	 * @param capability   MobEnchant Capability
 	 * @param random       Random
 	 * @param level        max limit level MobEnchant
-	 * @param allowRare    setting is allow rare enchant
+	 * @param allowTresure setting is allow rare enchant
 	 */
-	public static boolean addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowRare) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+	public static boolean addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowTresure) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
 
 		boolean flag = false;
 
@@ -284,18 +284,18 @@ public class MobEnchantUtils {
 		return flag;
 	}
 
-	public static ItemStack addRandomEnchantmentToItemStack(RandomSource random, ItemStack stack, int level, boolean allowRare) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+	public static ItemStack addRandomEnchantmentToItemStack(RandomSource random, ItemStack stack, int level, boolean allowTresure) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
 
 		for (MobEnchantmentData enchantmentdata : list) {
 			addMobEnchantToItemStack(stack, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
-        }
+		}
 
-        return stack;
-    }
+		return stack;
+	}
 
-    public static boolean findMobEnchantHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
-        for (MobEnchantHandler mobEnchant : list) {
+	public static boolean findMobEnchantHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
+		for (MobEnchantHandler mobEnchant : list) {
             if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
                 return true;
             }
