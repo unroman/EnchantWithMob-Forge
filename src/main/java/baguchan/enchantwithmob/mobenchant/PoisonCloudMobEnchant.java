@@ -71,7 +71,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 					areaeffectcloud.setOwner(owner);
 					areaeffectcloud.setRadiusPerTick(-0.001F);
 
-					areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, i));
+					areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, i - 1));
 					owner.level.addFreshEntity(areaeffectcloud);
 				}
 			}
