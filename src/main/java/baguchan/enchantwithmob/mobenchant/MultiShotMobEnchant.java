@@ -9,6 +9,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -71,6 +72,10 @@ public class MultiShotMobEnchant extends MobEnchant {
 			newDamagingProjectile.setDeltaMovement(newPower);
 		}
 
+		if (newProjectile instanceof AbstractArrow) {
+			((AbstractArrow) newProjectile).pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+		}
+
 		newProjectile.getCapability(EnchantWithMob.ITEM_MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
 			cap.setHasEnchant(true);
@@ -84,7 +89,7 @@ public class MultiShotMobEnchant extends MobEnchant {
 		Projectile projectile = event.getProjectile();
 
 		projectile.getCapability(EnchantWithMob.ITEM_MOB_ENCHANT_CAP).ifPresent(cap -> {
-			if (cap.hasEnchant()) {
+			if (cap.hasEnchant() && !(projectile instanceof AbstractArrow)) {
 				projectile.discard();
 			}
 		});
