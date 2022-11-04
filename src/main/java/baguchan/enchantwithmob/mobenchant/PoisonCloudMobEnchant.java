@@ -7,7 +7,6 @@ import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
@@ -54,27 +53,24 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 
 	@SubscribeEvent
 	public static void onImpact(ProjectileImpactEvent event) {
-		Entity entity = event.getEntity();
-		if (entity instanceof Projectile) {
-			Projectile projectile = (Projectile) entity;
-			if (!shooterIsLiving(projectile) || !EnchantConfig.COMMON.DISABLE_POISON_CLOUD_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString()))
-				return;
-			LivingEntity owner = (LivingEntity) projectile.getOwner();
-			MobEnchantUtils.executeIfPresent(owner, MobEnchants.POISON_CLOUD.get(), () -> {
-				if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
-					AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
-					areaeffectcloud.setRadius(0.6F);
-					areaeffectcloud.setRadiusOnUse(-0.01F);
-					areaeffectcloud.setWaitTime(10);
-					areaeffectcloud.setDuration(80);
-					areaeffectcloud.setOwner(owner);
-					areaeffectcloud.setRadiusPerTick(-0.001F);
+		Projectile projectile = event.getProjectile();
+		if (!shooterIsLiving(projectile) || EnchantConfig.COMMON.DISABLE_POISON_CLOUD_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(projectile.getType()).toString()))
+			return;
+		LivingEntity owner = (LivingEntity) projectile.getOwner();
+		MobEnchantUtils.executeIfPresent(owner, MobEnchants.POISON_CLOUD.get(), () -> {
+			if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
+				AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
+				areaeffectcloud.setRadius(0.6F);
+				areaeffectcloud.setRadiusOnUse(-0.01F);
+				areaeffectcloud.setWaitTime(10);
+				areaeffectcloud.setDuration(80);
+				areaeffectcloud.setOwner(owner);
+				areaeffectcloud.setRadiusPerTick(-0.001F);
 
-					areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, 0));
-					owner.level.addFreshEntity(areaeffectcloud);
-				}
-			});
-		}
+				areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, 0));
+				owner.level.addFreshEntity(areaeffectcloud);
+			}
+		});
 	}
 
 	public static boolean shooterIsLiving(Projectile projectile) {
