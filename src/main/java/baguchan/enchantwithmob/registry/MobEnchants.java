@@ -46,7 +46,7 @@ public class MobEnchants {
 	public static final RegistryObject<MobEnchant> THORN = MOB_ENCHANT.register("thorn", () -> new ThornEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 3)));
 	public static final RegistryObject<MobEnchant> HEALTH_BOOST = MOB_ENCHANT.register("health_boost", () -> new HealthBoostMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 5)).addAttributesModifier(Attributes.MAX_HEALTH, "f5d32c9f-2a3d-4157-bbf7-469d348ce097", 2.0D, AttributeModifier.Operation.ADDITION));
 	public static final RegistryObject<MobEnchant> POISON = MOB_ENCHANT.register("poison", () -> new PoisonMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 3)));
-	public static final RegistryObject<MobEnchant> POISON_CLOUD = MOB_ENCHANT.register("poison_cloud", () -> new PoisonCloudMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 1)));
+	public static final RegistryObject<MobEnchant> POISON_CLOUD = MOB_ENCHANT.register("poison_cloud", () -> new PoisonCloudMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 2)));
 	public static final RegistryObject<MobEnchant> HUGE = MOB_ENCHANT.register("huge", () -> new HugeMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.VERY_RARE, 2)).addAttributesModifier(Attributes.MAX_HEALTH, "c988bca7-7fa9-4fea-bb44-c3625ac74241", 0.1D, AttributeModifier.Operation.MULTIPLY_TOTAL));
 	public static final RegistryObject<MobEnchant> MULTISHOT = MOB_ENCHANT.register("multishot", () -> new MultiShotMobEnchant(new MobEnchant.Properties(MobEnchant.Rarity.RARE, 1)));
 

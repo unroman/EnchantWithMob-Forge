@@ -57,18 +57,23 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 		if (!shooterIsLiving(projectile) || EnchantConfig.COMMON.DISABLE_POISON_CLOUD_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(projectile.getType()).toString()))
 			return;
 		LivingEntity owner = (LivingEntity) projectile.getOwner();
-		MobEnchantUtils.executeIfPresent(owner, MobEnchants.POISON_CLOUD.get(), () -> {
-			if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
-				AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
-				areaeffectcloud.setRadius(0.6F);
-				areaeffectcloud.setRadiusOnUse(-0.01F);
-				areaeffectcloud.setWaitTime(10);
-				areaeffectcloud.setDuration(80);
-				areaeffectcloud.setOwner(owner);
-				areaeffectcloud.setRadiusPerTick(-0.001F);
+		owner.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+		{
+			int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON_CLOUD.get());
 
-				areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, 0));
-				owner.level.addFreshEntity(areaeffectcloud);
+			if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON_CLOUD.get())) {
+				if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
+					AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
+					areaeffectcloud.setRadius(0.6F);
+					areaeffectcloud.setRadiusOnUse(-0.01F);
+					areaeffectcloud.setWaitTime(10);
+					areaeffectcloud.setDuration(80);
+					areaeffectcloud.setOwner(owner);
+					areaeffectcloud.setRadiusPerTick(-0.001F);
+
+					areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, i));
+					owner.level.addFreshEntity(areaeffectcloud);
+				}
 			}
 		});
 	}
