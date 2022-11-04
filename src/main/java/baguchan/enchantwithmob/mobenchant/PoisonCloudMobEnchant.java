@@ -62,6 +62,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 			int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.POISON_CLOUD.get());
 
 			if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.POISON_CLOUD.get())) {
+				//arrow is different
 				if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
 					AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
 					areaeffectcloud.setRadius(0.6F);
