@@ -25,16 +25,20 @@ public class EnchantConfig {
     public static class Client {
         public final ForgeConfigSpec.BooleanValue showEnchantedMobHud;
         public final ForgeConfigSpec.BooleanValue disablePoisonParticle;
+        public final ForgeConfigSpec.BooleanValue disableAuraRender;
 
         public Client(ForgeConfigSpec.Builder builder) {
-			showEnchantedMobHud = builder
-					.translation(EnchantWithMob.MODID + ".config.showEnchantedMobHud")
-					.define("Show Enchanted Mob Hud", true);
-			disablePoisonParticle = builder
-					.comment("Disable Poison Mob Enchant Particle. [true / false]")
-					.translation(EnchantWithMob.MODID + ".config.disablePoisonParticle")
-					.define("Disable Poison Particle", true);
-		}
+            showEnchantedMobHud = builder
+                    .translation(EnchantWithMob.MODID + ".config.showEnchantedMobHud")
+                    .define("Show Enchanted Mob Hud", true);
+            disablePoisonParticle = builder
+                    .comment("Disable Poison Mob Enchant Particle. [true / false]")
+                    .translation(EnchantWithMob.MODID + ".config.disablePoisonParticle")
+                    .define("Disable Poison Particle", true);
+            disableAuraRender = builder
+                    .comment("Disable Aura Render. [true / false]")
+                    .define("Disable Aura Render", true);
+        }
     }
 
     public static class Common {

@@ -1,5 +1,6 @@
 package baguchan.enchantwithmob.client.render.layer;
 
+import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -26,7 +27,7 @@ public class GeoEnchantAuraLayer<T extends Entity & IAnimatable> extends GeoLaye
 		float tick = (float) entitylivingbaseIn.tickCount + partialTicks;
 		entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
-			if (cap.hasEnchant()) {
+			if (cap.hasEnchant() && !EnchantConfig.CLIENT.disableAuraRender.get()) {
 				float f = (float) entitylivingbaseIn.tickCount + partialTicks;
 				poseStackIn.pushPose();
 				poseStackIn.mulPose(Vector3f.YP.rotationDegrees(f * 10F));
