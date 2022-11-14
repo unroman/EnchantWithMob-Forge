@@ -9,7 +9,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class GeckoLibCompat {
 	public static boolean isLoaded = false;
-	public static final String GECKO_LIB_MOD_ID = "geckolib";
+	public static final String GECKO_LIB_MOD_ID = "geckolib3";
 
 	@SubscribeEvent
 	public static void onInterMod(InterModProcessEvent event) {
