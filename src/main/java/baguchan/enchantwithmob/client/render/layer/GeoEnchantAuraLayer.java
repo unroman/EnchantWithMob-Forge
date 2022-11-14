@@ -29,7 +29,7 @@ public class GeoEnchantAuraLayer<T extends Entity & IAnimatable> extends GeoLaye
 			if (cap.hasEnchant()) {
 				float f = (float) entitylivingbaseIn.tickCount + partialTicks;
 				poseStackIn.pushPose();
-				poseStackIn.mulPose(Vector3f.YP.rotationDegrees(f * 30F));
+				poseStackIn.mulPose(Vector3f.YP.rotationDegrees(f * 10F));
 				RenderType glint = renderType;
 				this.getRenderer().render(this.getEntityModel().getModel(this.getAuraModelResource()), entitylivingbaseIn, partialTicks, glint, poseStackIn, bufferIn,
 						bufferIn.getBuffer(glint), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
