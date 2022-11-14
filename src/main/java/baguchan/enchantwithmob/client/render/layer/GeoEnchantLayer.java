@@ -15,9 +15,7 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraftforge.registries.ForgeRegistries;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
@@ -31,7 +29,6 @@ public class GeoEnchantLayer<T extends Entity & IAnimatable> extends GeoLayerRen
 		RenderSystem.disableBlend();
 		RenderSystem.defaultBlendFunc();
 	});
-	protected static final RenderStateShard.ShaderStateShard RENDERTYPE_ENTITY_GLINT_SHADER = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEntityGlintShader);
 	protected static final RenderStateShard.ShaderStateShard RENDERTYPE_ENERGY_SWIRL_SHADER = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEnergySwirlShader);
 	protected static final RenderStateShard.CullStateShard NO_CULL = new RenderStateShard.CullStateShard(false);
 	protected static final RenderStateShard.TexturingStateShard ENTITY_GLINT_TEXTURING = new RenderStateShard.TexturingStateShard("entity_glint_texturing", () -> {
@@ -52,8 +49,6 @@ public class GeoEnchantLayer<T extends Entity & IAnimatable> extends GeoLayerRen
 		{
 			if (cap.hasEnchant()) {
 				float f = (float) entitylivingbaseIn.tickCount + partialTicks;
-//                GeoModelProvider<T> geomodel = (GeoModelProvider<T>) this.getEntityModel();
-//                renderModel(geomodel, this.getTextureLocation(), matrixStack, bufferIn, packedLightIn, entity, partialTicks, 1.0F, 1.0F, 1.0F);
 				RenderType glint = enchantSwirl();
 				this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, glint, poseStackIn, bufferIn,
 						bufferIn.getBuffer(glint), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
@@ -65,10 +60,6 @@ public class GeoEnchantLayer<T extends Entity & IAnimatable> extends GeoLayerRen
 		return RenderType.create("entity_enchant_glint", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
 	}
 
-	public static RenderType enchantBeamSwirl() {
-		return RenderType.create("entity_enchant_bean_glint", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
-	}
-
 	private static void setupGlintTexturing(float p_110187_) {
 		long var1 = Util.getMillis() * 8L;
 		float var3 = (float) (var1 % 110000L) / 110000.0F;
@@ -77,10 +68,5 @@ public class GeoEnchantLayer<T extends Entity & IAnimatable> extends GeoLayerRen
 		var5.multiply(Vector3f.ZP.rotationDegrees(10.0F));
 		var5.multiply(Matrix4f.createScaleMatrix(p_110187_, p_110187_, p_110187_));
 		RenderSystem.setTextureMatrix(var5);
-	}
-
-	protected ResourceLocation getModel(T entity) {
-		ResourceLocation registryName = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-		return new ResourceLocation(registryName.getNamespace(), "geo/" + registryName.getPath() + ".geo.json");
 	}
 }
