@@ -23,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 @OnlyIn(Dist.CLIENT)
 public class EnchantedEyesLayer<T extends LivingEntity, M extends EntityModel<T>> extends EyesLayer<T, M> {
@@ -43,20 +44,26 @@ public class EnchantedEyesLayer<T extends LivingEntity, M extends EntityModel<T>
 	});
 
 	public final RenderType render_types;
-	public final EntityType<?> entityType;
+	public final Predicate<T> predicate;
 
 	public EnchantedEyesLayer(RenderLayerParent<T, M> p_116964_, RenderType renderType, EntityType<?> entityType) {
+		this(p_116964_, renderType, (entity) -> {
+			return entity.getType() == entityType;
+		});
+	}
+
+	public EnchantedEyesLayer(RenderLayerParent<T, M> p_116964_, RenderType renderType, Predicate<T> predicate) {
 		super(p_116964_);
 
 		this.render_types = renderType;
-		this.entityType = entityType;
+		this.predicate = predicate;
 	}
 
 	@Override
 	public void render(PoseStack p_116983_, MultiBufferSource p_116984_, int p_116985_, T p_116986_, float p_116987_, float p_116988_, float p_116989_, float p_116990_, float p_116991_, float p_116992_) {
 		p_116986_.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
-			if (cap.hasEnchant() && p_116986_.getType() == entityType) {
+			if (cap.hasEnchant() && predicate.test(p_116986_)) {
 				VertexConsumer ivertexbuilder = p_116984_.getBuffer(this.renderType());
 				this.getParentModel().renderToBuffer(p_116983_, ivertexbuilder, p_116985_, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
 			}

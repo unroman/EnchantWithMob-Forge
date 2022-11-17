@@ -16,6 +16,8 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.SlimeRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -74,18 +76,20 @@ public class ClientRegistrar {
 				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), CREEPER_EYES, EntityType.CREEPER));
 				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), EVOKER_EYES, EntityType.EVOKER));
 				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), PILLAGER_EYES, EntityType.PILLAGER));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SKELETON_EYES, EntityType.SKELETON));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SKELETON_EYES, EntityType.STRAY));
+				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SKELETON_EYES, (entity) -> {
+					return entity instanceof AbstractSkeleton;
+				}));
 				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SLIME_EYES, EntityType.SLIME));
 				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SPIDER_EYES, EntityType.SPIDER));
 				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), VEX_EYES, EntityType.VEX));
-                ((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), VINDICATOR_EYES, EntityType.VINDICATOR));
-                ((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), WITCH_EYES, EntityType.WITCH));
-                ((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), WOLF_EYES, EntityType.WOLF));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), ZOMBIE_EYES, EntityType.ZOMBIE));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), ZOMBIE_EYES, EntityType.HUSK));
+				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), VINDICATOR_EYES, EntityType.VINDICATOR));
+				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), WITCH_EYES, EntityType.WITCH));
+				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), WOLF_EYES, EntityType.WOLF));
+				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), ZOMBIE_EYES, (entity) -> {
+					return entity instanceof Zombie;
+				}));
 
-            }
+			}
         });
     }
 
