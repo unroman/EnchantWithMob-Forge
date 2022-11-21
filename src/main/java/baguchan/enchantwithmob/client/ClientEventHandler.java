@@ -6,6 +6,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
@@ -88,6 +89,7 @@ public class ClientEventHandler {
 		float f3 = 0.1F;
 		VertexConsumer ivertexbuilder = p_229118_4_.getBuffer(enchantBeamSwirl(cap.isAncient() ? ANCIENT_GLINT : ItemRenderer.ENCHANT_GLINT_LOCATION));
 		Matrix4f matrix4f = p_229118_3_.last().pose();
+		Matrix3f matrix3f = p_229118_3_.last().normal();
 		float f4 = Mth.fastInvSqrt(f * f + f2 * f2) * 0.1F / 2.0F;
 		float f5 = f2 * f4;
 		float f6 = f * f4;
@@ -97,13 +99,13 @@ public class ClientEventHandler {
 		int j = getBlockLightLevel(p_229118_5_, blockpos1);
 		int k = p_229118_1_.level.getBrightness(LightLayer.SKY, blockpos);
 		int l = p_229118_1_.level.getBrightness(LightLayer.SKY, blockpos1);
-		renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.05F, 0.1F, f5, f6);
-		renderSide(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.1F, 0.0F, f5, f6);
+		renderSide(ivertexbuilder, matrix4f, matrix3f, f, f1, f2, i, j, k, l, 0.05F, 0.1F, f5, f6);
+		renderSide(ivertexbuilder, matrix4f, matrix3f, f, f1, f2, i, j, k, l, 0.1F, 0.0F, f5, f6);
 		p_229118_3_.popPose();
 	}
 
 
-	public static void renderSide(VertexConsumer p_229119_0_, Matrix4f p_229119_1_, float p_229119_2_, float p_229119_3_, float p_229119_4_, int p_229119_5_, int p_229119_6_, int p_229119_7_, int p_229119_8_, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_) {
+	public static void renderSide(VertexConsumer p_229119_0_, Matrix4f p_229119_1_, Matrix3f matrix3f, float p_229119_2_, float p_229119_3_, float p_229119_4_, int p_229119_5_, int p_229119_6_, int p_229119_7_, int p_229119_8_, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_) {
 		int i = 24;
 
 		for (int j = 0; j < 24; ++j) {
@@ -111,13 +113,13 @@ public class ClientEventHandler {
 			int k = (int) Mth.lerp(f, (float) p_229119_5_, (float) p_229119_6_);
 			int l = (int) Mth.lerp(f, (float) p_229119_7_, (float) p_229119_8_);
 			int i1 = LightTexture.pack(k, l);
-			addVertexPair(p_229119_0_, p_229119_1_, i1, p_229119_2_, p_229119_3_, p_229119_4_, p_229119_9_, p_229119_10_, 24, j, false, p_229119_11_, p_229119_12_);
-			addVertexPair(p_229119_0_, p_229119_1_, i1, p_229119_2_, p_229119_3_, p_229119_4_, p_229119_9_, p_229119_10_, 24, j + 1, true, p_229119_11_, p_229119_12_);
+			addVertexPair(p_229119_0_, p_229119_1_, matrix3f, i1, p_229119_2_, p_229119_3_, p_229119_4_, p_229119_9_, p_229119_10_, 24, j, false, p_229119_11_, p_229119_12_);
+			addVertexPair(p_229119_0_, p_229119_1_, matrix3f, i1, p_229119_2_, p_229119_3_, p_229119_4_, p_229119_9_, p_229119_10_, 24, j + 1, true, p_229119_11_, p_229119_12_);
 		}
 
 	}
 
-	public static void addVertexPair(VertexConsumer p_229120_0_, Matrix4f p_229120_1_, int p_229120_2_, float p_229120_3_, float p_229120_4_, float p_229120_5_, float p_229120_6_, float p_229120_7_, int p_229120_8_, int p_229120_9_, boolean p_229120_10_, float p_229120_11_, float p_229120_12_) {
+	public static void addVertexPair(VertexConsumer p_229120_0_, Matrix4f p_229120_1_, Matrix3f matrix3f, int p_229120_2_, float p_229120_3_, float p_229120_4_, float p_229120_5_, float p_229120_6_, float p_229120_7_, int p_229120_8_, int p_229120_9_, boolean p_229120_10_, float p_229120_11_, float p_229120_12_) {
 		float f = 0.5F;
 		float f1 = 0.4F;
 		float f2 = 0.3F;
@@ -132,12 +134,12 @@ public class ClientEventHandler {
 		float f5 = p_229120_4_ > 0.0F ? p_229120_4_ * f3 * f3 : p_229120_4_ - p_229120_4_ * (1.0F - f3) * (1.0F - f3);
 		float f6 = p_229120_5_ * f3;
 		if (!p_229120_10_) {
-			p_229120_0_.vertex(p_229120_1_, f4 + p_229120_11_, f5 + p_229120_6_ - p_229120_7_, f6 - p_229120_12_).color(1.0F, 1.0F, 1.0F, 1.0F).uv(0.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_229120_2_).endVertex();
+			p_229120_0_.vertex(p_229120_1_, f4 + p_229120_11_, f5 + p_229120_6_ - p_229120_7_, f6 - p_229120_12_).color(1.0F, 1.0F, 1.0F, 1.0F).uv(0.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_229120_2_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
 		}
 
-		p_229120_0_.vertex(p_229120_1_, f4 - p_229120_11_, f5 + p_229120_7_, f6 + p_229120_12_).color(1.0F, 1.0F, 1.0F, 1.0F).uv(1.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_229120_2_).endVertex();
+		p_229120_0_.vertex(p_229120_1_, f4 - p_229120_11_, f5 + p_229120_7_, f6 + p_229120_12_).color(1.0F, 1.0F, 1.0F, 1.0F).uv(1.0F, 1.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_229120_2_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
 		if (p_229120_10_) {
-			p_229120_0_.vertex(p_229120_1_, f4 + p_229120_11_, f5 + p_229120_6_ - p_229120_7_, f6 - p_229120_12_).color(1.0F, 1.0F, 1.0F, 1.0F).uv(1.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_229120_2_).endVertex();
+			p_229120_0_.vertex(p_229120_1_, f4 + p_229120_11_, f5 + p_229120_6_ - p_229120_7_, f6 - p_229120_12_).color(1.0F, 1.0F, 1.0F, 1.0F).uv(1.0F, 0.0F).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(p_229120_2_).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
 		}
 
 	}
