@@ -13,6 +13,7 @@ import net.minecraft.client.model.SlimeModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
@@ -40,7 +41,7 @@ public class SlimeEnchantLayer<T extends LivingEntity> extends RenderLayer<T, Sl
 				if (!p_117473_.isInvisible() || flag) {
 					float intensity = cap.getMobEnchants().size() < 3 ? ((float) cap.getMobEnchants().size() / 3) : 3;
 
-					VertexConsumer vertexconsumer = p_117471_.getBuffer(EnchantLayer.enchantSwirl());
+					VertexConsumer vertexconsumer = p_117471_.getBuffer(EnchantLayer.enchantSwirl(ItemRenderer.ENCHANT_GLINT_LOCATION));
 
 					this.getParentModel().copyPropertiesTo(this.model);
 					this.model.prepareMobModel(p_117473_, p_117474_, p_117475_, p_117476_);

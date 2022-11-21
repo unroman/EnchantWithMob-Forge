@@ -8,6 +8,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.Entity;
 import software.bernie.geckolib3.core.IAnimatable;
@@ -27,7 +28,7 @@ public class GeoEnchantLayer<T extends Entity & IAnimatable> extends GeoLayerRen
 		entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
 			if (cap.hasEnchant()) {
-				RenderType glint = enchantSwirl();
+				RenderType glint = enchantSwirl(ItemRenderer.ENCHANT_GLINT_LOCATION);
 				this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, glint, poseStackIn, bufferIn,
 						bufferIn.getBuffer(glint), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
 			}

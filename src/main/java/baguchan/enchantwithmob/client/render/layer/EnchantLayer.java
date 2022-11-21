@@ -19,6 +19,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -43,6 +44,7 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
     });
     protected static final RenderStateShard.DepthTestStateShard EQUAL_DEPTH_TEST = new RenderStateShard.DepthTestStateShard("==", 514);
 
+    public static final ResourceLocation ANCIENT_GLINT = new ResourceLocation(EnchantWithMob.MODID, "textures/entity/ancient_glint.png");
 
     public EnchantLayer(RenderLayerParent<T, M> p_i50947_1_) {
         super(p_i50947_1_);
@@ -59,18 +61,18 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
                 EntityModel<T> entitymodel = this.getParentModel();
                 entitymodel.prepareMobModel(entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks);
                 this.getParentModel().copyPropertiesTo(entitymodel);
-                VertexConsumer ivertexbuilder = bufferIn.getBuffer(enchantSwirl());
+                VertexConsumer ivertexbuilder = bufferIn.getBuffer(enchantSwirl(ItemRenderer.ENCHANT_GLINT_LOCATION));
                 entitymodel.setupAnim(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
                 entitymodel.renderToBuffer(poseStackIn, ivertexbuilder, packedLightIn, OverlayTexture.NO_OVERLAY, intensity, intensity, intensity, 1.0F);
             }
         });
     }
 
-    public static RenderType enchantSwirl() {
+    public static RenderType enchantSwirl(ResourceLocation resourceLocation) {
         return RenderType.create("entity_enchant_glint", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
     }
 
-    public static RenderType enchantBeamSwirl() {
+    public static RenderType enchantBeamSwirl(ResourceLocation resourceLocation) {
         return RenderType.create("entity_enchant_bean_glint", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
     }
 

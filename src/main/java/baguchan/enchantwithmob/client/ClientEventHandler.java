@@ -3,10 +3,8 @@ package baguchan.enchantwithmob.client;
 import baguchan.enchantwithmob.EnchantWithMob;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3d;
 import com.mojang.math.Vector3f;
@@ -16,7 +14,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -31,6 +28,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import static baguchan.enchantwithmob.client.render.layer.EnchantLayer.enchantBeamSwirl;
 
 @OnlyIn(Dist.CLIENT)
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, value = Dist.CLIENT)
@@ -68,10 +67,6 @@ public class ClientEventHandler {
 
 	}
 
-	public static RenderType enchantBeamSwirl() {
-		return RenderType.create("entity_enchant_glint", DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(ItemRenderer.ENCHANT_GLINT_LOCATION, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
-	}
-
 	private static void renderBeam(LivingEntity p_229118_1_, float p_229118_2_, PoseStack p_229118_3_, MultiBufferSource p_229118_4_, Entity p_229118_5_, LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>> renderer) {
 		float tick = (float) p_229118_1_.tickCount + p_229118_2_;
 		p_229118_3_.pushPose();
@@ -88,7 +83,7 @@ public class ClientEventHandler {
 		float f1 = (float) (vector3d.y - d4);
 		float f2 = (float) (vector3d.z - d5);
 		float f3 = 0.1F;
-		VertexConsumer ivertexbuilder = p_229118_4_.getBuffer(enchantBeamSwirl());
+		VertexConsumer ivertexbuilder = p_229118_4_.getBuffer(enchantBeamSwirl(ItemRenderer.ENCHANT_GLINT_LOCATION));
 		Matrix4f matrix4f = p_229118_3_.last().pose();
 		float f4 = Mth.fastInvSqrt(f * f + f2 * f2) * 0.1F / 2.0F;
 		float f5 = f2 * f4;

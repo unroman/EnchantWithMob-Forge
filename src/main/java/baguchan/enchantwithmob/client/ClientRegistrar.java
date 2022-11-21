@@ -63,7 +63,7 @@ public class ClientRegistrar {
 			}
 
 			if (r instanceof LivingEntityRenderer) {
-				((LivingEntityRenderer) r).addLayer(new EnchantLayer((LivingEntityRenderer) r));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantLayer((LivingEntityRenderer<?, ?>) r));
 
 			}
 			if (GeckoLibCompat.isLoaded) {
@@ -72,20 +72,20 @@ public class ClientRegistrar {
 
 
 			if (r instanceof LivingEntityRenderer) {
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), BLAZE_EYES, EntityType.BLAZE));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), CREEPER_EYES, EntityType.CREEPER));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), EVOKER_EYES, EntityType.EVOKER));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), PILLAGER_EYES, EntityType.PILLAGER));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SKELETON_EYES, (entity) -> {
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), BLAZE_EYES, EntityType.BLAZE));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), CREEPER_EYES, EntityType.CREEPER));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), EVOKER_EYES, EntityType.EVOKER));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), PILLAGER_EYES, EntityType.PILLAGER));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), SKELETON_EYES, (entity) -> {
 					return entity instanceof AbstractSkeleton;
 				}));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SLIME_EYES, EntityType.SLIME));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), SPIDER_EYES, EntityType.SPIDER));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), VEX_EYES, EntityType.VEX));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), VINDICATOR_EYES, EntityType.VINDICATOR));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), WITCH_EYES, EntityType.WITCH));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), WOLF_EYES, EntityType.WOLF));
-				((LivingEntityRenderer) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer) r), ZOMBIE_EYES, (entity) -> {
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), SLIME_EYES, EntityType.SLIME));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), SPIDER_EYES, EntityType.SPIDER));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), VEX_EYES, EntityType.VEX));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), VINDICATOR_EYES, EntityType.VINDICATOR));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), WITCH_EYES, EntityType.WITCH));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), WOLF_EYES, EntityType.WOLF));
+				((LivingEntityRenderer<?, ?>) r).addLayer(new EnchantedEyesLayer(((LivingEntityRenderer<?, ?>) r), ZOMBIE_EYES, (entity) -> {
 					return entity instanceof Zombie;
 				}));
 
