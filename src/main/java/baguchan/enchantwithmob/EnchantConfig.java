@@ -69,10 +69,10 @@ public class EnchantConfig {
                     .comment("Disables specific mob from receiveing enchantments on spawn. Use the full name, eg: minecraft:ender_dragon.")
                     .define("enchantOnSpawnExclusionMobs", Lists.newArrayList("minecraft:wither", "minecraft:ender_dragon"));
             ALWAY_ENCHANTABLE_MOBS = builder
-                    .comment("Allow the specific mob from alway receiveing enchantments on spawn(This feature may break for balance so be careful). Use the full name, eg: minecraft:zombie.")
+                    .comment("Allow the specific mob from alway receiveing enchantments on spawn. Use the full name, eg: minecraft:zombie.")
                     .define("alwayEnchantableMobs", Lists.newArrayList());
             ALWAY_ENCHANTABLE_ANCIENT_MOBS = builder
-                    .comment("Allow the specific mob from alway receiveing enchantments as Ancient Mob Tag on spawn. Use the full name, eg: minecraft:zombie.")
+                    .comment("Allow the specific mob from alway receiveing enchantments as Ancient Mob on spawn(This feature may break for balance so be careful). Use the full name, eg: minecraft:zombie.")
                     .define("alwayEnchantableAncientMobs", Lists.newArrayList());
             DISABLE_ENCHANTS = builder
                     .comment("Disables the specific mob enchant. Use the full name(This config only disabled mob enchant when mob spawn. not mean delete complete, eg: enchantwithmob:thorn.")
