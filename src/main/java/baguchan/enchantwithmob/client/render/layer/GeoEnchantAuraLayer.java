@@ -4,6 +4,7 @@ import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.client.render.layer.geo.EnchantedAuraGeoModel;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,9 +36,11 @@ public class GeoEnchantAuraLayer<T extends LivingEntity, M extends EntityModel<T
 			if (cap.hasEnchant() && !EnchantConfig.CLIENT.disableAuraRender.get()) {
 				float f = (float) entitylivingbaseIn.tickCount + partialTicks;
 				poseStackIn.pushPose();
+				poseStackIn.mulPose(Vector3f.YP.rotationDegrees(f * 15F));
+				poseStackIn.scale(-1.0F, -1.0F, 1.0F);
+				poseStackIn.translate(0.0D, (double) -1.501F, 0.0D);
 				GeoModel model = modelProvider.getModel(modelProvider.getModelResource(entitylivingbaseIn));
-
-				RenderType renderType = RenderType.entityTranslucentEmissive(this.getTextureLocation(entitylivingbaseIn));
+				RenderType renderType = RenderType.entityTranslucentEmissive(this.modelProvider.getTextureResource(entitylivingbaseIn));
 				if (!entitylivingbaseIn.isInvisibleTo(Minecraft.getInstance().player))
 					render(model, entitylivingbaseIn, partialTicks, renderType, poseStackIn, bufferIn, null, packedLightIn,
 							getPackedOverlay(entitylivingbaseIn, 0), 1.0f,
