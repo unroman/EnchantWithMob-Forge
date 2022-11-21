@@ -49,9 +49,9 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue dungeonsLikeHealth;
         public final ForgeConfigSpec.BooleanValue bigYourSelf;
 
-
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ENCHANT_ON_SPAWN_EXCLUSION_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_MOBS;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_ANCIENT_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ENCHANTS;
 
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_POISON_CLOUD_PROJECTILE;
@@ -69,8 +69,11 @@ public class EnchantConfig {
                     .comment("Disables specific mob from receiveing enchantments on spawn. Use the full name, eg: minecraft:ender_dragon.")
                     .define("enchantOnSpawnExclusionMobs", Lists.newArrayList("minecraft:wither", "minecraft:ender_dragon"));
             ALWAY_ENCHANTABLE_MOBS = builder
-                    .comment("Allow the specific mob from alway receiveing enchantments on spawn. Use the full name, eg: minecraft:zombie.")
+                    .comment("Allow the specific mob from alway receiveing enchantments on spawn(This feature may break for balance so be careful). Use the full name, eg: minecraft:zombie.")
                     .define("alwayEnchantableMobs", Lists.newArrayList());
+            ALWAY_ENCHANTABLE_ANCIENT_MOBS = builder
+                    .comment("Allow the specific mob from alway receiveing enchantments as Ancient Mob Tag on spawn. Use the full name, eg: minecraft:zombie.")
+                    .define("alwayEnchantableAncientMobs", Lists.newArrayList());
             DISABLE_ENCHANTS = builder
                     .comment("Disables the specific mob enchant. Use the full name(This config only disabled mob enchant when mob spawn. not mean delete complete, eg: enchantwithmob:thorn.")
                     .define("disableMobEnchants", Lists.newArrayList());

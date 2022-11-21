@@ -73,7 +73,36 @@ public class CommonEventHandler {
 		if (event.getEntity() instanceof LivingEntity) {
 			LevelAccessor world = event.getLevel();
 
-			LivingEntity livingEntity = (LivingEntity) event.getEntity();
+			LivingEntity livingEntity = event.getEntity();
+
+			if (isSpawnAlwayEnchantableAncientEntity(livingEntity)) {
+				if (!world.isClientSide()) {
+					livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
+					{
+						int i = 0;
+						float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
+						switch (world.getDifficulty()) {
+							case EASY:
+								i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 30);
+
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+								break;
+							case NORMAL:
+								i = (int) Mth.clamp((5 + world.getRandom().nextInt(15)) * difficultScale, 1, 60);
+
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+								break;
+							case HARD:
+								i = (int) Mth.clamp((5 + world.getRandom().nextInt(20)) * difficultScale, 1, 100);
+
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+								break;
+						}
+
+						livingEntity.setHealth(livingEntity.getMaxHealth());
+					});
+				}
+			}
 
 			// On add MobEnchant Alway Enchantable Mob
 			if (isSpawnAlwayEnchantableEntity(livingEntity)) {
@@ -146,6 +175,10 @@ public class CommonEventHandler {
 
 	private static boolean isSpawnAlwayEnchantableEntity(Entity entity) {
 		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && EnchantConfig.COMMON.ALWAY_ENCHANTABLE_MOBS.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());
+	}
+
+	private static boolean isSpawnAlwayEnchantableAncientEntity(Entity entity) {
+		return !(entity instanceof Player) && !(entity instanceof ArmorStand) && !(entity instanceof Boat) && !(entity instanceof Minecart) && EnchantConfig.COMMON.ALWAY_ENCHANTABLE_ANCIENT_MOBS.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString());
 	}
 
 	private static boolean isSpawnEnchantableEntity(Entity entity) {
