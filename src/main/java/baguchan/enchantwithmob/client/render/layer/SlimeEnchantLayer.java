@@ -21,6 +21,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import static baguchan.enchantwithmob.client.render.layer.EnchantLayer.ANCIENT_GLINT;
+
 
 @OnlyIn(Dist.CLIENT)
 public class SlimeEnchantLayer<T extends LivingEntity> extends RenderLayer<T, SlimeModel<T>> {
@@ -33,15 +35,13 @@ public class SlimeEnchantLayer<T extends LivingEntity> extends RenderLayer<T, Sl
 
 	public void render(PoseStack p_117470_, MultiBufferSource p_117471_, int p_117472_, T p_117473_, float p_117474_, float p_117475_, float p_117476_, float p_117477_, float p_117478_, float p_117479_) {
 		Minecraft minecraft = Minecraft.getInstance();
-		boolean flag = minecraft.shouldEntityAppearGlowing(p_117473_) && p_117473_.isInvisible();
-
 		p_117473_.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
 			if (cap.hasEnchant()) {
-				if (!p_117473_.isInvisible() || flag) {
+				if (!p_117473_.isInvisible()) {
 					float intensity = cap.getMobEnchants().size() < 3 ? ((float) cap.getMobEnchants().size() / 3) : 3;
 
-					VertexConsumer vertexconsumer = p_117471_.getBuffer(EnchantLayer.enchantSwirl(ItemRenderer.ENCHANT_GLINT_LOCATION));
+					VertexConsumer vertexconsumer = p_117471_.getBuffer(EnchantLayer.enchantSwirl(cap.isAncient() ? ANCIENT_GLINT : ItemRenderer.ENCHANT_GLINT_LOCATION));
 
 					this.getParentModel().copyPropertiesTo(this.model);
 					this.model.prepareMobModel(p_117473_, p_117474_, p_117475_, p_117476_);

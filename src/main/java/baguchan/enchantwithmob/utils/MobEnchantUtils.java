@@ -245,13 +245,13 @@ public class MobEnchantUtils {
 	 * @param level        max limit level MobEnchant
 	 * @param allowTresure setting is allow rare enchant
 	 */
-	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowTresure) {
+	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowTresure, boolean ancient) {
 		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
 
 		boolean flag = false;
 		for (MobEnchantmentData enchantmentdata : list) {
 			if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
-				capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
+				capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ancient);
 				flag = true;
 			}
 		}

@@ -3,6 +3,7 @@ package baguchan.enchantwithmob;
 import baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantHandler;
+import baguchan.enchantwithmob.message.AncientMobMessage;
 import baguchan.enchantwithmob.message.MobEnchantedMessage;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
@@ -85,17 +86,17 @@ public class CommonEventHandler {
 							case EASY:
 								i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
-								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
 								break;
 							case NORMAL:
 								i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
-								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
 								break;
 							case HARD:
 								i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
 
-								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+								MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
 								break;
 						}
 
@@ -119,17 +120,17 @@ public class CommonEventHandler {
 										case EASY:
 											i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
-											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
 											break;
 										case NORMAL:
 											i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
-											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
 											break;
 										case HARD:
 											i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
 
-											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true);
+											MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
 											break;
 									}
 
@@ -164,10 +165,14 @@ public class CommonEventHandler {
 						MobEnchantedMessage message = new MobEnchantedMessage(livingEntity, cap.getMobEnchants().get(i));
 						EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
 					}
+
+					AncientMobMessage message = new AncientMobMessage(livingEntity, cap.getEnchantType().name());
+					EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY.with(() -> livingEntity), message);
 				}
 
 				if (cap.isFromOwner() && (!cap.hasOwner() || cap.hasOwner() && livingEntity.distanceToSqr(cap.getEnchantOwner().get()) > 512)) {
 					cap.removeMobEnchantFromOwner(livingEntity);
+					cap.setEnchantType(livingEntity, MobEnchantCapability.EnchantType.NORMAL);
 					livingEntity.playSound(SoundEvents.ITEM_BREAK, 1.5F, 1.6F);
 				}
 			});
@@ -416,6 +421,9 @@ public class CommonEventHandler {
 					EnchantWithMob.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new MobEnchantedMessage(player, handler.getMobEnchants().get(i)));
 
 				}
+
+				AncientMobMessage message = new AncientMobMessage(player, handler.getEnchantType().name());
+				EnchantWithMob.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), message);
 			});
 	}
 
@@ -424,7 +432,11 @@ public class CommonEventHandler {
 		LivingEntity entity = event.getEntity();
 		entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
 			if (cap.hasEnchant()) {
-				event.setDroppedExperience(event.getDroppedExperience() + MobEnchantUtils.getExperienceFromMob(cap));
+				if (cap.isAncient()) {
+					event.setDroppedExperience(event.getDroppedExperience() + MobEnchantUtils.getExperienceFromMob(cap) * 5);
+				} else {
+					event.setDroppedExperience(event.getDroppedExperience() + MobEnchantUtils.getExperienceFromMob(cap));
+				}
 			}
 		});
 	}
@@ -436,6 +448,8 @@ public class CommonEventHandler {
 			for (int i = 0; i < handler.getMobEnchants().size(); i++) {
 				EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new MobEnchantedMessage(playerEntity, handler.getMobEnchants().get(i)));
 			}
+			AncientMobMessage message = new AncientMobMessage(playerEntity, handler.getEnchantType().name());
+			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), message);
 		});
 	}
 }

@@ -26,7 +26,9 @@ public class MobUnEnchantBookItem extends Item {
 		ItemStack stack = playerIn.getItemInHand(handIn);
 		playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
-			MobEnchantUtils.removeMobEnchantToEntity(playerIn, cap);
+			if (!cap.isAncient()) {
+				MobEnchantUtils.removeMobEnchantToEntity(playerIn, cap);
+			}
 		});
 		playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 

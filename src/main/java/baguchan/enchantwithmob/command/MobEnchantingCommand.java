@@ -1,9 +1,11 @@
 package baguchan.enchantwithmob.command;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
@@ -29,7 +31,6 @@ public class MobEnchantingCommand {
 
 		LiteralArgumentBuilder<CommandSourceStack> enchantCommand = Commands.literal("mob_enchanting")
 				.requires(player -> player.hasPermission(2));
-
 		enchantCommand.then(Commands.literal("clear").then(Commands.argument("target", EntityArgument.entity()).executes((ctx) -> {
 			return setClear(ctx.getSource(), EntityArgument.getEntity(ctx, "target"));
 		}))).then(Commands.literal("give").then(Commands.argument("target", EntityArgument.entity())
@@ -37,6 +38,16 @@ public class MobEnchantingCommand {
 						.then(Commands.argument("level", IntegerArgumentType.integer()).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "MobEnchantment"), IntegerArgumentType.getInteger(p_198357_0_, "level")))))));
 
 		dispatcher.register(enchantCommand);
+
+		LiteralArgumentBuilder<CommandSourceStack> ancientEnchantCommand = Commands.literal("ancient_mob")
+				.requires(player -> player.hasPermission(2));
+
+
+		ancientEnchantCommand.then(Commands.argument("target", EntityArgument.entity()).then(Commands.argument("ancient", BoolArgumentType.bool()).executes((ctx) -> {
+			return setAncientMob(ctx.getSource(), EntityArgument.getEntity(ctx, "target"), BoolArgumentType.getBool(ctx, "ancient"));
+		})));
+
+		dispatcher.register(ancientEnchantCommand);
 	}
 
 	private static int setClear(CommandSourceStack commandStack, Entity entity) {
@@ -45,6 +56,7 @@ public class MobEnchantingCommand {
 			if (entity instanceof LivingEntity) {
 				entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
 					cap.removeAllMobEnchant((LivingEntity) entity);
+					cap.setEnchantType((LivingEntity) entity, MobEnchantCapability.EnchantType.NORMAL);
 				});
 
 				commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.clear", entity.getDisplayName()), true);
@@ -56,6 +68,28 @@ public class MobEnchantingCommand {
 			}
 		} else {
 			commandStack.sendFailure(Component.translatable("commands.enchantwithmob.mob_enchanting.clear.fail.no_entity"));
+
+			return 0;
+		}
+	}
+
+	private static int setAncientMob(CommandSourceStack commandStack, Entity entity, boolean ancientMob) {
+		if (entity != null) {
+			if (entity instanceof LivingEntity) {
+
+				entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
+					cap.setEnchantType((LivingEntity) entity, ancientMob ? MobEnchantCapability.EnchantType.ANCIENT : MobEnchantCapability.EnchantType.NORMAL);
+				});
+
+				commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.ancient_mob.set_ancient", entity.getDisplayName()), true);
+				return 1;
+			} else {
+				commandStack.sendFailure(Component.translatable("commands.enchantwithmob.ancient_mobb.fail.no_living_entity", entity.getDisplayName()));
+
+				return 0;
+			}
+		} else {
+			commandStack.sendFailure(Component.translatable("commands.enchantwithmob.ancient_mob.fail.no_entity"));
 
 			return 0;
 		}

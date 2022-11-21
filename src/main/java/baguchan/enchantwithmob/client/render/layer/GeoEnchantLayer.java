@@ -15,6 +15,7 @@ import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
 import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
+import static baguchan.enchantwithmob.client.render.layer.EnchantLayer.ANCIENT_GLINT;
 import static baguchan.enchantwithmob.client.render.layer.EnchantLayer.enchantSwirl;
 
 public class GeoEnchantLayer<T extends Entity & IAnimatable> extends GeoLayerRenderer<T> {
@@ -27,8 +28,8 @@ public class GeoEnchantLayer<T extends Entity & IAnimatable> extends GeoLayerRen
 		float tick = (float) entitylivingbaseIn.tickCount + partialTicks;
 		entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
 		{
-			if (cap.hasEnchant()) {
-				RenderType glint = enchantSwirl(ItemRenderer.ENCHANT_GLINT_LOCATION);
+			if (cap.hasEnchant() && !entitylivingbaseIn.isInvisible()) {
+				RenderType glint = enchantSwirl(cap.isAncient() ? ANCIENT_GLINT : ItemRenderer.ENCHANT_GLINT_LOCATION);
 				this.getRenderer().render(this.getEntityModel().getModel(this.getEntityModel().getModelResource(entitylivingbaseIn)), entitylivingbaseIn, partialTicks, glint, poseStackIn, bufferIn,
 						bufferIn.getBuffer(glint), packedLightIn, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
 			}

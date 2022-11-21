@@ -3,6 +3,7 @@ package baguchan.enchantwithmob;
 import baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.command.MobEnchantingCommand;
+import baguchan.enchantwithmob.message.AncientMobMessage;
 import baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import baguchan.enchantwithmob.message.MobEnchantedMessage;
 import baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
@@ -115,6 +116,10 @@ public class EnchantWithMob {
 		CHANNEL.messageBuilder(SoulParticleMessage.class, 4)
 				.encoder(SoulParticleMessage::serialize).decoder(SoulParticleMessage::deserialize)
 				.consumerMainThread(SoulParticleMessage::handle)
+				.add();
+		CHANNEL.messageBuilder(AncientMobMessage.class, 5)
+				.encoder(AncientMobMessage::serialize).decoder(AncientMobMessage::deserialize)
+				.consumerMainThread(AncientMobMessage::handle)
 				.add();
 	}
 

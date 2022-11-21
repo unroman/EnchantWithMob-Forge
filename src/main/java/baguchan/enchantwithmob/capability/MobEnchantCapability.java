@@ -2,6 +2,7 @@ package baguchan.enchantwithmob.capability;
 
 import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.message.AncientMobMessage;
 import baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
 import baguchan.enchantwithmob.message.MobEnchantedMessage;
 import baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
@@ -38,6 +39,8 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 	private Optional<LivingEntity> enchantOwner = Optional.empty();
 	private boolean fromOwner;
 
+	private EnchantType enchantType = EnchantType.NORMAL;
+
 
 	/**
 	 * add MobEnchant on Entity
@@ -57,6 +60,19 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		}
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
+	}
+
+	public void addMobEnchant(LivingEntity entity, MobEnchant mobEnchant, int enchantLevel, boolean ancient) {
+		this.addMobEnchant(entity, mobEnchant, enchantLevel);
+		this.setEnchantType(entity, ancient ? EnchantType.ANCIENT : EnchantType.NORMAL);
+	}
+
+	public void setEnchantType(LivingEntity entity, EnchantType enchantType) {
+		this.enchantType = enchantType;
+		if (!entity.level.isClientSide) {
+			AncientMobMessage message = new AncientMobMessage(entity, enchantType.name());
+			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
+		}
 	}
 
 	/**
@@ -201,6 +217,14 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		return this.fromOwner;
 	}
 
+	public EnchantType getEnchantType() {
+		return enchantType;
+	}
+
+	public boolean isAncient() {
+		return enchantType == EnchantType.ANCIENT;
+	}
+
 	@Override
 	@Nonnull
 	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
@@ -219,6 +243,7 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		nbt.put("StoredMobEnchants", listnbt);
 		nbt.putBoolean("FromOwner", fromOwner);
 
+		nbt.putString("EnchantType", enchantType.name());
 
 		return nbt;
 	}
@@ -239,5 +264,20 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		}
 
 		fromOwner = nbt.getBoolean("FromOwner");
+
+		enchantType = EnchantType.get(nbt.getString("EnchantType"));
+	}
+
+	public enum EnchantType {
+		NORMAL,
+		ANCIENT;
+
+		public static EnchantType get(String nameIn) {
+			for (EnchantType enchantType : values()) {
+				if (enchantType.name().equals(nameIn))
+					return enchantType;
+			}
+			return NORMAL;
+		}
 	}
 }
