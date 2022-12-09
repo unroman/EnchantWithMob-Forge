@@ -6,10 +6,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3d;
-import com.mojang.math.Vector3f;
 import net.minecraft.Util;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -31,6 +27,9 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3d;
 
 import static baguchan.enchantwithmob.client.render.layer.EnchantLayer.ANCIENT_GLINT;
 import static baguchan.enchantwithmob.client.render.layer.EnchantLayer.enchantBeamSwirl;
@@ -153,12 +152,11 @@ public class ClientEventHandler {
 	}
 
 	private static void setupGlintTexturing(float p_110187_) {
-		long var1 = Util.getMillis() * 8L;
-		float var3 = (float) (var1 % 110000L) / 110000.0F;
-		float var4 = (float) (var1 % 30000L) / 30000.0F;
-		Matrix4f var5 = Matrix4f.createTranslateMatrix(-var3, var4, 0.0F);
-		var5.multiply(Vector3f.ZP.rotationDegrees(10.0F));
-		var5.multiply(Matrix4f.createScaleMatrix(p_110187_, p_110187_, p_110187_));
-		RenderSystem.setTextureMatrix(var5);
+		long i = Util.getMillis() * 8L;
+		float f = (float) (i % 110000L) / 110000.0F;
+		float f1 = (float) (i % 30000L) / 30000.0F;
+		Matrix4f matrix4f = (new Matrix4f()).translation(-f, f1, 0.0F);
+		matrix4f.rotateZ(0.17453292F).scale(p_110187_);
+		RenderSystem.setTextureMatrix(matrix4f);
 	}
 }

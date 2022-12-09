@@ -7,7 +7,6 @@ import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -19,7 +18,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -99,22 +97,6 @@ public class EnchantersBookItem extends Item {
 			}
 		}
 		return super.use(level, playerIn, handIn);
-	}
-
-	@Override
-	public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
-		if (this.allowedIn(p_41391_)) {
-			for (MobEnchant enchant : MobEnchants.getRegistry().get().getValues()) {
-				ItemStack stack = new ItemStack(this);
-				MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
-				p_41392_.add(stack);
-			}
-		}
-	}
-
-	public static ListTag getEnchantmentList(ItemStack stack) {
-		CompoundTag compoundnbt = stack.getTag();
-		return compoundnbt != null ? compoundnbt.getList(MobEnchantUtils.TAG_STORED_MOBENCHANTS, 10) : new ListTag();
 	}
 
 	@Override

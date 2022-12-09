@@ -115,6 +115,7 @@ public class EnchanterEntity extends SpellcasterIllager {
         this.capeZ += (this.getZ() - this.capeZ) * elasticity;
     }
 
+    @Override
     public boolean isAlliedTo(Entity p_184191_1_) {
         if (super.isAlliedTo(p_184191_1_)) {
             return true;
@@ -188,7 +189,7 @@ public class EnchanterEntity extends SpellcasterIllager {
 		return ModSoundEvents.ENCHANTER_HURT.get();
     }
 
-
+    @Override
     protected SoundEvent getCastingSoundEvent() {
 		return ModSoundEvents.ENCHANTER_SPELL.get();
     }
@@ -198,6 +199,7 @@ public class EnchanterEntity extends SpellcasterIllager {
 		return ModSoundEvents.ENCHANTER_AMBIENT.get();
     }
 
+    @Override
     public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
     }
 

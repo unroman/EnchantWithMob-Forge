@@ -21,7 +21,7 @@ public class ModSoundEvents {
 
 	private static RegistryObject<SoundEvent> createEvent(String sound) {
 		ResourceLocation name = new ResourceLocation(EnchantWithMob.MODID, sound);
-		return SOUND_EVENTS.register(sound, () -> new SoundEvent(name));
+		return SOUND_EVENTS.register(sound, () -> SoundEvent.createVariableRangeEvent(name));
 	}
 
 }

@@ -6,7 +6,7 @@ import baguchan.enchantwithmob.client.model.EnchanterModel;
 import baguchan.enchantwithmob.entity.EnchanterEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -44,15 +44,15 @@ public class EnchanterRenderer<T extends EnchanterEntity> extends MobRenderer<T,
 
         if (entityIn.isAlive()) {
             matrixStackIn.pushPose();
-            matrixStackIn.translate(0.0D, 1.1625D, 0.0F);
-            matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-f + 90F));
-            matrixStackIn.translate(-0.575D, 0.0D, 0.0D);
-            matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(60.0F * bookAnimation));
+			matrixStackIn.translate(0.0D, 1.1625D, 0.0F);
+			matrixStackIn.mulPose(Axis.YP.rotationDegrees(-f + 90F));
+			matrixStackIn.translate(-0.575D, 0.0D, 0.0D);
+			matrixStackIn.mulPose(Axis.ZP.rotationDegrees(60.0F * bookAnimation));
 
             //When spell casting, stop animation
             if (swingProgress > 0 && !entityIn.isCastingSpell()) {
-                matrixStackIn.translate(-0.05F * (1.0F - swingProgress), -0.1F * (1.0F - swingProgress), 0.0D);
-                matrixStackIn.mulPose(Vector3f.ZP.rotationDegrees(45.0F * (1.0F - swingProgress)));
+				matrixStackIn.translate(-0.05F * (1.0F - swingProgress), -0.1F * (1.0F - swingProgress), 0.0D);
+				matrixStackIn.mulPose(Axis.ZP.rotationDegrees(45.0F * (1.0F - swingProgress)));
             }
 
             this.bookModel.setupAnim(0.0F, Mth.clamp(bookAnimation, 0.0F, 0.1F), Mth.clamp(bookAnimation, 0.0F, 0.9F), bookAnimation);

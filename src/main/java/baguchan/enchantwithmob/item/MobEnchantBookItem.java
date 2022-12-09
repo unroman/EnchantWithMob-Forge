@@ -4,11 +4,11 @@ import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
+import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -23,6 +23,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.CreativeModeTabEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -80,24 +81,21 @@ public class MobEnchantBookItem extends Item {
 
 				return InteractionResultHolder.fail(stack);
 			}
-        }
-		return super.use(level, playerIn, handIn);
-    }
-
-	@Override
-	public void fillItemCategory(CreativeModeTab p_41391_, NonNullList<ItemStack> p_41392_) {
-		if (this.allowedIn(p_41391_)) {
-			for (MobEnchant enchant : MobEnchants.getRegistry().get()) {
-				ItemStack stack = new ItemStack(this);
-				MobEnchantUtils.addMobEnchantToItemStack(stack, enchant, enchant.getMaxLevel());
-				p_41392_.add(stack);
-			}
 		}
+		return super.use(level, playerIn, handIn);
 	}
 
-	public static ListTag getEnchantmentList(ItemStack stack) {
-		CompoundTag compoundnbt = stack.getTag();
-		return compoundnbt != null ? compoundnbt.getList(MobEnchantUtils.TAG_STORED_MOBENCHANTS, 10) : new ListTag();
+	public static void generateMobEnchantmentBookTypesOnlyMaxLevel(CreativeModeTabEvent.CreativeModeTabPopulator output, CreativeModeTab.TabVisibility tabVisibility) {
+
+		for (MobEnchant mobEnchant : MobEnchants.getRegistry().get().getValues()) {
+			ItemStack stack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
+			MobEnchantUtils.addMobEnchantToItemStack(stack, mobEnchant, mobEnchant.getMaxLevel());
+			output.accept(stack, tabVisibility);
+
+			ItemStack stack2 = new ItemStack(ModItems.ENCHANTERS_BOOK.get());
+			MobEnchantUtils.addMobEnchantToItemStack(stack2, mobEnchant, mobEnchant.getMaxLevel());
+			output.accept(stack2, tabVisibility);
+		}
 	}
 
 	@Override

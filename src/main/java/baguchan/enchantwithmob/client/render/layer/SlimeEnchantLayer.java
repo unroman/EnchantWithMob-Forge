@@ -1,12 +1,8 @@
 package baguchan.enchantwithmob.client.render.layer;
 
 import baguchan.enchantwithmob.EnchantWithMob;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Vector3f;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.SlimeModel;
@@ -50,15 +46,5 @@ public class SlimeEnchantLayer<T extends LivingEntity> extends RenderLayer<T, Sl
 				}
 			}
 		});
-	}
-
-	private static void setupGlintTexturing(float p_110187_) {
-		long var1 = Util.getMillis() * 8L;
-		float var3 = (float) (var1 % 110000L) / 110000.0F;
-		float var4 = (float) (var1 % 30000L) / 30000.0F;
-		Matrix4f var5 = Matrix4f.createTranslateMatrix(-var3, var4, 0.0F);
-		var5.multiply(Vector3f.ZP.rotationDegrees(10.0F));
-		var5.multiply(Matrix4f.createScaleMatrix(p_110187_, p_110187_, p_110187_));
-		RenderSystem.setTextureMatrix(var5);
 	}
 }

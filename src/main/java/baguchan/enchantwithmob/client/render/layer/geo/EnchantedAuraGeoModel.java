@@ -1,8 +1,6 @@
 package baguchan.enchantwithmob.client.render.layer.geo;
 
-import baguchan.enchantwithmob.EnchantWithMob;
-import net.minecraft.resources.ResourceLocation;
-import software.bernie.geckolib3.model.AnimatedGeoModel;
+/*
 
 public class EnchantedAuraGeoModel extends AnimatedGeoModel {
 
@@ -20,4 +18,4 @@ public class EnchantedAuraGeoModel extends AnimatedGeoModel {
 	public ResourceLocation getAnimationResource(Object animatable) {
 		return new ResourceLocation(EnchantWithMob.MODID, "animations/enchanted_aura.animation.json");
 	}
-}
+}*/

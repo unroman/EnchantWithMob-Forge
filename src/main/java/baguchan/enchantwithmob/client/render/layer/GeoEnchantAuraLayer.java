@@ -1,34 +1,30 @@
 package baguchan.enchantwithmob.client.render.layer;
 
-import baguchan.enchantwithmob.EnchantConfig;
-import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.client.render.layer.geo.EnchantedAuraGeoModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import software.bernie.geckolib3.geo.render.built.GeoModel;
-import software.bernie.geckolib3.model.provider.GeoModelProvider;
-import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
 
-public class GeoEnchantAuraLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> implements IGeoRenderer {
+public class GeoEnchantAuraLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
+/*
 	private final EnchantedAuraGeoModel modelProvider;
 	protected float widthScale = 1;
 	protected float heightScale = 1;
+*/
 
 	public GeoEnchantAuraLayer(RenderLayerParent<T, M> p_i50947_1_) {
 		super(p_i50947_1_);
-		this.modelProvider = new EnchantedAuraGeoModel();
+		//this.modelProvider = new EnchantedAuraGeoModel();
 	}
 
+	@Override
+	public void render(PoseStack p_117349_, MultiBufferSource p_117350_, int p_117351_, T p_117352_, float p_117353_, float p_117354_, float p_117355_, float p_117356_, float p_117357_, float p_117358_) {
+
+	}
+
+	/*
 	public void render(PoseStack poseStackIn, MultiBufferSource bufferIn, int packedLightIn, T entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
 		float tick = (float) entitylivingbaseIn.tickCount + partialTicks;
 		entitylivingbaseIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
@@ -86,5 +82,5 @@ public class GeoEnchantAuraLayer<T extends LivingEntity, M extends EntityModel<T
 	@Override
 	public float getHeightScale(Object entity) {
 		return this.heightScale;
-	}
+	}*/
 }
