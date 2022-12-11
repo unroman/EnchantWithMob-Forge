@@ -18,12 +18,10 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.CreativeModeTabEvent;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -85,17 +83,18 @@ public class MobEnchantBookItem extends Item {
 		return super.use(level, playerIn, handIn);
 	}
 
-	public static void generateMobEnchantmentBookTypesOnlyMaxLevel(CreativeModeTabEvent.CreativeModeTabPopulator output, CreativeModeTab.TabVisibility tabVisibility) {
-
+	public static List<ItemStack> generateMobEnchantmentBookTypesOnlyMaxLevel() {
+		List<ItemStack> items = Lists.newArrayList();
 		for (MobEnchant mobEnchant : MobEnchants.getRegistry().get().getValues()) {
 			ItemStack stack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
 			MobEnchantUtils.addMobEnchantToItemStack(stack, mobEnchant, mobEnchant.getMaxLevel());
-			output.accept(stack, tabVisibility);
+			items.add(stack);
 
 			ItemStack stack2 = new ItemStack(ModItems.ENCHANTERS_BOOK.get());
 			MobEnchantUtils.addMobEnchantToItemStack(stack2, mobEnchant, mobEnchant.getMaxLevel());
-			output.accept(stack2, tabVisibility);
+			items.add(stack2);
 		}
+		return items;
 	}
 
 	@Override
