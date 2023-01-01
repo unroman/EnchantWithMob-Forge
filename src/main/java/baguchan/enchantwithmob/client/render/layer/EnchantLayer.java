@@ -75,12 +75,23 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         return RenderType.create("entity_enchant_bean_glint", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(ADDITIVE_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
     }
 
+    //test
+    /*
+    * public static RenderType enchantSwirl(ResourceLocation resourceLocation) {
+        return RenderType.create("entity_enchant_glint", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setDepthTestState(EQUAL_DEPTH_TEST).setTransparencyState(GLINT_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
+    }
+
+    public static RenderType enchantBeamSwirl(ResourceLocation resourceLocation) {
+        return RenderType.create("entity_enchant_bean_glint", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true, RenderType.CompositeState.builder().setShaderState(RENDERTYPE_ENERGY_SWIRL_SHADER).setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false)).setCullState(NO_CULL).setLightmapState(LIGHTMAP).setTransparencyState(GLINT_TRANSPARENCY).setTexturingState(ENTITY_GLINT_TEXTURING).createCompositeState(false));
+    }
+    * */
+
     private static void setupGlintTexturing(float p_110187_) {
-		long i = Util.getMillis() * 8L;
-		float f = (float) (i % 110000L) / 110000.0F;
-		float f1 = (float) (i % 30000L) / 30000.0F;
-		Matrix4f matrix4f = (new Matrix4f()).translation(-f, f1, 0.0F);
-		matrix4f.rotateZ(0.17453292F).scale(p_110187_);
-		RenderSystem.setTextureMatrix(matrix4f);
-	}
+        long i = Util.getMillis() * 8L;
+        float f = (float) (i % 110000L) / 110000.0F;
+        float f1 = (float) (i % 30000L) / 30000.0F;
+        Matrix4f matrix4f = (new Matrix4f()).translation(-f, f1, 0.0F);
+        matrix4f.rotateZ(0.17453292F).scale(p_110187_);
+        RenderSystem.setTextureMatrix(matrix4f);
+    }
 }
