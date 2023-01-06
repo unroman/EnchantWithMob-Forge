@@ -7,6 +7,9 @@
   "mixins": [
   ],
   "client": [
+    "ArrowMixin",
+    "WitherSkullRendererMixin",
+    "EnderDragonRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
