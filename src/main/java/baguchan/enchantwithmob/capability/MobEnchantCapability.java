@@ -189,7 +189,7 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
 			if (modifiableattributeinstance != null) {
 				if (modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
-					entity.setHealth(entity.getHealth() / 1.5F);
+					entity.setHealth(entity.getHealth() / 1.25F);
 					modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
 				}
 			}
