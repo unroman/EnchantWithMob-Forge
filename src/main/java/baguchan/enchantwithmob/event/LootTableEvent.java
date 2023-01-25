@@ -2,6 +2,7 @@ package baguchan.enchantwithmob.event;
 
 import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.loot.MobEnchantRandomlyFunction;
+import baguchan.enchantwithmob.loot.MobEnchantWithLevelsFunction;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.registry.ModItems;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +40,7 @@ public class LootTableEvent {
 		}
 
 		if (event.getName().equals(ANCIENT_CITY)) {
-			event.getTable().addPool(LootPool.lootPool().apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))).add(LootItem.lootTableItem(ModItems.MOB_ENCHANT_BOOK.get()).setWeight(1).apply(new MobEnchantRandomlyFunction.Builder().withMobEnchant(MobEnchants.SOUL_STEAL.get()))).add(LootItem.lootTableItem(Items.AIR).setWeight(4)).build());
+			event.getTable().addPool(LootPool.lootPool().apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F))).add(LootItem.lootTableItem(ModItems.MOB_ENCHANT_BOOK.get()).setWeight(1).apply(new MobEnchantRandomlyFunction.Builder().withMobEnchant(MobEnchants.SOUL_STEAL.get()))).add(LootItem.lootTableItem(ModItems.MOB_ENCHANT_BOOK.get()).setWeight(1).apply(MobEnchantWithLevelsFunction.enchantWithLevels(UniformGenerator.between(30, 50)).allowTreasure())).add(LootItem.lootTableItem(Items.AIR).setWeight(3)).build());
 		}
 	}
 }
