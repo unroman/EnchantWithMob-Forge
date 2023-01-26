@@ -1,5 +1,6 @@
 package baguchan.enchantwithmob.utils;
 
+import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantHandler;
@@ -322,7 +323,7 @@ public class MobEnchantUtils {
     }
 
     public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, MobEnchantCapability capability) {
-		if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity)) {
+		if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity) && !EnchantConfig.COMMON.universalEnchant.get()) {
 			return false;
 		}
 

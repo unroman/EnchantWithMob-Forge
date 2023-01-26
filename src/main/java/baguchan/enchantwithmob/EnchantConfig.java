@@ -48,6 +48,7 @@ public class EnchantConfig {
         public final ForgeConfigSpec.BooleanValue changeSizeWhenEnchant;
         public final ForgeConfigSpec.BooleanValue dungeonsLikeHealth;
         public final ForgeConfigSpec.BooleanValue bigYourSelf;
+        public final ForgeConfigSpec.BooleanValue universalEnchant;
         public final ForgeConfigSpec.DoubleValue difficultyBasePercent;
         public final ForgeConfigSpec.DoubleValue effectiveBasePercent;
 
@@ -112,6 +113,9 @@ public class EnchantConfig {
                     .comment("Enable Player More Bigger When You have Huge Enchant. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.bigYourSelf")
                     .define("Big Your Self", false);
+            universalEnchant = builder
+                    .comment("Enable All MobEnchant for all mob. [true / false]")
+                    .define("UniversalEnchant", false);
             difficultyBasePercent = builder
                     .comment("Set The Difficulty Base Enchanted Mob Spawn Percent. [(Difficulty Base Percent * Difficulty id) + (Effective Difficulty Percent * Effective Difficulty)]")
                     .defineInRange("Difficulty Enchanted Spawn Percent", 0.005D, 0.0D, 1D);
