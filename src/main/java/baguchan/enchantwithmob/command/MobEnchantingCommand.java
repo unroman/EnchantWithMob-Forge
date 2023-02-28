@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.command;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
@@ -54,10 +54,10 @@ public class MobEnchantingCommand {
 
 		if (entity != null) {
 			if (entity instanceof LivingEntity) {
-				entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-					cap.removeAllMobEnchant((LivingEntity) entity);
-					cap.setEnchantType((LivingEntity) entity, MobEnchantCapability.EnchantType.NORMAL);
-				});
+				if (entity instanceof IEnchantCap enchantCap) {
+					enchantCap.getEnchantCap().removeAllMobEnchant((LivingEntity) entity);
+					enchantCap.getEnchantCap().setEnchantType((LivingEntity) entity, MobEnchantCapability.EnchantType.NORMAL);
+				}
 
 				commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.clear", entity.getDisplayName()), true);
 				return 1;
@@ -77,9 +77,9 @@ public class MobEnchantingCommand {
 		if (entity != null) {
 			if (entity instanceof LivingEntity) {
 
-				entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-					cap.setEnchantType((LivingEntity) entity, ancientMob ? MobEnchantCapability.EnchantType.ANCIENT : MobEnchantCapability.EnchantType.NORMAL);
-				});
+				if (entity instanceof IEnchantCap enchantCap) {
+					enchantCap.getEnchantCap().setEnchantType((LivingEntity) entity, ancientMob ? MobEnchantCapability.EnchantType.ANCIENT : MobEnchantCapability.EnchantType.NORMAL);
+				}
 
 				commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.ancient_mob.set_ancient", entity.getDisplayName()), true);
 				return 1;
@@ -100,11 +100,11 @@ public class MobEnchantingCommand {
 		if (entity != null) {
 			if (entity instanceof LivingEntity) {
 				if (mobEnchant != null) {
-					entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-						cap.addMobEnchant((LivingEntity) entity, mobEnchant, level);
-					});
+					if (entity instanceof IEnchantCap enchantCap) {
+						enchantCap.getEnchantCap().addMobEnchant((LivingEntity) entity, mobEnchant, level);
+					}
 
-					commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.getRegistry().get().getKey(mobEnchant)), true);
+					commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.MOB_ENCHANT_REGISTRY.getKey(mobEnchant)), true);
 					return 1;
 				} else {
 					commandStack.sendFailure(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_mobenchant"));

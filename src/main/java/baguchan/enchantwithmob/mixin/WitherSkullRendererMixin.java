@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.mixin;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -27,20 +27,20 @@ public class WitherSkullRendererMixin {
 
 	@Inject(method = "render", at = @At("TAIL"))
 	public void render(WitherSkull p_116484_, float p_116485_, float p_116486_, PoseStack p_116487_, MultiBufferSource p_116488_, int p_116489_, CallbackInfo callbackInfo) {
-		if (p_116484_.getOwner() != null) {
-			p_116484_.getOwner().getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-			{
-				if (cap.hasEnchant()) {
+		if (p_116484_.getOwner() instanceof IEnchantCap cap) {
+			if (cap.getEnchantCap().hasEnchant()) {
+				if (cap.getEnchantCap().hasEnchant()) {
 					p_116487_.pushPose();
 					p_116487_.scale(-1.0F, -1.0F, 1.0F);
 					float f = Mth.rotlerp(p_116484_.yRotO, p_116484_.getYRot(), p_116486_);
 					float f1 = Mth.lerp(p_116486_, p_116484_.xRotO, p_116484_.getXRot());
-					VertexConsumer vertexconsumer = p_116488_.getBuffer(EnchantLayer.enchantSwirl(cap.isAncient() ? EnchantLayer.ANCIENT_GLINT : ItemRenderer.ENCHANT_GLINT_LOCATION));
+					VertexConsumer vertexconsumer = p_116488_.getBuffer(EnchantLayer.enchantSwirl(cap.getEnchantCap().isAncient() ? EnchantLayer.ANCIENT_GLINT : ItemRenderer.ENCHANT_GLINT_LOCATION));
 					this.model.setupAnim(0.0F, f, f1);
 					this.model.renderToBuffer(p_116487_, vertexconsumer, p_116489_, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
 					p_116487_.popPose();
 				}
-			});
+			}
+			;
 		}
 	}
 }

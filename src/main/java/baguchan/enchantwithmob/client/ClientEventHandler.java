@@ -1,6 +1,7 @@
 package baguchan.enchantwithmob.client;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -56,19 +57,21 @@ public class ClientEventHandler {
 
 	@SubscribeEvent
 	public static void renderEnchantBeam(RenderLivingEvent.Post<LivingEntity, EntityModel<LivingEntity>> event) {
-		PoseStack matrixStack = event.getPoseStack();
-		MultiBufferSource bufferBuilder = event.getMultiBufferSource();
-		float particalTick = event.getPartialTick();
-		event.getEntity().getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-			if (cap.hasOwner()) {
-				LivingEntity entity = cap.getEnchantOwner().get();
-				if (entity != null) {
-					renderBeam(cap, event.getEntity(), particalTick, matrixStack, bufferBuilder, entity, event.getRenderer());
-				}
-			}
-		});
+        PoseStack matrixStack = event.getPoseStack();
+        MultiBufferSource bufferBuilder = event.getMultiBufferSource();
+        float particalTick = event.getPartialTick();
+        if (event.getEntity() instanceof IEnchantCap cap) {
+            if (cap.getEnchantCap().getEnchantOwner().isPresent()) {
 
-	}
+                LivingEntity entity = cap.getEnchantCap().getEnchantOwner().get();
+                if (entity != null) {
+                    renderBeam(cap.getEnchantCap(), event.getEntity(), particalTick, matrixStack, bufferBuilder, entity, event.getRenderer());
+                }
+            }
+        }
+        ;
+
+    }
 
 	private static void renderBeam(@NotNull MobEnchantCapability cap, LivingEntity p_229118_1_, float p_229118_2_, PoseStack p_229118_3_, MultiBufferSource p_229118_4_, Entity p_229118_5_, LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>> renderer) {
 		float tick = (float) p_229118_1_.tickCount + p_229118_2_;

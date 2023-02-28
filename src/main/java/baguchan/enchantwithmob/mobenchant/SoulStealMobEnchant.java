@@ -1,6 +1,7 @@
 package baguchan.enchantwithmob.mobenchant;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.message.SoulParticleMessage;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
@@ -33,10 +34,9 @@ public class SoulStealMobEnchant extends MobEnchant {
         DamageSource damageSource = event.getSource();
         if (damageSource != null && damageSource.getDirectEntity() instanceof LivingEntity) {
             LivingEntity attacker = (LivingEntity) damageSource.getDirectEntity();
-            attacker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-            {
-                int enchantLevel = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.SOUL_STEAL.get());
-                if (cap.hasEnchant() && enchantLevel > 0 && !attacker.hasEffect(MobEffects.ABSORPTION)) {
+            if (attacker instanceof IEnchantCap cap) {
+                int enchantLevel = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.SOUL_STEAL.get());
+                if (cap.getEnchantCap().hasEnchant() && enchantLevel > 0 && !attacker.hasEffect(MobEffects.ABSORPTION)) {
                     if (attacker.getAbsorptionAmount() < 6) {
                         attacker.setAbsorptionAmount(Mth.clamp(attacker.getAbsorptionAmount() + enchantLevel, 0, 6));
                     }
@@ -45,7 +45,8 @@ public class SoulStealMobEnchant extends MobEnchant {
                         EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
                     }
                 }
-            });
+            }
+            ;
         }
     }
 

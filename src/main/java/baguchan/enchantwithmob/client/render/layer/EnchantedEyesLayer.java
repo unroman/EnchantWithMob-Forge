@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.client.render.layer;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -61,13 +61,13 @@ public class EnchantedEyesLayer<T extends LivingEntity, M extends EntityModel<T>
 
 	@Override
 	public void render(PoseStack p_116983_, MultiBufferSource p_116984_, int p_116985_, T p_116986_, float p_116987_, float p_116988_, float p_116989_, float p_116990_, float p_116991_, float p_116992_) {
-		p_116986_.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-		{
-			if (cap.hasEnchant() && predicate.test(p_116986_)) {
+		if (p_116986_ instanceof IEnchantCap cap) {
+			if (cap.getEnchantCap().hasEnchant() && predicate.test(p_116986_)) {
 				VertexConsumer ivertexbuilder = p_116984_.getBuffer(this.renderType());
 				this.getParentModel().renderToBuffer(p_116983_, ivertexbuilder, p_116985_, OverlayTexture.NO_OVERLAY, 0.5F, 0.5F, 0.5F, 1.0F);
 			}
-		});
+		}
+		;
 	}
 
 	public static RenderType enchantedEyes(ResourceLocation p_110455_) {

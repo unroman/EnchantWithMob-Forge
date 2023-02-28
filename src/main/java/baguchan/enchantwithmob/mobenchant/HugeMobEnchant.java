@@ -2,6 +2,7 @@ package baguchan.enchantwithmob.mobenchant;
 
 import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
@@ -32,14 +33,14 @@ public class HugeMobEnchant extends MobEnchant {
         if (event.getSource().getEntity() instanceof LivingEntity) {
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
 
-            attacker.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-            {
-                if (cap.hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get())) {
+            if (attacker instanceof IEnchantCap cap) {
+                if (cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.HUGE.get())) {
                     if (event.getAmount() > 0) {
-                        event.setAmount(getDamageIncrease(event.getAmount(), cap));
+                        event.setAmount(getDamageIncrease(event.getAmount(), cap.getEnchantCap()));
                     }
                 }
-            });
+            }
+            ;
         }
     }
 

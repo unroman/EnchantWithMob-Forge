@@ -1,35 +1,24 @@
 package baguchan.enchantwithmob.capability;
 
 import baguchan.enchantwithmob.EnchantConfig;
-import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.message.AncientMobMessage;
-import baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
-import baguchan.enchantwithmob.message.MobEnchantedMessage;
-import baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
-import baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-public class MobEnchantCapability implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+
+public class MobEnchantCapability {
 	private static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("6699a403-e2cc-31e6-195e-4757200e0935");
 
 	private static final AttributeModifier HEALTH_MODIFIER = new AttributeModifier(HEALTH_MODIFIER_UUID, "Health boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
@@ -38,7 +27,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 	private List<MobEnchantHandler> mobEnchants = Lists.newArrayList();
 	private Optional<LivingEntity> enchantOwner = Optional.empty();
 	private boolean fromOwner;
-
 	private EnchantType enchantType = EnchantType.NORMAL;
 
 
@@ -54,10 +42,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		this.mobEnchants.add(new MobEnchantHandler(mobEnchant, enchantLevel));
 		this.onNewEnchantEffect(entity, mobEnchant, enchantLevel);
 		//Sync Client Enchant
-		if (!entity.level.isClientSide) {
-			MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
-			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
-		}
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
 	}
@@ -69,10 +53,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 
 	public void setEnchantType(LivingEntity entity, EnchantType enchantType) {
 		this.enchantType = enchantType;
-		if (!entity.level.isClientSide) {
-			AncientMobMessage message = new AncientMobMessage(entity, enchantType.name());
-			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
-		}
 	}
 
 	/**
@@ -87,32 +67,25 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 
 		this.mobEnchants.add(new MobEnchantHandler(mobEnchant, enchantLevel));
 		this.onNewEnchantEffect(entity, mobEnchant, enchantLevel);
-		//Sync Client Enchant
-		if (!entity.level.isClientSide) {
-			MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
-			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
-		}
-		//size changed like minecraft dungeons
 		entity.refreshDimensions();
 	}
 
 	public void addOwner(LivingEntity entity, @Nullable LivingEntity owner) {
 		this.fromOwner = true;
 		this.enchantOwner = Optional.ofNullable(owner);
-
-		if (!entity.level.isClientSide) {
-			MobEnchantFromOwnerMessage message = new MobEnchantFromOwnerMessage(entity, owner);
-			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
-		}
 	}
 
-	public void removeOwner(LivingEntity entity) {
+	public final void sync(LivingEntity entity) {
+		MobEnchantCapability capability = new MobEnchantCapability();
+		capability.mobEnchants = this.mobEnchants;
+		capability.enchantOwner = this.enchantOwner;
+		capability.enchantType = this.enchantType;
+		((IEnchantCap) entity).setEnchantCap(capability);
+	}
+
+	public void removeOwner() {
 		this.fromOwner = false;
 		this.enchantOwner = Optional.empty();
-		if (!entity.level.isClientSide) {
-			RemoveMobEnchantOwnerMessage message = new RemoveMobEnchantOwnerMessage(entity);
-			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
-		}
 	}
 
 	/*
@@ -122,11 +95,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 
 		for (int i = 0; i < mobEnchants.size(); ++i) {
 			this.onRemoveEnchantEffect(entity, mobEnchants.get(i).getMobEnchant());
-		}
-		//Sync Client Enchant
-		if (!entity.level.isClientSide) {
-			RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
-			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
 		this.mobEnchants.removeAll(mobEnchants);
 		//size changed like minecraft dungeons
@@ -141,18 +109,18 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			this.onRemoveEnchantEffect(entity, mobEnchants.get(i).getMobEnchant());
 		}
 		//Sync Client Enchant
-		if (!entity.level.isClientSide) {
+		/*if (!entity.level.isClientSide) {
 			RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
-		}
+		}*/
 		this.mobEnchants.removeAll(mobEnchants);
-		this.removeOwner(entity);
+		this.removeOwner();
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
 	}
 
 
-    /*
+	/*
 	 * Add Enchant Attribute
 	 */
 	public void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
@@ -170,20 +138,20 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		}
 	}
 
-    /*
-     * Changed Enchant Attribute When Enchant is Changed
-     */
-    protected void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-        if (!entity.level.isClientSide) {
-            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
-        }
-    }
+	/*
+	 * Changed Enchant Attribute When Enchant is Changed
+	 */
+	protected void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
+		if (!entity.level.isClientSide) {
+			enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
+		}
+	}
 
-    /*
-     * Remove Enchant Attribute effect
-     */
-    protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant) {
-        if (!entity.level.isClientSide()) {
+	/*
+	 * Remove Enchant Attribute effect
+	 */
+	protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant) {
+		if (!entity.level.isClientSide()) {
 			enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
 
 			AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
@@ -225,12 +193,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		return enchantType == EnchantType.ANCIENT;
 	}
 
-	@Override
-	@Nonnull
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-		return capability == EnchantWithMob.MOB_ENCHANT_CAP ? LazyOptional.of(() -> this).cast() : LazyOptional.empty();
-	}
-
 	public CompoundTag serializeNBT() {
 		CompoundTag nbt = new CompoundTag();
 
@@ -264,7 +226,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		}
 
 		fromOwner = nbt.getBoolean("FromOwner");
-
 		enchantType = EnchantType.get(nbt.getString("EnchantType"));
 	}
 

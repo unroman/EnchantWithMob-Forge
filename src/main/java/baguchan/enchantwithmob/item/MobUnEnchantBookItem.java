@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.item;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -24,12 +24,11 @@ public class MobUnEnchantBookItem extends Item {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
-		playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-		{
-			if (!cap.isAncient()) {
+		if (playerIn instanceof IEnchantCap cap) {
+			if (!cap.getEnchantCap().isAncient()) {
 				MobEnchantUtils.removeMobEnchantToEntity(playerIn, cap);
 			}
-		});
+		}
 		playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
 		stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));

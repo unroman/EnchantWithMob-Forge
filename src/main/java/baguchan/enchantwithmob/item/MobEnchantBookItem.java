@@ -1,7 +1,7 @@
 package baguchan.enchantwithmob.item;
 
 import baguchan.enchantwithmob.EnchantConfig;
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.registry.ModItems;
@@ -57,21 +57,21 @@ public class MobEnchantBookItem extends Item {
 	public InteractionResultHolder<ItemStack> use(Level level, Player playerIn, InteractionHand handIn) {
 		ItemStack stack = playerIn.getItemInHand(handIn);
 		if (EnchantConfig.COMMON.enchantYourSelf.get() && MobEnchantUtils.hasMobEnchant(stack)) {
-			final boolean[] flag = {false};
-			playerIn.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-			{
-				flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
-			});
+            final boolean[] flag = {false};
+            if (playerIn instanceof IEnchantCap cap) {
+                flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, playerIn, cap);
+            }
+            ;
 
-			//When flag is true, enchanting is success.
-			if (flag[0]) {
-				playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
+            //When flag is true, enchanting is success.
+            if (flag[0]) {
+                playerIn.playSound(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0F, 1.0F);
 
-				stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
+                stack.hurtAndBreak(1, playerIn, (entity) -> entity.broadcastBreakEvent(handIn));
 
-				playerIn.getCooldowns().addCooldown(stack.getItem(), 40);
+                playerIn.getCooldowns().addCooldown(stack.getItem(), 40);
 
-				return InteractionResultHolder.success(stack);
+                return InteractionResultHolder.success(stack);
 			} else {
 				playerIn.displayClientMessage(Component.translatable("enchantwithmob.cannot.enchant_yourself"), true);
 

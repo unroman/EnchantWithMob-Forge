@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "refmap": "enchantwithmob.refmap.json",
   "mixins": [
+    "LivingEntityMixin",
     "WoodlandMansionPieceMixin"
   ],
   "client": [

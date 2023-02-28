@@ -1,20 +1,9 @@
 package baguchan.enchantwithmob;
 
 import baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
-import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.command.MobEnchantingCommand;
-import baguchan.enchantwithmob.message.AncientMobMessage;
-import baguchan.enchantwithmob.message.MobEnchantFromOwnerMessage;
-import baguchan.enchantwithmob.message.MobEnchantedMessage;
-import baguchan.enchantwithmob.message.RemoveAllMobEnchantMessage;
-import baguchan.enchantwithmob.message.RemoveMobEnchantOwnerMessage;
 import baguchan.enchantwithmob.message.SoulParticleMessage;
-import baguchan.enchantwithmob.registry.MobEnchants;
-import baguchan.enchantwithmob.registry.ModArgumentTypeInfos;
-import baguchan.enchantwithmob.registry.ModEntities;
-import baguchan.enchantwithmob.registry.ModItems;
-import baguchan.enchantwithmob.registry.ModLootItemFunctions;
-import baguchan.enchantwithmob.registry.ModSoundEvents;
+import baguchan.enchantwithmob.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraftforge.common.MinecraftForge;
@@ -45,17 +34,14 @@ public class EnchantWithMob {
 
 	public static final String MODID = "enchantwithmob";
 	public static final String NETWORK_PROTOCOL = "2";
-
-	public static Capability<MobEnchantCapability> MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
-	});
-
-	public static Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
-	});
 	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
 			.networkProtocolVersion(() -> NETWORK_PROTOCOL)
 			.clientAcceptedVersions(NETWORK_PROTOCOL::equals)
 			.serverAcceptedVersions(NETWORK_PROTOCOL::equals)
 			.simpleChannel();
+
+	public static Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
+	});
 
 	public EnchantWithMob() {
 		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -87,34 +73,15 @@ public class EnchantWithMob {
 	}
 
 	private void setup(final FMLCommonSetupEvent event) {
+		ModTrackedDatas.init();
 		ModLootItemFunctions.init();
 		Raid.RaiderType.create("enchanter", ModEntities.ENCHANTER.get(), new int[]{0, 0, 1, 0, 1, 1, 2, 1});
 	}
 
 	private void setupMessages() {
-		CHANNEL.messageBuilder(MobEnchantedMessage.class, 0)
-				.encoder(MobEnchantedMessage::serialize).decoder(MobEnchantedMessage::deserialize)
-				.consumerMainThread(MobEnchantedMessage::handle)
-				.add();
-		CHANNEL.messageBuilder(RemoveAllMobEnchantMessage.class, 1)
-				.encoder(RemoveAllMobEnchantMessage::serialize).decoder(RemoveAllMobEnchantMessage::deserialize)
-				.consumerMainThread(RemoveAllMobEnchantMessage::handle)
-				.add();
-		CHANNEL.messageBuilder(MobEnchantFromOwnerMessage.class, 2)
-				.encoder(MobEnchantFromOwnerMessage::serialize).decoder(MobEnchantFromOwnerMessage::deserialize)
-				.consumerMainThread(MobEnchantFromOwnerMessage::handle)
-				.add();
-		CHANNEL.messageBuilder(RemoveMobEnchantOwnerMessage.class, 3)
-				.encoder(RemoveMobEnchantOwnerMessage::serialize).decoder(RemoveMobEnchantOwnerMessage::deserialize)
-				.consumerMainThread(RemoveMobEnchantOwnerMessage::handle)
-				.add();
-		CHANNEL.messageBuilder(SoulParticleMessage.class, 4)
+		CHANNEL.messageBuilder(SoulParticleMessage.class, 0)
 				.encoder(SoulParticleMessage::serialize).decoder(SoulParticleMessage::deserialize)
 				.consumerMainThread(SoulParticleMessage::handle)
-				.add();
-		CHANNEL.messageBuilder(AncientMobMessage.class, 5)
-				.encoder(AncientMobMessage::serialize).decoder(AncientMobMessage::deserialize)
-				.consumerMainThread(AncientMobMessage::handle)
 				.add();
 	}
 

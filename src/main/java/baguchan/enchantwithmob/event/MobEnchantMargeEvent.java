@@ -1,6 +1,7 @@
 package baguchan.enchantwithmob.event;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantHandler;
 import com.google.common.collect.Maps;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,13 +19,14 @@ public class MobEnchantMargeEvent {
 
 	@SubscribeEvent
 	public static void onPreEntityConversion(LivingConversionEvent.Pre event) {
-		LivingEntity livingEntity = event.getEntity();
-		livingEntity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(mobEnchantCapability -> {
-			if (mobEnchantCapability.hasEnchant()) {
-				maps.put(livingEntity, mobEnchantCapability.getMobEnchants());
-			}
-		});
-	}
+        LivingEntity livingEntity = event.getEntity();
+        if (livingEntity instanceof IEnchantCap cap) {
+            if (cap.getEnchantCap().hasEnchant()) {
+                maps.put(livingEntity, cap.getEnchantCap().getMobEnchants());
+            }
+        }
+        ;
+    }
 
 	@SubscribeEvent
 	public static void onEntityConversion(LivingConversionEvent.Post event) {
@@ -32,13 +34,14 @@ public class MobEnchantMargeEvent {
 		LivingEntity outcome = event.getOutcome();
 
 		if (maps.containsKey(livingEntity)) {
-			outcome.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-				for (MobEnchantHandler enchantHandler : maps.get(livingEntity)) {
-					cap.addMobEnchant(outcome, enchantHandler.getMobEnchant(), enchantHandler.getEnchantLevel());
-				}
-			});
-			maps.remove(livingEntity);
-		}
+            if (livingEntity instanceof IEnchantCap cap) {
+                for (MobEnchantHandler enchantHandler : maps.get(livingEntity)) {
+                    cap.getEnchantCap().addMobEnchant(outcome, enchantHandler.getMobEnchant(), enchantHandler.getEnchantLevel());
+                }
+            }
+            ;
+            maps.remove(livingEntity);
+        }
 	}
 
 	@SubscribeEvent

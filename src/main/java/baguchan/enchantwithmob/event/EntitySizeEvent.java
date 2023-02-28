@@ -2,7 +2,7 @@ package baguchan.enchantwithmob.event;
 
 import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.capability.MobEnchantCapability;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.client.Minecraft;
@@ -15,7 +15,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -24,30 +23,30 @@ import net.minecraftforge.fml.common.Mod;
 public class EntitySizeEvent {
 	@SubscribeEvent
 	public static void onSetSize(EntityEvent.Size event) {
-		Entity entity = event.getEntity();
+        Entity entity = event.getEntity();
 
 
-		LazyOptional<MobEnchantCapability> capLazy = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP);
-		capLazy.ifPresent(cap -> {
-			if (cap.hasEnchant()) {
-				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get())) {
-					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get());
+        if (entity instanceof IEnchantCap cap) {
+            if (cap.getEnchantCap().hasEnchant()) {
+                if (MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.HUGE.get())) {
+                    int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.HUGE.get());
 
-					float totalWidth = entity.getDimensions(entity.getPose()).width * (1.0F + level * 0.15F);
-					float totalHeight = entity.getDimensions(entity.getPose()).height * (1.0F + level * 0.15F);
+                    float totalWidth = entity.getDimensions(entity.getPose()).width * (1.0F + level * 0.15F);
+                    float totalHeight = entity.getDimensions(entity.getPose()).height * (1.0F + level * 0.15F);
 
-					event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * (1.0F + level * 0.15F));
-					event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
-				} else if (EnchantConfig.COMMON.changeSizeWhenEnchant.get()) {
-					float totalWidth = entity.getDimensions(entity.getPose()).width * 1.025F;
-					float totalHeight = entity.getDimensions(entity.getPose()).height * 1.025F;
+                    event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * (1.0F + level * 0.15F));
+                    event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
+                } else if (EnchantConfig.COMMON.changeSizeWhenEnchant.get()) {
+                    float totalWidth = entity.getDimensions(entity.getPose()).width * 1.025F;
+                    float totalHeight = entity.getDimensions(entity.getPose()).height * 1.025F;
 
-					event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * 1.025F);
-					event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
-				}
-			}
-		});
-	}
+                    event.setNewEyeHeight(entity.getEyeHeight(entity.getPose()) * 1.025F);
+                    event.setNewSize(EntityDimensions.fixed(totalWidth, totalHeight));
+                }
+            }
+        }
+        ;
+    }
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
@@ -70,21 +69,21 @@ public class EntitySizeEvent {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onEntityRenderPre(RenderLivingEvent.Pre<LivingEntity, EntityModel<LivingEntity>> event) {
-		final LivingEntity entity = event.getEntity();
+        final LivingEntity entity = event.getEntity();
 
-		LazyOptional<MobEnchantCapability> capLazy = entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP);
-		capLazy.ifPresent(cap -> {
-			if (cap.hasEnchant()) {
-				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get())) {
-					int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get());
-					event.getPoseStack().scale(1.0F + 0.15F * level, 1.0F + 0.15F * level, 1.0F + 0.15F * level);
-				} else if (EnchantConfig.COMMON.changeSizeWhenEnchant.get()) {
-					event.getPoseStack().scale(1.05F, 1.05F, 1.05F);
-				}
+        if (entity instanceof IEnchantCap cap) {
+            if (cap.getEnchantCap().hasEnchant()) {
+                if (MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.HUGE.get())) {
+                    int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.HUGE.get());
+                    event.getPoseStack().scale(1.0F + 0.15F * level, 1.0F + 0.15F * level, 1.0F + 0.15F * level);
+                } else if (EnchantConfig.COMMON.changeSizeWhenEnchant.get()) {
+                    event.getPoseStack().scale(1.05F, 1.05F, 1.05F);
+                }
 
 
-			}
-		});
+            }
+        }
+        ;
 
-	}
+    }
 }

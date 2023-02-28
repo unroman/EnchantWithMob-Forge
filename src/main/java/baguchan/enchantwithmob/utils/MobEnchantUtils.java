@@ -1,8 +1,7 @@
 package baguchan.enchantwithmob.utils;
 
 import baguchan.enchantwithmob.EnchantConfig;
-import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.capability.MobEnchantCapability;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantHandler;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
@@ -19,8 +18,8 @@ import net.minecraft.util.random.WeightedRandom;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,21 +32,23 @@ public class MobEnchantUtils {
 	//when projectile Shooter has mob enchant, start Runnable
 	public static void executeIfPresent(Entity entity, MobEnchant mobEnchantment, Runnable runnable) {
 		if (entity != null) {
-			entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getMobEnchants(), mobEnchantment)) {
+			if (entity instanceof IEnchantCap cap) {
+				if (MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), mobEnchantment)) {
 					runnable.run();
 				}
-			});
+			}
+			;
 		}
 	}
 
 	public static void executeIfPresent(Entity entity, Runnable runnable) {
 		if (entity != null) {
-			entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap -> {
-				if (cap.hasEnchant()) {
+			if (entity instanceof IEnchantCap cap) {
+				if (cap.getEnchantCap().hasEnchant()) {
 					runnable.run();
 				}
-			});
+			}
+			;
 		}
 	}
 
@@ -56,8 +57,8 @@ public class MobEnchantUtils {
 	 *
 	 * @param tag nbt tag
 	 */
-	@Nullable
-	public static MobEnchant getEnchantFromNBT(@Nullable CompoundTag tag) {
+	@org.jetbrains.annotations.Nullable
+	public static MobEnchant getEnchantFromNBT(@org.jetbrains.annotations.Nullable CompoundTag tag) {
 		if (tag != null && MobEnchants.getRegistry().get().containsKey(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)))) {
 			return MobEnchants.getRegistry().get().getValue(ResourceLocation.tryParse(tag.getString(TAG_MOBENCHANT)));
 		} else {
@@ -70,7 +71,7 @@ public class MobEnchantUtils {
 	 *
 	 * @param tag nbt tag
 	 */
-	public static int getEnchantLevelFromNBT(@Nullable CompoundTag tag) {
+	public static int getEnchantLevelFromNBT(@org.jetbrains.annotations.Nullable CompoundTag tag) {
 		if (tag != null) {
 			return tag.getInt(TAG_ENCHANT_LEVEL);
 		} else {
@@ -78,13 +79,13 @@ public class MobEnchantUtils {
 		}
 	}
 
-    /**
-     * get MobEnchant From String
-     *
-     * @param id MobEnchant id
-     */
-    @Nullable
-    public static MobEnchant getEnchantFromString(@Nullable String id) {
+	/**
+	 * get MobEnchant From String
+	 *
+	 * @param id MobEnchant id
+	 */
+	@org.jetbrains.annotations.Nullable
+	public static MobEnchant getEnchantFromString(@org.jetbrains.annotations.Nullable String id) {
 		if (id != null && MobEnchants.getRegistry().get().containsKey(ResourceLocation.tryParse(id))) {
 			return MobEnchants.getRegistry().get().getValue(ResourceLocation.tryParse(id));
 		} else {
@@ -92,8 +93,8 @@ public class MobEnchantUtils {
 		}
 	}
 
-    @Nullable
-    public static MobEnchant getEnchantFromResourceLocation(@Nullable ResourceLocation id) {
+	@org.jetbrains.annotations.Nullable
+	public static MobEnchant getEnchantFromResourceLocation(@org.jetbrains.annotations.Nullable ResourceLocation id) {
 		if (id != null && MobEnchants.getRegistry().get().containsKey(id)) {
 			return MobEnchants.getRegistry().get().getValue(id);
 		} else {
@@ -101,15 +102,15 @@ public class MobEnchantUtils {
 		}
 	}
 
-    /**
-     * check ItemStack has Mob Enchant
-     *
-     * @param stack MobEnchanted Item
-     */
-    public static boolean hasMobEnchant(ItemStack stack) {
+	/**
+	 * check ItemStack has Mob Enchant
+	 *
+	 * @param stack MobEnchanted Item
+	 */
+	public static boolean hasMobEnchant(ItemStack stack) {
 		CompoundTag compoundnbt = stack.getTag();
-        return compoundnbt != null && compoundnbt.contains(TAG_STORED_MOBENCHANTS);
-    }
+		return compoundnbt != null && compoundnbt.contains(TAG_STORED_MOBENCHANTS);
+	}
 
 	/**
 	 * check NBT has Mob Enchant
@@ -120,43 +121,43 @@ public class MobEnchantUtils {
 		return compoundnbt != null ? compoundnbt.getList(TAG_STORED_MOBENCHANTS, 10) : new ListTag();
 	}
 
-    /**
-     * get Mob Enchantments From ItemStack
-     *
-     * @param stack MobEnchanted Item
-     */
-    public static Map<MobEnchant, Integer> getEnchantments(ItemStack stack) {
+	/**
+	 * get Mob Enchantments From ItemStack
+	 *
+	 * @param stack MobEnchanted Item
+	 */
+	public static Map<MobEnchant, Integer> getEnchantments(ItemStack stack) {
 		ListTag listnbt = getEnchantmentListForNBT(stack.getTag());
-        return makeMobEnchantListFromListNBT(listnbt);
-    }
+		return makeMobEnchantListFromListNBT(listnbt);
+	}
 
-    /**
-     * set Mob Enchantments From ItemStack
-     *
-     * @param enchMap MobEnchants and those level map
-     * @param stack   MobEnchanted Item
-     */
-    public static void setEnchantments(Map<MobEnchant, Integer> enchMap, ItemStack stack) {
+	/**
+	 * set Mob Enchantments From ItemStack
+	 *
+	 * @param enchMap MobEnchants and those level map
+	 * @param stack   MobEnchanted Item
+	 */
+	public static void setEnchantments(Map<MobEnchant, Integer> enchMap, ItemStack stack) {
 		ListTag listnbt = new ListTag();
 
-        for (Map.Entry<MobEnchant, Integer> entry : enchMap.entrySet()) {
-            MobEnchant enchantment = entry.getKey();
-            if (enchantment != null) {
+		for (Map.Entry<MobEnchant, Integer> entry : enchMap.entrySet()) {
+			MobEnchant enchantment = entry.getKey();
+			if (enchantment != null) {
 				int i = entry.getValue();
 				CompoundTag compoundnbt = new CompoundTag();
 				compoundnbt.putString(TAG_MOBENCHANT, String.valueOf((Object) MobEnchants.getRegistry().get().getKey(enchantment)));
 				compoundnbt.putShort(TAG_ENCHANT_LEVEL, (short) i);
-                listnbt.add(compoundnbt);
-                if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK.get()) {
+				listnbt.add(compoundnbt);
+				if (stack.getItem() == ModItems.MOB_ENCHANT_BOOK.get()) {
 					addMobEnchantToItemStack(stack, enchantment, i);
 				}
-            }
-        }
+			}
+		}
 
-        if (listnbt.isEmpty()) {
-            stack.removeTagKey(TAG_STORED_MOBENCHANTS);
-        }
-    }
+		if (listnbt.isEmpty()) {
+			stack.removeTagKey(TAG_STORED_MOBENCHANTS);
+		}
+	}
 
 	private static Map<MobEnchant, Integer> makeMobEnchantListFromListNBT(ListTag p_226652_0_) {
 		Map<MobEnchant, Integer> map = Maps.newLinkedHashMap();
@@ -169,73 +170,75 @@ public class MobEnchantUtils {
 		}
 
 		return map;
-    }
+	}
 
-    //add MobEnchantToItemstack (example,this method used to MobEnchantBook)
-    public static void addMobEnchantToItemStack(ItemStack itemIn, MobEnchant mobenchant, int level) {
+	//add MobEnchantToItemstack (example,this method used to MobEnchantBook)
+	public static void addMobEnchantToItemStack(ItemStack itemIn, MobEnchant mobenchant, int level) {
 		ListTag listnbt = getEnchantmentListForNBT(itemIn.getTag());
 
 		boolean flag = true;
 		ResourceLocation resourcelocation = MobEnchants.getRegistry().get().getKey(mobenchant);
 
 
-        for (int i = 0; i < listnbt.size(); ++i) {
+		for (int i = 0; i < listnbt.size(); ++i) {
 			CompoundTag compoundnbt = listnbt.getCompound(i);
 			ResourceLocation resourcelocation1 = ResourceLocation.tryParse(compoundnbt.getString("MobEnchant"));
-            if (resourcelocation1 != null && resourcelocation1.equals(resourcelocation)) {
-                if (compoundnbt.getInt(TAG_ENCHANT_LEVEL) < level) {
-                    compoundnbt.putInt(TAG_ENCHANT_LEVEL, level);
-                }
+			if (resourcelocation1 != null && resourcelocation1.equals(resourcelocation)) {
+				if (compoundnbt.getInt(TAG_ENCHANT_LEVEL) < level) {
+					compoundnbt.putInt(TAG_ENCHANT_LEVEL, level);
+				}
 
-                flag = false;
-                break;
-            }
-        }
+				flag = false;
+				break;
+			}
+		}
 
-        if (flag) {
+		if (flag) {
 			CompoundTag compoundnbt1 = new CompoundTag();
-            compoundnbt1.putString(TAG_MOBENCHANT, String.valueOf((Object) resourcelocation));
-            compoundnbt1.putInt(TAG_ENCHANT_LEVEL, level);
-            listnbt.add(compoundnbt1);
-        }
+			compoundnbt1.putString(TAG_MOBENCHANT, String.valueOf((Object) resourcelocation));
+			compoundnbt1.putInt(TAG_ENCHANT_LEVEL, level);
+			listnbt.add(compoundnbt1);
+		}
 
-        itemIn.getTag().put(TAG_STORED_MOBENCHANTS, listnbt);
-    }
+		itemIn.getTag().put(TAG_STORED_MOBENCHANTS, listnbt);
+	}
 
-    /**
+	/**
 	 * add Mob Enchantments From ItemStack
 	 *
 	 * @param itemIn     MobEnchanted Item
 	 * @param entity     Enchanting target
 	 * @param capability MobEnchant Capability
 	 */
-	public static boolean addItemMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, MobEnchantCapability capability) {
+	public static boolean addItemMobEnchantToEntity(ItemStack itemIn, LivingEntity entity, IEnchantCap capability) {
 		ListTag listnbt = getEnchantmentListForNBT(itemIn.getTag());
 		boolean flag = false;
 
 		for (int i = 0; i < listnbt.size(); ++i) {
 			CompoundTag compoundnbt = listnbt.getCompound(i);
 			if (checkAllowMobEnchantFromMob(MobEnchantUtils.getEnchantFromNBT(compoundnbt), entity, capability)) {
-				capability.addMobEnchant(entity, MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt));
+				capability.getEnchantCap().addMobEnchant(entity, MobEnchantUtils.getEnchantFromNBT(compoundnbt), MobEnchantUtils.getEnchantLevelFromNBT(compoundnbt));
 				flag = true;
 			}
 		}
+		capability.getEnchantCap().sync(entity);
 		return flag;
 	}
 
-    public static void removeMobEnchantToEntity(LivingEntity entity, MobEnchantCapability capability) {
-        capability.removeAllMobEnchant(entity);
-    }
+	public static void removeMobEnchantToEntity(LivingEntity entity, IEnchantCap capability) {
+		capability.getEnchantCap().removeAllMobEnchant(entity);
+		capability.getEnchantCap().sync(entity);
+	}
 
-    public static int getExperienceFromMob(MobEnchantCapability cap) {
-        int l = 0;
-        for (MobEnchantHandler list : cap.getMobEnchants()) {
-            MobEnchant enchantment = list.getMobEnchant();
-            int integer = list.getEnchantLevel();
-            l += enchantment.getMinEnchantability(integer);
-        }
-        return l;
-    }
+	public static int getExperienceFromMob(IEnchantCap cap) {
+		int l = 0;
+		for (MobEnchantHandler list : cap.getEnchantCap().getMobEnchants()) {
+			MobEnchant enchantment = list.getMobEnchant();
+			int integer = list.getEnchantLevel();
+			l += enchantment.getMinEnchantability(integer);
+		}
+		return l;
+	}
 
 	/**
 	 * add Mob Enchantments To Entity
@@ -246,16 +249,17 @@ public class MobEnchantUtils {
 	 * @param level        max limit level MobEnchant
 	 * @param allowTresure setting is allow rare enchant
 	 */
-	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowTresure, boolean ancient) {
+	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, IEnchantCap capability, RandomSource random, int level, boolean allowTresure, boolean ancient) {
 		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
 
 		boolean flag = false;
 		for (MobEnchantmentData enchantmentdata : list) {
 			if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
-				capability.addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ancient);
+				capability.getEnchantCap().addMobEnchant(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ancient);
 				flag = true;
 			}
 		}
+		capability.getEnchantCap().sync(livingEntity);
 		return flag;
 	}
 
@@ -268,25 +272,26 @@ public class MobEnchantUtils {
 	 * @param level        max limit level MobEnchant
 	 * @param allowTresure setting is allow rare enchant
 	 */
-	public static boolean addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, MobEnchantCapability capability, RandomSource random, int level, boolean allowTresure) {
+	public static boolean addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, IEnchantCap capability, RandomSource random, int level, boolean allowTresure) {
 		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
 
 		boolean flag = false;
 
 		for (MobEnchantmentData enchantmentdata : list) {
 			if (checkAllowMobEnchantFromMob(enchantmentdata.enchantment, livingEntity, capability)) {
-				capability.addMobEnchantFromOwner(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ownerEntity);
+				capability.getEnchantCap().addMobEnchantFromOwner(livingEntity, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel, ownerEntity);
 				flag = true;
 			}
 		}
 		if (flag) {
-			capability.addOwner(livingEntity, ownerEntity);
+			capability.getEnchantCap().addOwner(livingEntity, ownerEntity);
 		}
+		capability.getEnchantCap().sync(livingEntity);
 		return flag;
 	}
 
-	public static ItemStack addRandomEnchantmentToItemStack(RandomSource random, ItemStack stack, int level, boolean allowTresure) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
+	public static ItemStack addRandomEnchantmentToItemStack(RandomSource random, ItemStack stack, int level, boolean allowRare) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
 
 		for (MobEnchantmentData enchantmentdata : list) {
 			addMobEnchantToItemStack(stack, enchantmentdata.enchantment, enchantmentdata.enchantmentLevel);
@@ -297,21 +302,21 @@ public class MobEnchantUtils {
 
 	public static boolean findMobEnchantHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
 		for (MobEnchantHandler mobEnchant : list) {
-            if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
-                return true;
-            }
-        }
-        return false;
-    }
+			if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-    public static boolean findMobEnchant(List<MobEnchant> list, MobEnchant findMobEnchant) {
+	public static boolean findMobEnchant(List<MobEnchant> list, MobEnchant findMobEnchant) {
 		if (list.contains(findMobEnchant)) {
 			return true;
 		}
 		return false;
-    }
+	}
 
-    public static boolean findMobEnchantFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
+	public static boolean findMobEnchantFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
 		for (MobEnchantHandler mobEnchant : list) {
 			if (mobEnchant != null && !findMobEnchant.isDisabled()) {
 				if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
@@ -320,14 +325,14 @@ public class MobEnchantUtils {
 			}
 		}
 		return false;
-    }
+	}
 
-    public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, MobEnchantCapability capability) {
+	public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, IEnchantCap capability) {
 		if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity) && !EnchantConfig.COMMON.universalEnchant.get()) {
 			return false;
 		}
 
-		for (MobEnchantHandler enchantHandler : capability.getMobEnchants()) {
+		for (MobEnchantHandler enchantHandler : capability.getEnchantCap().getMobEnchants()) {
 			if (mobEnchant != null && enchantHandler.getMobEnchant() != null && !enchantHandler.getMobEnchant().isCompatibleWith(mobEnchant)) {
 				return false;
 			}
@@ -337,12 +342,12 @@ public class MobEnchantUtils {
 		return mobEnchant != null;
 	}
 
-    public static int getMobEnchantLevelFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
-        for (MobEnchantHandler mobEnchant : list) {
-            if (mobEnchant != null) {
-                if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
-                    return mobEnchant.getEnchantLevel();
-                }
+	public static int getMobEnchantLevelFromHandler(List<MobEnchantHandler> list, MobEnchant findMobEnchant) {
+		for (MobEnchantHandler mobEnchant : list) {
+			if (mobEnchant != null) {
+				if (mobEnchant.getMobEnchant().equals(findMobEnchant)) {
+					return mobEnchant.getEnchantLevel();
+				}
 			}
 		}
 		return 0;
@@ -379,7 +384,7 @@ public class MobEnchantUtils {
 
 			return list;
 		}
-    }
+	}
 
 	/*
 	 * get MobEnchantment data.
@@ -388,8 +393,8 @@ public class MobEnchantUtils {
 	public static List<MobEnchantmentData> makeMobEnchantmentDatas(int p_185291_0_, boolean allowTresure) {
 		List<MobEnchantmentData> list = Lists.newArrayList();
 
-		for (MobEnchant enchantment : MobEnchants.getRegistry().get().getValues()) {
-			if ((!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest() && !enchantment.isDisabled()) {
+		for (MobEnchant enchantment : MobEnchants.getRegistry().get().getValues().stream().toList()) {
+			if ((!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest()) {
 				for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
 					if (p_185291_0_ >= enchantment.getMinEnchantability(i) && p_185291_0_ <= enchantment.getMaxEnchantability(i)) {
 						list.add(new MobEnchantmentData(enchantment, i));
@@ -399,17 +404,17 @@ public class MobEnchantUtils {
 			}
 		}
 
-        return list;
-    }
+		return list;
+	}
 
-    private static void removeIncompatible(List<MobEnchantmentData> dataList, MobEnchantmentData data) {
-        Iterator<MobEnchantmentData> iterator = dataList.iterator();
+	private static void removeIncompatible(List<MobEnchantmentData> dataList, MobEnchantmentData data) {
+		Iterator<MobEnchantmentData> iterator = dataList.iterator();
 
-        while (iterator.hasNext()) {
-            if (!data.enchantment.isCompatibleWith((iterator.next()).enchantment)) {
-                iterator.remove();
-            }
-        }
+		while (iterator.hasNext()) {
+			if (!data.enchantment.isCompatibleWith((iterator.next()).enchantment)) {
+				iterator.remove();
+			}
+		}
 
-    }
+	}
 }

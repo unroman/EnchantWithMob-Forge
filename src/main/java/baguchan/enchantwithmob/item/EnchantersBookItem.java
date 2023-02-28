@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.item;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
@@ -30,7 +30,7 @@ import java.util.Map;
 public class EnchantersBookItem extends Item {
 	private final TargetingConditions enchantTargeting = TargetingConditions.forNonCombat().range(16.0D).ignoreLineOfSight().ignoreInvisibilityTesting();
 	private final TargetingConditions alreadyEnchantTargeting = TargetingConditions.forNonCombat().range(16.0D).ignoreLineOfSight().ignoreInvisibilityTesting().selector((entity) -> {
-		return entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).map(mob -> mob.hasEnchant()).orElse(false);
+		return entity instanceof IEnchantCap enchantCap && enchantCap.getEnchantCap().hasEnchant();
 	});
 
 	public EnchantersBookItem(Properties properties) {
@@ -56,18 +56,18 @@ public class EnchantersBookItem extends Item {
 						}
 
 						if (!enchantedMob.canAttack(playerIn) && playerIn != enchantedMob) {
-							enchantedMob.getCapability(EnchantWithMob.MOB_ENCHANT_CAP).ifPresent(cap ->
-							{
-								if (!cap.hasEnchant()) {
+							if (enchantedMob instanceof IEnchantCap cap) {
+								if (!cap.getEnchantCap().hasEnchant()) {
 									if (flag[0]) {
 										MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
 									} else {
 										flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
 									}
 									//add Enchanting Owner
-									cap.addOwner(enchantedMob, playerIn);
+									cap.getEnchantCap().addOwner(enchantedMob, playerIn);
 								}
-							});
+							}
+							;
 						}
 					}
 
