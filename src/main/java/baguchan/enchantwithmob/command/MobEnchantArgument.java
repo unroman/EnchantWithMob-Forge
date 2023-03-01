@@ -1,5 +1,6 @@
 package baguchan.enchantwithmob.command;
 
+import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import com.mojang.brigadier.StringReader;
@@ -42,7 +43,7 @@ public class MobEnchantArgument implements ArgumentType<MobEnchant> {
 	}
 
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> p_listSuggestions_1_, SuggestionsBuilder p_listSuggestions_2_) {
-		return SharedSuggestionProvider.suggestResource(MobEnchants.getRegistry().get().getKeys(), p_listSuggestions_2_);
+		return SharedSuggestionProvider.suggestResource(MobEnchants.getRegistry().get().getKeys().stream().filter(resource -> !EnchantConfig.COMMON.DISABLE_ENCHANTS.get().contains(resource.toString())), p_listSuggestions_2_);
 	}
 
 	public Collection<String> getExamples() {
