@@ -86,13 +86,18 @@ public class MobEnchantBookItem extends Item {
 	public static List<ItemStack> generateMobEnchantmentBookTypesOnlyMaxLevel() {
 		List<ItemStack> items = Lists.newArrayList();
 		for (MobEnchant mobEnchant : MobEnchants.getRegistry().get().getValues()) {
-			ItemStack stack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
-			MobEnchantUtils.addMobEnchantToItemStack(stack, mobEnchant, mobEnchant.getMaxLevel());
-			items.add(stack);
-
-			ItemStack stack2 = new ItemStack(ModItems.ENCHANTERS_BOOK.get());
-			MobEnchantUtils.addMobEnchantToItemStack(stack2, mobEnchant, mobEnchant.getMaxLevel());
-			items.add(stack2);
+			if (!mobEnchant.isDisabled()) {
+				ItemStack stack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
+				MobEnchantUtils.addMobEnchantToItemStack(stack, mobEnchant, mobEnchant.getMaxLevel());
+				items.add(stack);
+			}
+		}
+		for (MobEnchant mobEnchant : MobEnchants.getRegistry().get().getValues()) {
+			if (!mobEnchant.isDisabled()) {
+				ItemStack stack2 = new ItemStack(ModItems.ENCHANTERS_BOOK.get());
+				MobEnchantUtils.addMobEnchantToItemStack(stack2, mobEnchant, mobEnchant.getMaxLevel());
+				items.add(stack2);
+			}
 		}
 		return items;
 	}

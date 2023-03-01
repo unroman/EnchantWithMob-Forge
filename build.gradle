@@ -20,7 +20,7 @@ mixin {
     add sourceSets.main, "enchantwithmob.refmap.json"
 }
 
-version = '1.19.3-8.5.0'
+version = '1.19.3-8.5.1'
 group = 'baguchan.enchantwithmob' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'EnchantWithMob'
 
