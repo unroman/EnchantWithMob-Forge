@@ -3,6 +3,7 @@ package baguchan.enchantwithmob.mobenchant;
 import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -36,6 +37,9 @@ public class DeflectMobEnchant extends MobEnchant {
 
                 projectile.setDeltaMovement(-vec3.x * 0.6F, -vec3.y * 0.6F, -vec3.z * 0.6F);
                 projectile.setOwner(entityHitResult.getEntity());
+                if (projectile instanceof AbstractArrow arrow) {
+                    arrow.setPierceLevel((byte) 0);
+                }
             });
         }
     }
