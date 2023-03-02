@@ -221,13 +221,11 @@ public class MobEnchantUtils {
 				flag = true;
 			}
 		}
-		capability.getEnchantCap().sync(entity);
 		return flag;
 	}
 
 	public static void removeMobEnchantToEntity(LivingEntity entity, IEnchantCap capability) {
 		capability.getEnchantCap().removeAllMobEnchant(entity);
-		capability.getEnchantCap().sync(entity);
 	}
 
 	public static int getExperienceFromMob(IEnchantCap cap) {
@@ -259,7 +257,6 @@ public class MobEnchantUtils {
 				flag = true;
 			}
 		}
-		capability.getEnchantCap().sync(livingEntity);
 		return flag;
 	}
 
@@ -286,7 +283,6 @@ public class MobEnchantUtils {
 		if (flag) {
 			capability.getEnchantCap().addOwner(livingEntity, ownerEntity);
 		}
-		capability.getEnchantCap().sync(livingEntity);
 		return flag;
 	}
 

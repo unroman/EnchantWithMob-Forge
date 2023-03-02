@@ -44,6 +44,7 @@ public class MobEnchantCapability {
 		//Sync Client Enchant
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
+		this.sync(entity);
 	}
 
 	public void addMobEnchant(LivingEntity entity, MobEnchant mobEnchant, int enchantLevel, boolean ancient) {
@@ -53,6 +54,7 @@ public class MobEnchantCapability {
 
 	public void setEnchantType(LivingEntity entity, EnchantType enchantType) {
 		this.enchantType = enchantType;
+		this.sync(entity);
 	}
 
 	/**
@@ -68,11 +70,13 @@ public class MobEnchantCapability {
 		this.mobEnchants.add(new MobEnchantHandler(mobEnchant, enchantLevel));
 		this.onNewEnchantEffect(entity, mobEnchant, enchantLevel);
 		entity.refreshDimensions();
+		this.sync(entity);
 	}
 
 	public void addOwner(LivingEntity entity, @Nullable LivingEntity owner) {
 		this.fromOwner = true;
 		this.enchantOwner = Optional.ofNullable(owner);
+		this.sync(entity);
 	}
 
 	public final void sync(LivingEntity entity) {
@@ -99,6 +103,7 @@ public class MobEnchantCapability {
 		this.mobEnchants.removeAll(mobEnchants);
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
+		this.sync(entity);
 	}
 
 	/*
@@ -117,6 +122,7 @@ public class MobEnchantCapability {
 		this.removeOwner();
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
+		this.sync(entity);
 	}
 
 
