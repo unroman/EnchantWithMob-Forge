@@ -222,11 +222,11 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     public class SpellGoal extends SpellcasterIllager.SpellcasterUseSpellGoal {
         private final Predicate<LivingEntity> fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof Raider && entity instanceof IEnchantCap enchantCap && !enchantCap.getEnchantCap().hasEnchant();
+            return !(entity instanceof EnchanterEntity) && entity instanceof IEnchantCap enchantCap && !enchantCap.getEnchantCap().hasEnchant();
         };
 
         private final Predicate<LivingEntity> enchanted_fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof Raider && entity instanceof IEnchantCap enchantCap && !enchantCap.getEnchantCap().hasEnchant();
+            return !(entity instanceof EnchanterEntity) && entity instanceof IEnchantCap enchantCap && !enchantCap.getEnchantCap().hasEnchant();
         };
 
         /**
@@ -250,8 +250,8 @@ public class EnchanterEntity extends SpellcasterIllager {
                     //set enchant limit
                     if (enchanted_list.size() < 5) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
-                        if (target != EnchanterEntity.this.getTarget()) {
-                            EnchanterEntity.this.setEnchantTarget(list.get(EnchanterEntity.this.random.nextInt(list.size())));
+                        if (target != EnchanterEntity.this.getTarget() && target.isAlliedTo(EnchanterEntity.this) && EnchanterEntity.this.isAlliedTo(target) && (target.getTeam() == EnchanterEntity.this.getTeam() || target.getMobType() == MobType.ILLAGER && target.getTeam() == null)) {
+                            EnchanterEntity.this.setEnchantTarget(target);
                             return true;
                         } else {
                             return false;
