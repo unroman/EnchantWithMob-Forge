@@ -10,11 +10,10 @@ import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -39,11 +38,9 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
@@ -272,8 +269,8 @@ public class CommonEventHandler {
                 if (cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.THORN.get())) {
                     int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.THORN.get());
 
-                    if (event.getSource().getDirectEntity() == attacker && !event.getSource().isExplosion() && livingEntity.getRandom().nextFloat() < i * 0.1F) {
-                        attacker.hurt(DamageSource.thorns(livingEntity), getThornDamage(event.getAmount(), cap.getEnchantCap()));
+                    if (event.getSource().getDirectEntity() == attacker && !event.getSource().isIndirect() && livingEntity.getRandom().nextFloat() < i * 0.1F) {
+                        attacker.hurt(attacker.damageSources().thorns(livingEntity), getThornDamage(event.getAmount(), cap.getEnchantCap()));
                     }
                 }
             }
@@ -281,7 +278,7 @@ public class CommonEventHandler {
         }
 
         if (livingEntity instanceof IEnchantCap cap) {
-            if (event.getSource() != DamageSource.STARVE && cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.PROTECTION.get())) {
+            if (!event.getSource().is(DamageTypes.STARVE) && cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.PROTECTION.get())) {
                 event.setAmount(getDamageReduction(event.getAmount(), cap.getEnchantCap()));
             }
 

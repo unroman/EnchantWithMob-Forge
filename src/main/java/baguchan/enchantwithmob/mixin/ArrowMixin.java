@@ -1,6 +1,5 @@
 package baguchan.enchantwithmob.mixin;
 
-import baguchan.enchantwithmob.EnchantWithMob;
 import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.client.render.layer.EnchantLayer;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -49,8 +48,8 @@ public class ArrowMixin<T extends AbstractArrow> {
 					p_113842_.mulPose(Axis.XP.rotationDegrees(45.0F));
 					p_113842_.scale(0.05625F, 0.05625F, 0.05625F);
 					p_113842_.translate(-4.0F, 0.0F, 0.0F);
-                    VertexConsumer vertexconsumer = p_113843_.getBuffer(EnchantLayer.enchantSwirl(cap.getEnchantCap().isAncient() ? EnchantLayer.ANCIENT_GLINT : ItemRenderer.ENCHANT_GLINT_LOCATION));
-                    PoseStack.Pose posestack$pose = p_113842_.last();
+                    VertexConsumer vertexconsumer = p_113843_.getBuffer(EnchantLayer.enchantSwirl(cap.getEnchantCap().isAncient() ? EnchantLayer.ANCIENT_GLINT : ItemRenderer.ENCHANTED_GLINT_ENTITY));
+					PoseStack.Pose posestack$pose = p_113842_.last();
 					Matrix4f matrix4f = posestack$pose.pose();
 					Matrix3f matrix3f = posestack$pose.normal();
 					this.vertex(matrix4f, matrix3f, vertexconsumer, -7, -2, -2, 0.0F, 0.15625F, -1, 0, 0, p_113844_);

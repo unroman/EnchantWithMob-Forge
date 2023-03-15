@@ -36,7 +36,7 @@ public class SlimeEnchantLayer<T extends LivingEntity> extends RenderLayer<T, Sl
 				if (!p_117473_.isInvisible()) {
 					float intensity = cap.getEnchantCap().getMobEnchants().size() < 3 ? ((float) cap.getEnchantCap().getMobEnchants().size() / 3) : 3;
 
-					VertexConsumer vertexconsumer = p_117471_.getBuffer(EnchantLayer.enchantSwirl(cap.getEnchantCap().isAncient() ? ANCIENT_GLINT : ItemRenderer.ENCHANT_GLINT_LOCATION));
+					VertexConsumer vertexconsumer = p_117471_.getBuffer(EnchantLayer.enchantSwirl(cap.getEnchantCap().isAncient() ? ANCIENT_GLINT : ItemRenderer.ENCHANTED_GLINT_ENTITY));
 
 					this.getParentModel().copyPropertiesTo(this.model);
 					this.model.prepareMobModel(p_117473_, p_117474_, p_117475_, p_117476_);
