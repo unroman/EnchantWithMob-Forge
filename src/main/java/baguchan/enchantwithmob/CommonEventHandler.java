@@ -37,7 +37,7 @@ import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -117,7 +117,7 @@ public class CommonEventHandler {
     }
 
     @SubscribeEvent
-    public static void onSpawnEntity(LivingSpawnEvent.SpecialSpawn event) {
+    public static void onSpawnEntity(MobSpawnEvent.FinalizeSpawn event) {
         if (event.getEntity() instanceof IEnchantCap cap) {
             LevelAccessor world = event.getLevel();
 
@@ -179,7 +179,7 @@ public class CommonEventHandler {
             if (EnchantConfig.COMMON.naturalSpawnEnchantedMob.get() && isSpawnEnchantableEntity(event.getEntity())) {
 
                 if (!(livingEntity instanceof Animal) && !(livingEntity instanceof WaterAnimal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
-                    if (event.getSpawnReason() != MobSpawnType.BREEDING && event.getSpawnReason() != MobSpawnType.CONVERSION && event.getSpawnReason() != MobSpawnType.STRUCTURE && event.getSpawnReason() != MobSpawnType.MOB_SUMMONED) {
+                    if (event.getSpawnType() != MobSpawnType.BREEDING && event.getSpawnType() != MobSpawnType.CONVERSION && event.getSpawnType() != MobSpawnType.STRUCTURE && event.getSpawnType() != MobSpawnType.MOB_SUMMONED) {
                         if (world.getRandom().nextFloat() < (EnchantConfig.COMMON.difficultyBasePercent.get() * world.getDifficulty().getId()) + world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() * EnchantConfig.COMMON.effectiveBasePercent.get()) {
                             if (!world.isClientSide()) {
                                 int i = 0;
