@@ -34,7 +34,6 @@ public class EnchantLayer<T extends LivingEntity, M extends EntityModel<T>> exte
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
     });
-    protected static final RenderStateShard.OverlayStateShard OVERLAY = new RenderStateShard.OverlayStateShard(true);
     protected static final RenderStateShard.ShaderStateShard RENDERTYPE_ENERGY_SWIRL_SHADER = new RenderStateShard.ShaderStateShard(GameRenderer::getRendertypeEnergySwirlShader);
     protected static final RenderStateShard.CullStateShard NO_CULL = new RenderStateShard.CullStateShard(false);
     protected static final RenderStateShard.TexturingStateShard ENTITY_GLINT_TEXTURING = new RenderStateShard.TexturingStateShard("entity_glint_texturing", () -> {
