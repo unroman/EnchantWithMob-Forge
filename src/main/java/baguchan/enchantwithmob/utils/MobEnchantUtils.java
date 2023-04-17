@@ -243,6 +243,22 @@ public class MobEnchantUtils {
 	 *
 	 * @param livingEntity Enchanting target
 	 * @param capability   MobEnchant Capability
+	 * @param data         MobEnchant Data
+	 */
+	public static boolean addEnchantmentToEntity(LivingEntity livingEntity, IEnchantCap capability, MobEnchantmentData data) {
+		boolean flag = false;
+		if (checkAllowMobEnchantFromMob(data.enchantment, livingEntity, capability)) {
+			capability.getEnchantCap().addMobEnchant(livingEntity, data.enchantment, data.enchantmentLevel, false);
+			flag = true;
+		}
+		return flag;
+	}
+
+	/**
+	 * add Mob Enchantments To Entity
+	 *
+	 * @param livingEntity Enchanting target
+	 * @param capability   MobEnchant Capability
 	 * @param random       Random
 	 * @param level        max limit level MobEnchant
 	 * @param allowTresure setting is allow rare enchant

@@ -1,9 +1,11 @@
 package baguchan.enchantwithmob.entity;
 
 import baguchan.enchantwithmob.api.IEnchantCap;
+import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.registry.ModSoundEvents;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
+import baguchan.enchantwithmob.utils.MobEnchantmentData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -21,6 +23,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.SpellcasterIllager;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -34,9 +37,6 @@ import java.util.function.Predicate;
 
 public class EnchanterEntity extends SpellcasterIllager {
     private LivingEntity enchantTarget;
-
-    public float prevCapeX, prevCapeY, prevCapeZ;
-    public float capeX, capeY, capeZ;
     private float clientSideBookAnimation0;
     private float clientSideBookAnimation;
 
@@ -85,25 +85,11 @@ public class EnchanterEntity extends SpellcasterIllager {
                 this.clientSideBookAnimation = Mth.clamp(this.clientSideBookAnimation - 0.15F, 0.0F, 1.0F);
             }
         }
-
-        this.updateCape();
     }
 
     @OnlyIn(Dist.CLIENT)
     public float getBookAnimationScale(float tick) {
         return Mth.lerp(tick, this.clientSideBookAnimation0, this.clientSideBookAnimation) / 1.0F;
-    }
-
-    private void updateCape() {
-        double elasticity = 0.25;
-        double gravity = -0.1;
-        this.prevCapeX = this.capeX;
-        this.prevCapeY = this.capeY;
-        this.prevCapeZ = this.capeZ;
-        this.capeY += gravity;
-        this.capeX += (this.getX() - this.capeX) * elasticity;
-        this.capeY += (this.getY() - this.capeY) * elasticity;
-        this.capeZ += (this.getZ() - this.capeZ) * elasticity;
     }
 
     @Override
@@ -192,6 +178,13 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     @Override
     public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
+        Raid raid = this.getCurrentRaid();
+        boolean flag = this.random.nextFloat() <= raid.getEnchantOdds();
+        if (flag) {
+            if (this instanceof IEnchantCap cap) {
+                MobEnchantUtils.addEnchantmentToEntity(this, cap, new MobEnchantmentData(MobEnchants.PROTECTION.get(), 2));
+            }
+        }
     }
 
     @OnlyIn(Dist.CLIENT)

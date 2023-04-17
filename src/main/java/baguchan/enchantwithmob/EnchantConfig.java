@@ -104,7 +104,7 @@ public class EnchantConfig {
             changeSizeWhenEnchant = builder
                     .comment("Enable Change Size When Enchanted. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.changeSizeWhenEnchant")
-                    .define("Change Size", true);
+                    .define("Change Size", false);
             dungeonsLikeHealth = builder
                     .comment("Enable Increase Health like Dungeons When Enchanted. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.dungeonsLikeHealth")
