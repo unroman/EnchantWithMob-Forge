@@ -8,6 +8,7 @@ import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
+import baguchan.enchantwithmob.utils.MobEnchantmentData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -110,6 +111,11 @@ public class CommonEventHandler {
                             break;
                     }
 
+                    livingEntity.setHealth(livingEntity.getMaxHealth());
+                }
+                for (String enchantname : EnchantConfig.COMMON.buffedDragon.get()) {
+                    MobEnchant mobEnchant = MobEnchants.getRegistry().get().getValue(ResourceLocation.tryParse(enchantname));
+                    MobEnchantUtils.addEnchantmentToEntity(livingEntity, cap, new MobEnchantmentData(mobEnchant, mobEnchant.getMaxLevel()), true);
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                 }
             }

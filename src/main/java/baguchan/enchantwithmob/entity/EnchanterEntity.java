@@ -179,7 +179,7 @@ public class EnchanterEntity extends SpellcasterIllager {
     @Override
     public void applyRaidBuffs(int p_213660_1_, boolean p_213660_2_) {
         Raid raid = this.getCurrentRaid();
-        boolean flag = this.random.nextFloat() <= raid.getEnchantOdds();
+        boolean flag = this.random.nextFloat() <= raid.getEnchantOdds() + 0.1F;
         if (flag) {
             if (this instanceof IEnchantCap cap) {
                 MobEnchantUtils.addEnchantmentToEntity(this, cap, new MobEnchantmentData(MobEnchants.PROTECTION.get(), 2));

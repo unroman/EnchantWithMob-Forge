@@ -254,6 +254,15 @@ public class MobEnchantUtils {
 		return flag;
 	}
 
+	public static boolean addEnchantmentToEntity(LivingEntity livingEntity, IEnchantCap capability, MobEnchantmentData data, boolean ancient) {
+		boolean flag = false;
+		if (checkAllowMobEnchantFromMob(data.enchantment, livingEntity, capability)) {
+			capability.getEnchantCap().addMobEnchant(livingEntity, data.enchantment, data.enchantmentLevel, ancient);
+			flag = true;
+		}
+		return flag;
+	}
+
 	/**
 	 * add Mob Enchantments To Entity
 	 *

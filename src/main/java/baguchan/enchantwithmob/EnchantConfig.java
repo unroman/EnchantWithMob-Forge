@@ -42,6 +42,7 @@ public class EnchantConfig {
     }
 
     public static class Common {
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> buffedDragon;
         public final ForgeConfigSpec.BooleanValue naturalSpawnEnchantedMob;
         public final ForgeConfigSpec.BooleanValue spawnEnchantedAnimal;
         public final ForgeConfigSpec.BooleanValue enchantYourSelf;
@@ -92,7 +93,9 @@ public class EnchantConfig {
                     .define("whitelistShootEntity", Lists.newArrayList("minecraft:skeleton", "minecraft:pillager", "minecraft:shulker", "minecraft:llama", "conjurer_illager:conjurer", "earthmobsmod:bone_spider", "earthmobsmod:lobber_zombie", "earthmobsmod:lobber_drowned"
                             , "earthmobsmod:melon_golem", "minecraft:piglin", "minecraft:snow_golem", "minecraft:player"));
 
-
+            buffedDragon = builder
+                    .comment("Set the MobEnchant on the EnderDragon. If you want more harder fight. should set it! eg: enchantwithmob:thorn.")
+                    .define("Buffed Dragon", Lists.newArrayList());
             spawnEnchantedAnimal = builder
                     .comment("Enable the the spawning of enchanted animal mobs. [true / false]")
                     .translation(EnchantWithMob.MODID + ".config.spawnEnchantedAnimal")
