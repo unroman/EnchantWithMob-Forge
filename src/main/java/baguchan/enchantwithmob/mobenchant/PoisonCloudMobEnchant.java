@@ -55,7 +55,7 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 	@SubscribeEvent
 	public static void onImpact(ProjectileImpactEvent event) {
 		Projectile projectile = event.getProjectile();
-		if (!shooterIsLiving(projectile) || EnchantConfig.COMMON.DISABLE_POISON_CLOUD_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(projectile.getType()).toString()))
+		if (!shooterIsLiving(projectile) || !EnchantConfig.COMMON.ALLOW_POISON_CLOUD_PROJECTILE.get().contains(ForgeRegistries.ENTITY_TYPES.getKey(projectile.getType()).toString()))
 			return;
 		LivingEntity owner = (LivingEntity) projectile.getOwner();
 		if (owner instanceof IEnchantCap cap) {

@@ -58,9 +58,9 @@ public class EnchantConfig {
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAY_ENCHANTABLE_ANCIENT_MOBS;
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_ENCHANTS;
 
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_POISON_CLOUD_PROJECTILE;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALLOW_POISON_CLOUD_PROJECTILE;
 
-        public final ForgeConfigSpec.ConfigValue<List<? extends String>> DISABLE_MULTISHOT_PROJECTILE;
+        public final ForgeConfigSpec.ConfigValue<List<? extends String>> ALLOW_MULTISHOT_PROJECTILE;
 
         public final ForgeConfigSpec.ConfigValue<List<? extends String>> WHITELIST_SHOOT_ENTITY;
 
@@ -81,12 +81,12 @@ public class EnchantConfig {
             DISABLE_ENCHANTS = builder
                     .comment("Disables the specific mob enchant. Use the full name(This config only disabled mob enchant when mob spawn. not mean delete complete, eg: enchantwithmob:thorn.")
                     .define("disableMobEnchants", Lists.newArrayList());
-            DISABLE_POISON_CLOUD_PROJECTILE = builder
-                    .comment("Disables the poison cloud for projectile. Use the full name(eg: minecraft:potion.")
-                    .define("disablePoisonCloudProjectiles", Lists.newArrayList("minecraft:potion", "minecraft:experience_bottle", "minecraft:ender_pearl", "minecraft:egg", "earthmobsmod:smelly_egg"));
-            DISABLE_MULTISHOT_PROJECTILE = builder
-                    .comment("Disables the multi shot for projectile. Use the full name(eg: minecraft:potion.")
-                    .define("disableMultiShotProjectiles", Lists.newArrayList("minecraft:experience_bottle", "minecraft:ender_pearl", "minecraft:eye_of_ender", "minecraft:egg", "earthmobsmod:smelly_egg", "conjurer_illager:throwing_card", "conjurer_illager:bouncy_ball"));
+            ALLOW_POISON_CLOUD_PROJECTILE = builder
+                    .comment("Allow the poison cloud for projectile. Use the full name(eg: minecraft:arrow.")
+                    .define("allowPoisonCloudProjectiles", Lists.newArrayList("minecraft:arrow", "minecraft:snowball", "earthmobsmod:melon_seeds", "earthmobsmod:zombie_flesh", "conjurer_illager:throwing_card", "conjurer_illager:bouncy_ball", "tofucraft:fukumame", "tofucraft:nether_fukumame", "tofucraft:soul_fukumame"));
+            ALLOW_MULTISHOT_PROJECTILE = builder
+                    .comment("Allow the multi shot for projectile. Use the full name(eg: minecraft:arrow.")
+                    .define("allowMultiShotProjectiles", Lists.newArrayList("minecraft:arrow", "minecraft:snowball", "earthmobsmod:melon_seeds", "earthmobsmod:zombie_flesh", "conjurer_illager:throwing_card", "conjurer_illager:bouncy_ball", "tofucraft:fukumame", "tofucraft:nether_fukumame", "tofucraft:soul_fukumame"));
 
             WHITELIST_SHOOT_ENTITY = builder
                     .comment("Whitelist the projectile mob enchant for mob. Use the full name(eg: minecraft:zombie.")
