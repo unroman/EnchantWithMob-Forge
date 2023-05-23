@@ -6,10 +6,12 @@
   "refmap": "enchantwithmob.refmap.json",
   "mixins": [
     "LivingEntityMixin",
+    "EvokerFangsMixin",
     "WoodlandMansionPieceMixin"
   ],
   "client": [
     "ArrowMixin",
+    "EvokerFangsRendererMixin",
     "WitherSkullRendererMixin",
     "EnderDragonRendererMixin"
   ],

@@ -1,6 +1,7 @@
 package baguchan.enchantwithmob;
 
 import baguchan.enchantwithmob.api.IEnchantCap;
+import baguchan.enchantwithmob.api.IEnchantVisual;
 import baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantHandler;
@@ -20,6 +21,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.TraceableEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.SnowGolem;
 import net.minecraft.world.entity.animal.WaterAnimal;
@@ -59,6 +61,18 @@ public class CommonEventHandler {
     public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Projectile) {
             event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "item_mob_enchant"), new ItemMobEnchantCapability());
+        }
+    }
+
+    /*
+     * add Fang Enchant Visual
+     */
+    @SubscribeEvent
+    public static void onTraceableEntitySpawn(EntityJoinLevelEvent event) {
+        if (event.getEntity() instanceof IEnchantVisual enchantVisual && event.getEntity() instanceof TraceableEntity traceableEntity) {
+            if (traceableEntity.getOwner() instanceof IEnchantCap enchantCap) {
+                enchantVisual.setEnchantVisual(enchantCap.getEnchantCap().hasEnchant());
+            }
         }
     }
 
