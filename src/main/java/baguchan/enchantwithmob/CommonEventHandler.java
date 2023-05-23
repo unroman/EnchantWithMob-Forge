@@ -65,7 +65,7 @@ public class CommonEventHandler {
     }
 
     /*
-     * add Fang Enchant Visual
+     * add Enchant Visual
      */
     @SubscribeEvent
     public static void onTraceableEntitySpawn(EntityJoinLevelEvent event) {
@@ -76,6 +76,9 @@ public class CommonEventHandler {
         }
     }
 
+    /*
+     * this event handle the Ender dragon mob enchant
+     */
     @SubscribeEvent
     public static void onEnderDragonSpawn(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof IEnchantCap cap && event.getEntity() instanceof EnderDragon livingEntity) {
@@ -137,6 +140,9 @@ public class CommonEventHandler {
         }
     }
 
+    /*
+     * handle the Normal Entity Mob Enchant
+     */
     @SubscribeEvent
     public static void onSpawnEntity(MobSpawnEvent.FinalizeSpawn event) {
         if (event.getEntity() instanceof IEnchantCap cap) {
