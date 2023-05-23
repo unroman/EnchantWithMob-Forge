@@ -39,6 +39,13 @@ public abstract class LivingEntityMixin extends Entity implements IEnchantCap {
 		}
 	}
 
+	@Inject(method = "onSyncedDataUpdated", at = @At("TAIL"))
+	public void onSyncedDataUpdated(EntityDataAccessor<?> p_21104_, CallbackInfo callbackInfo) {
+		if (MOB_ENCHANT_CAP.equals(p_21104_)) {
+			this.refreshDimensions();
+		}
+	}
+
 	@Inject(method = "defineSynchedData", at = @At("TAIL"))
 	public void defineSynchedData(CallbackInfo callbackInfo) {
 		this.entityData.define(MOB_ENCHANT_CAP, new MobEnchantCapability());
