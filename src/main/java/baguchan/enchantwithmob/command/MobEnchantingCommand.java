@@ -34,8 +34,8 @@ public class MobEnchantingCommand {
 		enchantCommand.then(Commands.literal("clear").then(Commands.argument("target", EntityArgument.entity()).executes((ctx) -> {
 			return setClear(ctx.getSource(), EntityArgument.getEntity(ctx, "target"));
 		}))).then(Commands.literal("give").then(Commands.argument("target", EntityArgument.entity())
-				.then(Commands.argument("MobEnchantment", MobEnchantArgument.mobEnchantment()).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "MobEnchantment"), 1))
-						.then(Commands.argument("level", IntegerArgumentType.integer()).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "MobEnchantment"), IntegerArgumentType.getInteger(p_198357_0_, "level")))))));
+				.then(Commands.argument("mob_enchantment", MobEnchantArgument.mobEnchantment()).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "mob_enchantment"), 1))
+						.then(Commands.argument("level", IntegerArgumentType.integer()).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "mob_enchantment"), IntegerArgumentType.getInteger(p_198357_0_, "level")))))));
 
 		dispatcher.register(enchantCommand);
 
@@ -104,7 +104,7 @@ public class MobEnchantingCommand {
 						enchantCap.getEnchantCap().addMobEnchant((LivingEntity) entity, mobEnchant, level);
 					}
 
-					commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.MOB_ENCHANT_REGISTRY.getKey(mobEnchant)), true);
+					commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.getRegistry().get().getKey(mobEnchant)), true);
 					return 1;
 				} else {
 					commandStack.sendFailure(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_mobenchant"));

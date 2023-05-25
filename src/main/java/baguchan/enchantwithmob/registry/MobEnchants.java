@@ -1,41 +1,18 @@
 package baguchan.enchantwithmob.registry;
 
 import baguchan.enchantwithmob.EnchantWithMob;
-import baguchan.enchantwithmob.mobenchant.DeflectMobEnchant;
-import baguchan.enchantwithmob.mobenchant.HealthBoostMobEnchant;
-import baguchan.enchantwithmob.mobenchant.HugeMobEnchant;
-import baguchan.enchantwithmob.mobenchant.MobEnchant;
-import baguchan.enchantwithmob.mobenchant.MultiShotMobEnchant;
-import baguchan.enchantwithmob.mobenchant.PoisonCloudMobEnchant;
-import baguchan.enchantwithmob.mobenchant.PoisonMobEnchant;
-import baguchan.enchantwithmob.mobenchant.ProtectionMobEnchant;
-import baguchan.enchantwithmob.mobenchant.SoulStealMobEnchant;
-import baguchan.enchantwithmob.mobenchant.SpeedyMobEnchant;
-import baguchan.enchantwithmob.mobenchant.StrongMobEnchant;
-import baguchan.enchantwithmob.mobenchant.ThornEnchant;
-import baguchan.enchantwithmob.mobenchant.ToughMobEnchant;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import baguchan.enchantwithmob.mobenchant.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.NewRegistryEvent;
-import net.minecraftforge.registries.RegistryBuilder;
-import net.minecraftforge.registries.RegistryManager;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraftforge.registries.*;
 
 import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class MobEnchants {
-	public static final ResourceKey<Registry<MobEnchant>> MOB_ENCHNAT_KEY = ResourceKey.createRegistryKey(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"));
-
-	public static final IForgeRegistry<MobEnchant> MOB_ENCHANT_REGISTRY = RegistryManager.ACTIVE.getRegistry(MOB_ENCHNAT_KEY);
-
 	public static final DeferredRegister<MobEnchant> MOB_ENCHANT = DeferredRegister.create(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), EnchantWithMob.MODID);
 
 

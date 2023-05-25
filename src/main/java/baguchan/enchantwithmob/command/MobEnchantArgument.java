@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 public class MobEnchantArgument implements ArgumentType<MobEnchant> {
-	private static final Collection<String> EXAMPLES = Arrays.asList("spooky", "effect");
+	private static final Collection<String> EXAMPLES = Arrays.asList("enchantwithmob:strong", "enchantwithmob:protection");
 	public static final DynamicCommandExceptionType ERROR_UNKNOWN_EFFECT = new DynamicCommandExceptionType((p_208663_0_) -> {
 		return Component.translatable("mobEnchantment.mobEnchantmentNotFound", p_208663_0_);
 	});
@@ -29,7 +29,7 @@ public class MobEnchantArgument implements ArgumentType<MobEnchant> {
 		return new MobEnchantArgument();
 	}
 
-	public static MobEnchant getMobEnchant(CommandContext<CommandSourceStack> source, String name) throws CommandSyntaxException {
+	public static MobEnchant getMobEnchant(CommandContext<CommandSourceStack> source, String name) {
 		return source.getArgument(name, MobEnchant.class);
 	}
 
