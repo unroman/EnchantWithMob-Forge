@@ -243,37 +243,12 @@ public class MobEnchantUtils {
 	 *
 	 * @param livingEntity Enchanting target
 	 * @param capability   MobEnchant Capability
-	 * @param data         MobEnchant Data
-	 */
-	public static boolean addEnchantmentToEntity(LivingEntity livingEntity, IEnchantCap capability, MobEnchantmentData data) {
-		boolean flag = false;
-		if (checkAllowMobEnchantFromMob(data.enchantment, livingEntity, capability)) {
-			capability.getEnchantCap().addMobEnchant(livingEntity, data.enchantment, data.enchantmentLevel, false);
-			flag = true;
-		}
-		return flag;
-	}
-
-	public static boolean addEnchantmentToEntity(LivingEntity livingEntity, IEnchantCap capability, MobEnchantmentData data, boolean ancient) {
-		boolean flag = false;
-		if (checkAllowMobEnchantFromMob(data.enchantment, livingEntity, capability)) {
-			capability.getEnchantCap().addMobEnchant(livingEntity, data.enchantment, data.enchantmentLevel, ancient);
-			flag = true;
-		}
-		return flag;
-	}
-
-	/**
-	 * add Mob Enchantments To Entity
-	 *
-	 * @param livingEntity Enchanting target
-	 * @param capability   MobEnchant Capability
 	 * @param random       Random
 	 * @param level        max limit level MobEnchant
 	 * @param allowTresure setting is allow rare enchant
 	 */
-	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, IEnchantCap capability, RandomSource random, int level, boolean allowTresure, boolean ancient) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
+	public static boolean addRandomEnchantmentToEntity(LivingEntity livingEntity, IEnchantCap capability, RandomSource random, int level, boolean allowTresure, boolean allowCurse, boolean ancient) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure, allowCurse);
 
 		boolean flag = false;
 		for (MobEnchantmentData enchantmentdata : list) {
@@ -294,8 +269,8 @@ public class MobEnchantUtils {
 	 * @param level        max limit level MobEnchant
 	 * @param allowTresure setting is allow rare enchant
 	 */
-	public static boolean addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, IEnchantCap capability, RandomSource random, int level, boolean allowTresure) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure);
+	public static boolean addUnstableRandomEnchantmentToEntity(LivingEntity livingEntity, LivingEntity ownerEntity, IEnchantCap capability, RandomSource random, int level, boolean allowTresure, boolean allowCurse) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowTresure, allowCurse);
 
 		boolean flag = false;
 
@@ -311,8 +286,8 @@ public class MobEnchantUtils {
 		return flag;
 	}
 
-	public static ItemStack addRandomEnchantmentToItemStack(RandomSource random, ItemStack stack, int level, boolean allowRare) {
-		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare);
+	public static ItemStack addRandomEnchantmentToItemStack(RandomSource random, ItemStack stack, int level, boolean allowRare, boolean allowCurse) {
+		List<MobEnchantmentData> list = buildEnchantmentList(random, level, allowRare, allowCurse);
 
 		for (MobEnchantmentData enchantmentdata : list) {
 			if (!enchantmentdata.enchantment.isDisabled()) {
@@ -383,7 +358,7 @@ public class MobEnchantUtils {
 	/*
 	 * build MobEnchantment list like vanilla's enchantment
 	 */
-	public static List<MobEnchantmentData> buildEnchantmentList(RandomSource randomIn, int level, boolean allowTresure) {
+	public static List<MobEnchantmentData> buildEnchantmentList(RandomSource randomIn, int level, boolean allowTresure, boolean allowCursed) {
 		List<MobEnchantmentData> list = Lists.newArrayList();
 		int i = 1; //Enchantability
 		if (i <= 0) {
@@ -392,7 +367,7 @@ public class MobEnchantUtils {
 			level = level + 1 + randomIn.nextInt(i / 4 + 1) + randomIn.nextInt(i / 4 + 1);
 			float f = (randomIn.nextFloat() + randomIn.nextFloat() - 1.0F) * 0.15F;
 			level = Mth.clamp(Math.round((float) level + (float) level * f), 1, Integer.MAX_VALUE);
-			List<MobEnchantmentData> list1 = makeMobEnchantmentDatas(level, allowTresure);
+			List<MobEnchantmentData> list1 = makeMobEnchantmentDatas(level, allowTresure, allowCursed);
 			if (!list1.isEmpty()) {
 				WeightedRandom.getRandomItem(randomIn, list1).ifPresent(list::add);
 
@@ -417,11 +392,11 @@ public class MobEnchantUtils {
 	 * get MobEnchantment data.
 	 * when not allow rare enchantment,Ignore rare enchantment
 	 */
-	public static List<MobEnchantmentData> makeMobEnchantmentDatas(int p_185291_0_, boolean allowTresure) {
+	public static List<MobEnchantmentData> makeMobEnchantmentDatas(int p_185291_0_, boolean allowTresure, boolean allowCursed) {
 		List<MobEnchantmentData> list = Lists.newArrayList();
 
 		for (MobEnchant enchantment : MobEnchants.getRegistry().get().getValues().stream().toList()) {
-			if ((!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest()) {
+			if ((!enchantment.isCursedEnchant() || allowCursed) && (!enchantment.isTresureEnchant() || allowTresure) && !enchantment.isOnlyChest()) {
 				for (int i = enchantment.getMaxLevel(); i > enchantment.getMinLevel() - 1; --i) {
 					if (p_185291_0_ >= enchantment.getMinEnchantability(i) && p_185291_0_ <= enchantment.getMaxEnchantability(i)) {
 						list.add(new MobEnchantmentData(enchantment, i));

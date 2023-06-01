@@ -13,8 +13,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
-public class HugeMobEnchant extends MobEnchant {
-    public HugeMobEnchant(Properties properties) {
+public class SmallMobEnchant extends MobEnchant {
+    public SmallMobEnchant(Properties properties) {
         super(properties);
     }
 
@@ -45,9 +45,9 @@ public class HugeMobEnchant extends MobEnchant {
     }
 
     public static float getDamageIncrease(float damage, MobEnchantCapability cap) {
-        int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.HUGE.get());
+        int level = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getMobEnchants(), MobEnchants.SMALL.get());
         if (level > 0) {
-            damage *= 1.0F + level * 0.15F;
+            damage /= 1.0F + level * 0.15F;
         }
         return damage;
     }
@@ -57,8 +57,17 @@ public class HugeMobEnchant extends MobEnchant {
         return true;
     }
 
+    public boolean isCursedEnchant() {
+        return true;
+    }
+
     @Override
     public boolean isCompatibleMob(LivingEntity livingEntity) {
         return !(livingEntity instanceof Player) || EnchantConfig.COMMON.bigYourSelf.get();
+    }
+
+    @Override
+    protected boolean canApplyTogether(MobEnchant ench) {
+        return super.canApplyTogether(ench) && ench != MobEnchants.HUGE.get();
     }
 }

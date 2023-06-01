@@ -114,25 +114,29 @@ public class MobEnchant {
 				modifiableattributeinstance.addPermanentModifier(new AttributeModifier(attributemodifier.getId(), MobEnchants.getRegistry().get().getKey(this).toString() + " " + amplifier, this.getAttributeModifierAmount(amplifier, attributemodifier), attributemodifier.getOperation()));
 			}
 		}
-	}
+    }
 
-	public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
-		return modifier.getAmount() * (double) (amplifier);
-	}
+    public double getAttributeModifierAmount(int amplifier, AttributeModifier modifier) {
+        return modifier.getAmount() * (double) (amplifier);
+    }
 
-	public boolean isDisabled() {
-		return EnchantConfig.COMMON.DISABLE_ENCHANTS.get().contains(MobEnchants.getRegistry().get().getKey(this).toString());
-	}
+    public boolean isDisabled() {
+        return EnchantConfig.COMMON.DISABLE_ENCHANTS.get().contains(MobEnchants.getRegistry().get().getKey(this).toString());
+    }
+
+    public boolean isCursedEnchant() {
+        return false;
+    }
 
 
-	public static class Properties {
-		private final Rarity enchantType;
-		private final int level;
+    public static class Properties {
+        private final Rarity enchantType;
+        private final int level;
 
-		public Properties(Rarity enchantType, int level) {
-			this.enchantType = enchantType;
-			this.level = level;
-		}
+        public Properties(Rarity enchantType, int level) {
+            this.enchantType = enchantType;
+            this.level = level;
+        }
     }
 
     public static enum Rarity {

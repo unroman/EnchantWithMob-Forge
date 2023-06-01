@@ -9,7 +9,6 @@ import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
-import baguchan.enchantwithmob.utils.MobEnchantmentData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -91,17 +90,17 @@ public class CommonEventHandler {
                         case EASY:
                             i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 30);
 
-                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
                             break;
                         case NORMAL:
                             i = (int) Mth.clamp((5 + world.getRandom().nextInt(15)) * difficultScale, 1, 60);
 
-                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
                             break;
                         case HARD:
                             i = (int) Mth.clamp((5 + world.getRandom().nextInt(20)) * difficultScale, 1, 100);
 
-                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
                             break;
                     }
                     livingEntity.setHealth(livingEntity.getMaxHealth());
@@ -115,25 +114,20 @@ public class CommonEventHandler {
                         case EASY:
                             i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
-                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
                             break;
                         case NORMAL:
                             i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
-                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
                             break;
                         case HARD:
                             i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
 
-                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
                             break;
                     }
 
-                    livingEntity.setHealth(livingEntity.getMaxHealth());
-                }
-                for (String enchantname : EnchantConfig.COMMON.buffedDragon.get()) {
-                    MobEnchant mobEnchant = MobEnchants.getRegistry().get().getValue(ResourceLocation.tryParse(enchantname));
-                    MobEnchantUtils.addEnchantmentToEntity(livingEntity, cap, new MobEnchantmentData(mobEnchant, mobEnchant.getMaxLevel()), true);
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                 }
             }
@@ -157,17 +151,17 @@ public class CommonEventHandler {
                     case EASY:
                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 30);
 
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
                         break;
                     case NORMAL:
                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(15)) * difficultScale, 1, 60);
 
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
                         break;
                     case HARD:
                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(20)) * difficultScale, 1, 100);
 
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true);
+                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
                         break;
                 }
 
@@ -184,17 +178,17 @@ public class CommonEventHandler {
                     case EASY:
                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
                         break;
                     case NORMAL:
                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
                         break;
                     case HARD:
                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
 
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
                         break;
                 }
 
@@ -215,17 +209,17 @@ public class CommonEventHandler {
                                     case EASY:
                                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
-                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
                                         break;
                                     case NORMAL:
                                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
-                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
                                         break;
                                     case HARD:
                                         i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
 
-                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false);
+                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
                                         break;
                                 }
 
