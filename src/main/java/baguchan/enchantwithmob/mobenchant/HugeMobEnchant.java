@@ -34,13 +34,12 @@ public class HugeMobEnchant extends MobEnchant {
             LivingEntity attacker = (LivingEntity) event.getSource().getEntity();
 
             if (attacker instanceof IEnchantCap cap) {
-                if (cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.HUGE.get())) {
+                if (cap.getEnchantCap().hasEnchant()) {
                     if (event.getAmount() > 0) {
                         event.setAmount(getDamageIncrease(event.getAmount(), cap.getEnchantCap()));
                     }
                 }
             }
-            ;
         }
     }
 
