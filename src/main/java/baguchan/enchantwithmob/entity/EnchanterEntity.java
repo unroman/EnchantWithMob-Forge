@@ -126,7 +126,7 @@ public class EnchanterEntity extends SpellcasterIllager {
                     itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
                 }
 
-                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20 + this.getWave() * 4, true));
+                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20 + this.getWave() * 4, true, false));
             } else {
                 ItemStack itemStack = new ItemStack(ModItems.ENCHANTERS_BOOK.get());
 
@@ -134,7 +134,7 @@ public class EnchanterEntity extends SpellcasterIllager {
                     itemStack = new ItemStack(ModItems.MOB_ENCHANT_BOOK.get());
                 }
 
-                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20, true));
+                this.spawnAtLocation(MobEnchantUtils.addRandomEnchantmentToItemStack(random, itemStack, 20, true, false));
             }
         }
     }
@@ -275,7 +275,7 @@ public class EnchanterEntity extends SpellcasterIllager {
             LivingEntity entity = EnchanterEntity.this.getEnchantTarget();
             if (entity != null && entity.isAlive()) {
                 if (entity instanceof IEnchantCap cap) {
-                    MobEnchantUtils.addUnstableRandomEnchantmentToEntity(entity, EnchanterEntity.this, cap, entity.getRandom(), 12, false);
+                    MobEnchantUtils.addUnstableRandomEnchantmentToEntity(entity, EnchanterEntity.this, cap, entity.getRandom(), 12, false, false);
                 }
                 ;
             }
