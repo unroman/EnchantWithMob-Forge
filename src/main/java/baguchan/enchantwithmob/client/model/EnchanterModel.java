@@ -166,7 +166,11 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		this.leftHand.visible = false;
 
 		this.animateWalk(EnchanterAnimation.ENCHANTER_MCD_WALK, limbSwing, limbSwingAmount, 3.0F, 4.5F);
-		this.animateWalk(EnchanterAnimation.ENCHANTER_IDLE, ageInTicks, 1.0F, 1.0F, 1.0F);
+
+		if (!entity.castingAnimationState.isStarted() && !entity.attackAnimationState.isStarted()) {
+			this.animateWalk(EnchanterAnimation.ENCHANTER_IDLE, ageInTicks, 1.0F, 1.0F, 1.0F);
+
+		}
 
 		this.animate(entity.idleAnimationState, EnchanterAnimation.ENCHANTER_MCD_IDLE, ageInTicks);
 		this.animate(entity.attackAnimationState, EnchanterAnimation.ENCHANTER_MCD_ATTACK, ageInTicks, 3.0F);
@@ -203,7 +207,7 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 			this.leftLeg.translateAndRotate(poseStack);
 		}
 		modelPart.translateAndRotate(poseStack);
-		poseStack.translate(0, 0.701F, 0);
+		poseStack.translate(0, 0.75F, 0);
 	}
 
 	@Override
