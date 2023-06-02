@@ -6,9 +6,11 @@ import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.registry.ModSoundEvents;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import baguchan.enchantwithmob.utils.MobEnchantmentData;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -27,6 +29,7 @@ import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,8 +40,11 @@ import java.util.function.Predicate;
 
 public class EnchanterEntity extends SpellcasterIllager {
     private LivingEntity enchantTarget;
-    private float clientSideBookAnimation0;
-    private float clientSideBookAnimation;
+
+    public final AnimationState idleAnimationState = new AnimationState();
+    public final AnimationState attackAnimationState = new AnimationState();
+    public final AnimationState castingAnimationState = new AnimationState();
+    private int idleAnimationTimeout = 0;
 
     public EnchanterEntity(EntityType<? extends EnchanterEntity> type, Level p_i48551_2_) {
         super(type, p_i48551_2_);
@@ -65,6 +71,21 @@ public class EnchanterEntity extends SpellcasterIllager {
     }
 
     @Override
+    public void handleEntityEvent(byte p_21375_) {
+        if (p_21375_ == 4) {
+            this.attackAnimationState.start(this.tickCount);
+            this.idleAnimationState.stop();
+            this.castingAnimationState.stop();
+        } else if (p_21375_ == 61) {
+            this.castingAnimationState.start(this.tickCount);
+            this.idleAnimationState.stop();
+            this.attackAnimationState.stop();
+        } else {
+            super.handleEntityEvent(p_21375_);
+        }
+    }
+
+    @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
     }
@@ -78,18 +99,19 @@ public class EnchanterEntity extends SpellcasterIllager {
         super.tick();
 
         if (this.level.isClientSide) {
-            this.clientSideBookAnimation0 = this.clientSideBookAnimation;
-            if (this.isCastingSpell()) {
-                this.clientSideBookAnimation = Mth.clamp(this.clientSideBookAnimation + 0.1F, 0.0F, 1.0F);
-            } else {
-                this.clientSideBookAnimation = Mth.clamp(this.clientSideBookAnimation - 0.15F, 0.0F, 1.0F);
-            }
+            this.setupAnimationStates();
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public float getBookAnimationScale(float tick) {
-        return Mth.lerp(tick, this.clientSideBookAnimation0, this.clientSideBookAnimation) / 1.0F;
+    private void setupAnimationStates() {
+        if (this.getTarget() != null || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D) {
+            this.idleAnimationState.ifStarted(AnimationState::stop);
+        } else if (this.idleAnimationTimeout <= 0) {
+            this.idleAnimationTimeout = this.random.nextInt(200) + 80;
+            this.idleAnimationState.startIfStopped(this.tickCount);
+        } else {
+            --this.idleAnimationTimeout;
+        }
     }
 
     @Override
@@ -147,7 +169,7 @@ public class EnchanterEntity extends SpellcasterIllager {
     @Override
     public boolean doHurtTarget(Entity p_70652_1_) {
         this.playSound(ModSoundEvents.ENCHANTER_ATTACK.get(), this.getSoundVolume(), this.getVoicePitch());
-
+        this.level.broadcastEntityEvent(this, (byte) 4);
         return super.doHurtTarget(p_70652_1_);
     }
 
@@ -168,12 +190,26 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     @Override
     protected SoundEvent getCastingSoundEvent() {
-		return ModSoundEvents.ENCHANTER_SPELL.get();
+        return ModSoundEvents.ENCHANTER_SPELL.get();
     }
 
     @Override
     public SoundEvent getCelebrateSound() {
-		return ModSoundEvents.ENCHANTER_AMBIENT.get();
+        return ModSoundEvents.ENCHANTER_AMBIENT.get();
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_37856_, DifficultyInstance p_37857_, MobSpawnType p_37858_, @org.jetbrains.annotations.Nullable SpawnGroupData p_37859_, @org.jetbrains.annotations.Nullable CompoundTag p_37860_) {
+        this.populateDefaultEquipmentSlots(p_37856_.getRandom(), p_37857_);
+        this.populateDefaultEquipmentEnchantments(p_37856_.getRandom(), p_37857_);
+        return super.finalizeSpawn(p_37856_, p_37857_, p_37858_, p_37859_, p_37860_);
+    }
+
+    @Override
+    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
+        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModItems.ENCHANTER_CLOTHES.get()));
+        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.ENCHANTER_HAT.get()));
     }
 
     @Override
@@ -245,6 +281,7 @@ public class EnchanterEntity extends SpellcasterIllager {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
                         if (target != EnchanterEntity.this.getTarget() && target.isAlliedTo(EnchanterEntity.this) && EnchanterEntity.this.isAlliedTo(target) && (target.getTeam() == EnchanterEntity.this.getTeam() || target.getMobType() == MobType.ILLAGER && target.getTeam() == null)) {
                             EnchanterEntity.this.setEnchantTarget(target);
+                            EnchanterEntity.this.level.broadcastEntityEvent(EnchanterEntity.this, (byte) 61);
                             return true;
                         } else {
                             return false;
@@ -277,7 +314,6 @@ public class EnchanterEntity extends SpellcasterIllager {
                 if (entity instanceof IEnchantCap cap) {
                     MobEnchantUtils.addUnstableRandomEnchantmentToEntity(entity, EnchanterEntity.this, cap, entity.getRandom(), 12, false, false);
                 }
-                ;
             }
         }
 

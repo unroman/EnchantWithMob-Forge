@@ -1,6 +1,7 @@
 package baguchan.enchantwithmob.client;
 
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.client.model.EnchanterClothesModel;
 import baguchan.enchantwithmob.client.model.EnchanterModel;
 import baguchan.enchantwithmob.client.overlay.MobEnchantOverlay;
 import baguchan.enchantwithmob.client.render.EnchanterRenderer;
@@ -48,7 +49,8 @@ public class ClientRegistrar {
 
 	@SubscribeEvent
 	public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
-		event.registerLayerDefinition(ModModelLayers.ENCHANTER, EnchanterModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.ENCHANTER, EnchanterModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.ENCHANTER_CLOTHES, EnchanterClothesModel::createBodyLayer);
 	}
 
 	@SubscribeEvent

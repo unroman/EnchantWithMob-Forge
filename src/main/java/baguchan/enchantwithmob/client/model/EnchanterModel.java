@@ -1,20 +1,14 @@
 package baguchan.enchantwithmob.client.model;
 
+import bagu_chan.bagus_lib.client.layer.IArmor;
+import baguchan.enchantwithmob.client.animation.EnchanterAnimation;
 import baguchan.enchantwithmob.entity.EnchanterEntity;
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.model.AnimationUtils;
-import net.minecraft.client.model.ArmedModel;
-import net.minecraft.client.model.HeadedModel;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeDeformation;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,67 +18,124 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * Created using Tabula 8.0.0
  */
 @OnlyIn(Dist.CLIENT)
-public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel<T> implements ArmedModel, HeadedModel {
+public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel<T> implements IArmor {
 	private final ModelPart root;
 	private final ModelPart head;
-	private final ModelPart hat;
 	private final ModelPart body;
 	private final ModelPart cape;
-	private final ModelPart arms;
+	private final ModelPart illagerArms;
+	private final ModelPart bipedArms;
 	private final ModelPart leftLeg;
 	private final ModelPart rightLeg;
 	private final ModelPart rightArm;
 	private final ModelPart leftArm;
+	private final ModelPart illagerRightArm;
+	private final ModelPart illagerLeftArm;
+	private final ModelPart armorBipedLeftArm;
+	private final ModelPart armorBipedRightArm;
 
-
-	public EnchanterModel(ModelPart p_170688_) {
-		this.root = p_170688_;
-		this.head = p_170688_.getChild("head");
-		this.hat = this.head.getChild("hat");
-		this.hat.visible = true;
-		this.body = p_170688_.getChild("body");
-		this.cape = this.body.getChild("cape");
-		this.arms = p_170688_.getChild("arms");
-		this.leftLeg = p_170688_.getChild("left_leg");
-		this.rightLeg = p_170688_.getChild("right_leg");
-		this.leftArm = p_170688_.getChild("left_arm");
-		this.rightArm = p_170688_.getChild("right_arm");
+	public EnchanterModel(ModelPart root) {
+		this.root = root.getChild("root");
+		this.body = this.root.getChild("bipedBody");
+		this.head = this.body.getChild("bipedHeadBaseRotator");
+		this.cape = this.body.getChild("bipedCape");
+		this.illagerArms = this.body.getChild("illagerArms");
+		this.illagerRightArm = this.illagerArms.getChild("armorIllagerLeftArm");
+		this.illagerLeftArm = this.illagerArms.getChild("armorIllagerRightArm");
+		this.leftLeg = this.root.getChild("bipedLegs").getChild("bipedLegLeft");
+		this.rightLeg = this.root.getChild("bipedLegs").getChild("bipedLegRight");
+		this.bipedArms = this.body.getChild("bipedArms");
+		this.leftArm = this.bipedArms.getChild("bipedArmLeft");
+		this.rightArm = this.bipedArms.getChild("bipedArmRight");
+		this.armorBipedLeftArm = this.leftArm.getChild("armorBipedLeftArm");
+		this.armorBipedRightArm = this.rightArm.getChild("armorBipedRightArm");
 	}
 
 	public static LayerDefinition createBodyLayer() {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
-		PartDefinition partdefinition1 = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F), PartPose.offset(0.0F, 0.0F, 0.0F));
-		partdefinition1.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(32, 0).addBox(-4.0F, -14.0F, -4.0F, 8.0F, 8.0F, 8.0F, new CubeDeformation(0.45F)), PartPose.ZERO);
-		partdefinition1.addOrReplaceChild("nose", CubeListBuilder.create().texOffs(24, 0).addBox(-1.0F, -1.0F, -6.0F, 2.0F, 4.0F, 2.0F), PartPose.offset(0.0F, -2.0F, 0.0F));
 
-		PartDefinition partdefinition2 = partdefinition.addOrReplaceChild("body", CubeListBuilder.create().texOffs(16, 20).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F).texOffs(0, 38).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 18.0F, 6.0F, new CubeDeformation(0.5F)), PartPose.offset(0.0F, 0.0F, 0.0F));
-		partdefinition2.addOrReplaceChild("cape", CubeListBuilder.create().texOffs(64, 0).addBox(-4.5F, 0.0F, 0.0F, 9.0F, 15.0F, 1.0F, new CubeDeformation(0.6F, 0.7F, 0.0F)), PartPose.offset(0.0F, 1.0F, 3.4F));
+		PartDefinition root = partdefinition.addOrReplaceChild("root", CubeListBuilder.create(), PartPose.offset(0.0F, 22.0F, 0.0F));
 
-		PartDefinition partdefinition3 = partdefinition.addOrReplaceChild("arms", CubeListBuilder.create().texOffs(44, 22).addBox(-8.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F).texOffs(40, 38).addBox(-4.0F, 2.0F, -2.0F, 8.0F, 4.0F, 4.0F), PartPose.offsetAndRotation(0.0F, 3.0F, -1.0F, -0.75F, 0.0F, 0.0F));
-		partdefinition3.addOrReplaceChild("left_shoulder", CubeListBuilder.create().texOffs(44, 22).mirror().addBox(4.0F, -2.0F, -2.0F, 4.0F, 8.0F, 4.0F), PartPose.ZERO);
-		partdefinition.addOrReplaceChild("right_leg", CubeListBuilder.create().texOffs(0, 22).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(-2.0F, 12.0F, 0.0F));
-		partdefinition.addOrReplaceChild("left_leg", CubeListBuilder.create().texOffs(0, 22).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(2.0F, 12.0F, 0.0F));
-		partdefinition.addOrReplaceChild("right_arm", CubeListBuilder.create().texOffs(40, 46).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(-5.0F, 2.0F, 0.0F));
-		partdefinition.addOrReplaceChild("left_arm", CubeListBuilder.create().texOffs(40, 46).mirror().addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F), PartPose.offset(5.0F, 2.0F, 0.0F));
+		PartDefinition bipedLegs = root.addOrReplaceChild("bipedLegs", CubeListBuilder.create(), PartPose.offset(0.0F, -10.0F, 0.0F));
 
-		/*this.cape = new ModelRenderer(this, 64, 0);
-		this.cape.setPos(0.0F, 1.0F, 3.4F);
-		this.cape.addBox(-4.5F, 0.0F, 0.0F, 9.0F, 15.0F, 1.0F, 0.6F, 0.7F, 0.0F);*/
-		return LayerDefinition.create(meshdefinition, 128, 64);
+		PartDefinition bipedLegLeft = bipedLegs.addOrReplaceChild("bipedLegLeft", CubeListBuilder.create().texOffs(0, 22).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 0.0F, 0.0F));
+
+		PartDefinition armorBipedLeftLeg = bipedLegLeft.addOrReplaceChild("armorBipedLeftLeg", CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition armorBipedLeftFoot = bipedLegLeft.addOrReplaceChild("armorBipedLeftFoot", CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition bipedLegRight = bipedLegs.addOrReplaceChild("bipedLegRight", CubeListBuilder.create().texOffs(0, 22).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-2.0F, 0.0F, 0.0F));
+
+		PartDefinition armorBipedRightLeg = bipedLegRight.addOrReplaceChild("armorBipedRightLeg", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition armorBipedRightFoot = bipedLegRight.addOrReplaceChild("armorBipedRightFoot", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition bipedBody = root.addOrReplaceChild("bipedBody", CubeListBuilder.create().texOffs(16, 20).addBox(-4.0F, -10.0F, -3.0F, 8.0F, 12.0F, 6.0F, new CubeDeformation(0.0F))
+				.texOffs(0, 38).addBox(-4.0F, -10.0F, -3.0F, 8.0F, 16.0F, 6.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -12.0F, 0.0F));
+
+		PartDefinition bipedArms = bipedBody.addOrReplaceChild("bipedArms", CubeListBuilder.create(), PartPose.offset(0.0F, -8.0F, 0.0F));
+
+		PartDefinition bipedArmLeft = bipedArms.addOrReplaceChild("bipedArmLeft", CubeListBuilder.create().texOffs(40, 46).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 0.0F, 0.0F));
+
+		PartDefinition bipedHandLeft = bipedArmLeft.addOrReplaceChild("bipedHandLeft", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(1.0F, 11.0F, 0.0F));
+
+		PartDefinition armorBipedLeftArm = bipedArmLeft.addOrReplaceChild("armorBipedLeftArm", CubeListBuilder.create().texOffs(32, 48).addBox(-1.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition bipedArmRight = bipedArms.addOrReplaceChild("bipedArmRight", CubeListBuilder.create().texOffs(40, 46).mirror().addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(-5.0F, 0.0F, 0.0F));
+
+		PartDefinition bipedHandRight = bipedArmRight.addOrReplaceChild("bipedHandRight", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(-1.0F, 11.0F, 0.0F));
+
+		PartDefinition armorBipedRightArm = bipedArmRight.addOrReplaceChild("armorBipedRightArm", CubeListBuilder.create().texOffs(40, 16).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition illagerArms = bipedBody.addOrReplaceChild("illagerArms", CubeListBuilder.create().texOffs(44, 22).addBox(4.0F, 0.0F, -2.0F, 4.0F, 8.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(44, 22).addBox(-8.0F, 0.0F, -2.0F, 4.0F, 8.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(40, 38).addBox(-4.0F, 4.0F, -2.0F, 8.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -8.5F, 0.3F, -0.7505F, 0.0F, 0.0F));
+
+		PartDefinition armorIllagerLeftArm = illagerArms.addOrReplaceChild("armorIllagerLeftArm", CubeListBuilder.create().texOffs(32, 48).addBox(-1.0F, -1.5F, -2.05F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 0.0F, 0.0F));
+
+		PartDefinition armorIllagerRightArm = illagerArms.addOrReplaceChild("armorIllagerRightArm", CubeListBuilder.create().texOffs(40, 16).addBox(-3.0F, -1.5F, -2.05F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(-5.0F, 0.0F, 0.0F));
+
+		PartDefinition bipedCape = bipedBody.addOrReplaceChild("bipedCape", CubeListBuilder.create().texOffs(0, 64).addBox(-6.0F, 0.0F, 0.0F, 12.0F, 23.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -10.0F, 3.0F, 0.1309F, 0.0F, 0.0F));
+
+		PartDefinition bipedPotionSlot = bipedBody.addOrReplaceChild("bipedPotionSlot", CubeListBuilder.create().texOffs(0, 0).addBox(1.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, new CubeDeformation(0.0F)), PartPose.offset(4.0F, 1.0F, 0.0F));
+
+		PartDefinition armorBipedBody = bipedBody.addOrReplaceChild("armorBipedBody", CubeListBuilder.create().texOffs(16, 16).addBox(-4.0F, 0.0F, -3.0F, 8.0F, 12.0F, 6.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, -10.0F, 0.0F));
+
+		PartDefinition bipedHeadBaseRotator = bipedBody.addOrReplaceChild("bipedHeadBaseRotator", CubeListBuilder.create(), PartPose.offset(0.0F, -10.0F, 0.0F));
+
+		PartDefinition bipedHead = bipedHeadBaseRotator.addOrReplaceChild("bipedHead", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
+				.texOffs(24, 0).addBox(-1.0F, -3.0F, -6.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition armorBipedHead = bipedHead.addOrReplaceChild("armorBipedHead", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition book = root.addOrReplaceChild("book", CubeListBuilder.create(), PartPose.offset(0.0F, -16.5F, -9.0F));
+
+		PartDefinition leftBookCover = book.addOrReplaceChild("leftBookCover", CubeListBuilder.create().texOffs(26, 75).addBox(-8.0F, -5.0F, -1.0F, 8.0F, 11.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(44, 63).addBox(-6.5F, -4.0F, -0.25F, 6.0F, 9.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, 1.5708F, 0.0F));
+
+		PartDefinition leftPage = leftBookCover.addOrReplaceChild("leftPage", CubeListBuilder.create().texOffs(44, 63).addBox(-6.5F, -4.0F, -0.24F, 6.0F, 9.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		PartDefinition rightBookCover = book.addOrReplaceChild("rightBookCover", CubeListBuilder.create().texOffs(26, 63).addBox(0.0F, -5.0F, -1.0F, 8.0F, 11.0F, 1.0F, new CubeDeformation(0.0F))
+				.texOffs(44, 63).addBox(0.5F, -4.0F, -0.25F, 6.0F, 9.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -1.5708F, 0.0F));
+
+		PartDefinition rightPage = rightBookCover.addOrReplaceChild("rightPage", CubeListBuilder.create().texOffs(44, 63).addBox(0.5F, -4.0F, -0.24F, 6.0F, 9.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+
+		return LayerDefinition.create(meshdefinition, 64, 128);
 	}
 
-	public ModelPart root() {
-		return this.root;
-	}
+	@Override
+	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		this.root().getAllParts().forEach(ModelPart::resetPose);
+		this.head.yRot = netHeadYaw * ((float) Math.PI / 180F);
+		this.head.xRot = headPitch * ((float) Math.PI / 180F);
 
-	public void setupAnim(T p_102928_, float p_102929_, float p_102930_, float p_102931_, float p_102932_, float p_102933_) {
-		this.head.yRot = p_102932_ * ((float) Math.PI / 180F);
-		this.head.xRot = p_102933_ * ((float) Math.PI / 180F);
+		this.cape.xRot = 0.1F + limbSwingAmount * 0.6F;
 
-		this.cape.xRot = 0.1F + p_102930_ * 0.6F;
+		AbstractIllager.IllagerArmPose abstractillager$illagerarmpose = entity.getArmPose();
 
-		if (this.riding) {
+		boolean flag = abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSED;
+		if (this.riding && abstractillager$illagerarmpose != AbstractIllager.IllagerArmPose.SPELLCASTING) {
 			this.rightArm.xRot = (-(float) Math.PI / 5F);
 			this.rightArm.yRot = 0.0F;
 			this.rightArm.zRot = 0.0F;
@@ -97,81 +148,82 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 			this.leftLeg.xRot = -1.4137167F;
 			this.leftLeg.yRot = (-(float) Math.PI / 10F);
 			this.leftLeg.zRot = -0.07853982F;
+		}
+		this.animateWalk(EnchanterAnimation.ENCHANTER_MCD_WALK, limbSwing, limbSwingAmount, 1.0F, 2.5F);
+		this.animate(entity.idleAnimationState, EnchanterAnimation.ENCHANTER_MCD_IDLE, ageInTicks);
+		this.animate(entity.attackAnimationState, EnchanterAnimation.ENCHANTER_MCD_ATTACK, ageInTicks, 3.0F);
+		this.animate(entity.castingAnimationState, EnchanterAnimation.ENCHANTER_MCD_CAST_SPELL, ageInTicks, 1.0F);
+
+	}
+
+	@Override
+	public ModelPart root() {
+		return this.root;
+	}
+
+	@Override
+	public void translateToHead(ModelPart modelPart, PoseStack poseStack) {
+		this.root.translateAndRotate(poseStack);
+		this.body.translateAndRotate(poseStack);
+		modelPart.translateAndRotate(poseStack);
+	}
+
+	@Override
+	public void translateToChest(ModelPart modelPart, PoseStack poseStack) {
+		this.root.translateAndRotate(poseStack);
+		this.body.translateAndRotate(poseStack);
+		modelPart.translateAndRotate(poseStack);
+	}
+
+	@Override
+	public void translateToLeg(ModelPart modelPart, PoseStack poseStack) {
+		this.root.translateAndRotate(poseStack);
+		this.body.translateAndRotate(poseStack);
+		this.body.getChild("bipedLegs").translateAndRotate(poseStack);
+		modelPart.translateAndRotate(poseStack);
+	}
+
+	@Override
+	public void translateToChestPat(ModelPart modelPart, PoseStack poseStack) {
+		this.root.translateAndRotate(poseStack);
+		this.body.translateAndRotate(poseStack);
+		this.bipedArms.translateAndRotate(poseStack);
+		if (modelPart == armorBipedLeftArm) {
+			this.leftArm.translateAndRotate(poseStack);
 		} else {
-			this.rightArm.xRot = Mth.cos(p_102929_ * 0.6662F + (float) Math.PI) * 2.0F * p_102930_ * 0.5F;
-			this.rightArm.yRot = 0.0F;
-			this.rightArm.zRot = 0.0F;
-			this.leftArm.xRot = Mth.cos(p_102929_ * 0.6662F) * 2.0F * p_102930_ * 0.5F;
-			this.leftArm.yRot = 0.0F;
-			this.leftArm.zRot = 0.0F;
-			this.rightLeg.xRot = Mth.cos(p_102929_ * 0.6662F) * 1.4F * p_102930_ * 0.5F;
-			this.rightLeg.yRot = 0.0F;
-			this.rightLeg.zRot = 0.0F;
-			this.leftLeg.xRot = Mth.cos(p_102929_ * 0.6662F + (float) Math.PI) * 1.4F * p_102930_ * 0.5F;
-			this.leftLeg.yRot = 0.0F;
-			this.leftLeg.zRot = 0.0F;
+			this.rightArm.translateAndRotate(poseStack);
 		}
+		modelPart.translateAndRotate(poseStack);
 
-		AbstractIllager.IllagerArmPose abstractillager$illagerarmpose = p_102928_.getArmPose();
-		if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.ATTACKING) {
-			if (p_102928_.getMainHandItem().isEmpty()) {
-				AnimationUtils.animateZombieArms(this.leftArm, this.rightArm, true, this.attackTime, p_102931_);
-			} else {
-				AnimationUtils.swingWeaponDown(this.rightArm, this.leftArm, p_102928_, this.attackTime, p_102931_);
-			}
-		} else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.SPELLCASTING) {
-			this.rightArm.z = 0.0F;
-			this.rightArm.x = -5.0F;
-			this.leftArm.z = 0.0F;
-			this.leftArm.x = 5.0F;
-			this.rightArm.xRot = -0.95F + Mth.cos(p_102931_ * 0.265F) * 0.075F;
-			this.leftArm.xRot = -0.95F + Mth.cos(p_102931_ * 0.265F) * 0.075F;
-			this.rightArm.zRot = -Mth.cos(p_102931_ * 0.265F) * 0.075F;
-			this.leftArm.zRot = Mth.cos(p_102931_ * 0.265F) * 0.075F;
-			this.rightArm.yRot = 0.0F;
-			this.leftArm.yRot = 0.0F;
-		} else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.BOW_AND_ARROW) {
-			this.rightArm.yRot = -0.1F + this.head.yRot;
-			this.rightArm.xRot = (-(float) Math.PI / 2F) + this.head.xRot;
-			this.leftArm.xRot = -0.9424779F + this.head.xRot;
-			this.leftArm.yRot = this.head.yRot - 0.4F;
-			this.leftArm.zRot = ((float) Math.PI / 2F);
-		} else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSBOW_HOLD) {
-			AnimationUtils.animateCrossbowHold(this.rightArm, this.leftArm, this.head, true);
-		} else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSBOW_CHARGE) {
-			AnimationUtils.animateCrossbowCharge(this.rightArm, this.leftArm, p_102928_, true);
-		} else if (abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CELEBRATING) {
-			this.rightArm.z = 0.0F;
-			this.rightArm.x = -5.0F;
-			this.rightArm.xRot = Mth.cos(p_102931_ * 0.6662F) * 0.05F;
-			this.rightArm.zRot = 2.670354F;
-			this.rightArm.yRot = 0.0F;
-			this.leftArm.z = 0.0F;
-			this.leftArm.x = 5.0F;
-			this.leftArm.xRot = Mth.cos(p_102931_ * 0.6662F) * 0.05F;
-			this.leftArm.zRot = -2.3561945F;
-			this.leftArm.yRot = 0.0F;
-		}
-
-		boolean flag = abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSED;
-		this.arms.visible = flag;
-		this.leftArm.visible = !flag;
-		this.rightArm.visible = !flag;
 	}
 
-	private ModelPart getArm(HumanoidArm p_102923_) {
-		return p_102923_ == HumanoidArm.LEFT ? this.leftArm : this.rightArm;
+	@Override
+	public Iterable<ModelPart> rightHands() {
+		return ImmutableList.of(this.armorBipedRightArm);
 	}
 
-	public ModelPart getHat() {
-		return this.hat;
+	@Override
+	public Iterable<ModelPart> leftHands() {
+		return ImmutableList.of(this.armorBipedLeftArm);
 	}
 
-	public ModelPart getHead() {
-		return this.head;
+	@Override
+	public Iterable<ModelPart> rightLegParts() {
+		return ImmutableList.of(this.rightLeg);
 	}
 
-	public void translateToHand(HumanoidArm p_102925_, PoseStack p_102926_) {
-		this.getArm(p_102925_).translateAndRotate(p_102926_);
+	@Override
+	public Iterable<ModelPart> leftLegParts() {
+		return ImmutableList.of(this.leftLeg);
+	}
+
+	@Override
+	public Iterable<ModelPart> bodyParts() {
+		return ImmutableList.of(this.body);
+	}
+
+	@Override
+	public Iterable<ModelPart> headParts() {
+		return ImmutableList.of(this.head);
 	}
 }
