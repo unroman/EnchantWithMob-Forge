@@ -9,6 +9,7 @@ import baguchan.enchantwithmob.utils.MobEnchantmentData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
@@ -45,6 +46,7 @@ public class EnchanterEntity extends SpellcasterIllager {
     public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState castingAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
+    private float castingScale;
 
     public EnchanterEntity(EntityType<? extends EnchanterEntity> type, Level p_i48551_2_) {
         super(type, p_i48551_2_);
@@ -112,7 +114,21 @@ public class EnchanterEntity extends SpellcasterIllager {
         } else {
             --this.idleAnimationTimeout;
         }
+        if (isCastingSpell()) {
+            idleAnimationState.stop();
+            castingScale = Mth.clamp(castingScale + 0.1F, 0, 1);
+        } else {
+            idleAnimationState.stop();
+            castingScale = Mth.clamp(castingScale - 0.1F, 0, 1);
+        }
+
     }
+
+    @OnlyIn(Dist.CLIENT)
+    public float getCastingScale() {
+        return castingScale;
+    }
+
 
     @Override
     public boolean isAlliedTo(Entity p_184191_1_) {
@@ -210,6 +226,7 @@ public class EnchanterEntity extends SpellcasterIllager {
     protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
         this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModItems.ENCHANTER_CLOTHES.get()));
         this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.ENCHANTER_HAT.get()));
+        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModItems.ENCHANTER_BOOTS.get()));
     }
 
     @Override

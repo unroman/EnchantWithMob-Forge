@@ -13,12 +13,9 @@ import net.minecraft.world.entity.monster.AbstractIllager;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-/**
- * EnchanterModel - bagu
- * Created using Tabula 8.0.0
- */
 @OnlyIn(Dist.CLIENT)
 public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel<T> implements IArmor {
+	private final ModelPart realRoot;
 	private final ModelPart root;
 	private final ModelPart head;
 	private final ModelPart body;
@@ -27,14 +24,20 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 	private final ModelPart bipedArms;
 	private final ModelPart leftLeg;
 	private final ModelPart rightLeg;
+	private final ModelPart armorLeftLeg;
+	private final ModelPart armorRightLeg;
 	private final ModelPart rightArm;
 	private final ModelPart leftArm;
+
+	private final ModelPart rightHand;
+	private final ModelPart leftHand;
 	private final ModelPart illagerRightArm;
 	private final ModelPart illagerLeftArm;
 	private final ModelPart armorBipedLeftArm;
 	private final ModelPart armorBipedRightArm;
 
 	public EnchanterModel(ModelPart root) {
+		this.realRoot = root;
 		this.root = root.getChild("root");
 		this.body = this.root.getChild("bipedBody");
 		this.head = this.body.getChild("bipedHeadBaseRotator");
@@ -44,9 +47,13 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		this.illagerLeftArm = this.illagerArms.getChild("armorIllagerRightArm");
 		this.leftLeg = this.root.getChild("bipedLegs").getChild("bipedLegLeft");
 		this.rightLeg = this.root.getChild("bipedLegs").getChild("bipedLegRight");
+		this.armorRightLeg = this.rightLeg.getChild("armorBipedRightLeg");
+		this.armorLeftLeg = this.leftLeg.getChild("armorBipedLeftLeg");
 		this.bipedArms = this.body.getChild("bipedArms");
 		this.leftArm = this.bipedArms.getChild("bipedArmLeft");
 		this.rightArm = this.bipedArms.getChild("bipedArmRight");
+		this.leftHand = this.leftArm.getChild("bipedHandLeft");
+		this.rightHand = this.rightArm.getChild("bipedHandRight");
 		this.armorBipedLeftArm = this.leftArm.getChild("armorBipedLeftArm");
 		this.armorBipedRightArm = this.rightArm.getChild("armorBipedRightArm");
 	}
@@ -136,12 +143,12 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 
 		boolean flag = abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSED;
 		if (this.riding && abstractillager$illagerarmpose != AbstractIllager.IllagerArmPose.SPELLCASTING) {
-			this.rightArm.xRot = (-(float) Math.PI / 5F);
-			this.rightArm.yRot = 0.0F;
-			this.rightArm.zRot = 0.0F;
-			this.leftArm.xRot = (-(float) Math.PI / 5F);
-			this.leftArm.yRot = 0.0F;
-			this.leftArm.zRot = 0.0F;
+			this.rightHand.xRot = (-(float) Math.PI / 5F);
+			this.rightHand.yRot = 0.0F;
+			this.rightHand.zRot = 0.0F;
+			this.leftHand.xRot = (-(float) Math.PI / 5F);
+			this.leftHand.yRot = 0.0F;
+			this.leftHand.zRot = 0.0F;
 			this.rightLeg.xRot = -1.4137167F;
 			this.rightLeg.yRot = ((float) Math.PI / 10F);
 			this.rightLeg.zRot = 0.07853982F;
@@ -149,16 +156,26 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 			this.leftLeg.yRot = (-(float) Math.PI / 10F);
 			this.leftLeg.zRot = -0.07853982F;
 		}
-		this.animateWalk(EnchanterAnimation.ENCHANTER_MCD_WALK, limbSwing, limbSwingAmount, 1.0F, 2.5F);
+		this.armorBipedRightArm.visible = false;
+		this.armorBipedLeftArm.visible = false;
+		this.illagerRightArm.visible = false;
+		this.illagerLeftArm.visible = false;
+		this.armorRightLeg.visible = false;
+		this.armorLeftLeg.visible = false;
+		this.rightHand.visible = false;
+		this.leftHand.visible = false;
+
+		this.animateWalk(EnchanterAnimation.ENCHANTER_MCD_WALK, limbSwing, limbSwingAmount, 3.0F, 4.5F);
+		this.animateWalk(EnchanterAnimation.ENCHANTER_IDLE, ageInTicks, 1.0F, 1.0F, 1.0F);
+
 		this.animate(entity.idleAnimationState, EnchanterAnimation.ENCHANTER_MCD_IDLE, ageInTicks);
 		this.animate(entity.attackAnimationState, EnchanterAnimation.ENCHANTER_MCD_ATTACK, ageInTicks, 3.0F);
-		this.animate(entity.castingAnimationState, EnchanterAnimation.ENCHANTER_MCD_CAST_SPELL, ageInTicks, 1.0F);
-
+		this.animate(entity.castingAnimationState, EnchanterAnimation.ENCHANTER_MCD_CAST_SPELL, ageInTicks);
 	}
 
 	@Override
 	public ModelPart root() {
-		return this.root;
+		return this.realRoot;
 	}
 
 	@Override
@@ -179,42 +196,58 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 	public void translateToLeg(ModelPart modelPart, PoseStack poseStack) {
 		this.root.translateAndRotate(poseStack);
 		this.body.translateAndRotate(poseStack);
-		this.body.getChild("bipedLegs").translateAndRotate(poseStack);
+		this.root.getChild("bipedLegs").translateAndRotate(poseStack);
+		if (modelPart == armorRightLeg) {
+			this.rightLeg.translateAndRotate(poseStack);
+		} else {
+			this.leftLeg.translateAndRotate(poseStack);
+		}
 		modelPart.translateAndRotate(poseStack);
+		poseStack.translate(0, 0.701F, 0);
 	}
 
 	@Override
 	public void translateToChestPat(ModelPart modelPart, PoseStack poseStack) {
 		this.root.translateAndRotate(poseStack);
 		this.body.translateAndRotate(poseStack);
-		this.bipedArms.translateAndRotate(poseStack);
-		if (modelPart == armorBipedLeftArm) {
-			this.leftArm.translateAndRotate(poseStack);
+		if ((this.illagerRightArm == modelPart || this.illagerLeftArm == modelPart)) {
+			this.illagerArms.translateAndRotate(poseStack);
+			modelPart.translateAndRotate(poseStack);
+			if (modelPart == illagerRightArm) {
+				poseStack.translate(0.195F, 0F, 0F);
+			} else {
+				poseStack.translate(-0.195F, 0F, 0F);
+			}
 		} else {
-			this.rightArm.translateAndRotate(poseStack);
+			this.bipedArms.translateAndRotate(poseStack);
+			if (this.armorBipedRightArm == modelPart) {
+				this.rightArm.translateAndRotate(poseStack);
+			} else if (this.armorBipedLeftArm == modelPart) {
+				this.leftArm.translateAndRotate(poseStack);
+			}
+			modelPart.translateAndRotate(poseStack);
 		}
-		modelPart.translateAndRotate(poseStack);
 
 	}
 
 	@Override
 	public Iterable<ModelPart> rightHands() {
-		return ImmutableList.of(this.armorBipedRightArm);
+		return ImmutableList.of(this.armorBipedRightArm, this.illagerRightArm);
 	}
 
 	@Override
 	public Iterable<ModelPart> leftHands() {
-		return ImmutableList.of(this.armorBipedLeftArm);
+		return ImmutableList.of(this.armorBipedLeftArm, this.illagerLeftArm);
 	}
 
 	@Override
 	public Iterable<ModelPart> rightLegParts() {
-		return ImmutableList.of(this.rightLeg);
+		return ImmutableList.of(this.armorRightLeg);
 	}
 
 	@Override
 	public Iterable<ModelPart> leftLegParts() {
-		return ImmutableList.of(this.leftLeg);
+		return ImmutableList.of(this.armorLeftLeg);
 	}
 
 	@Override

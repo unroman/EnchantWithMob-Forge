@@ -7,34 +7,34 @@ import net.minecraft.client.animation.KeyframeAnimations;
 
 public class EnchanterAnimation {
 
-    public static final AnimationDefinition ENCHANTER_IDLE = AnimationDefinition.Builder.withLength(0f).looping()
+    public static final AnimationDefinition ENCHANTER_IDLE = AnimationDefinition.Builder.withLength(1f).looping()
             .addAnimation("bipedArmLeft",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                            new Keyframe(1f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("bipedArmLeft",
                     new AnimationChannel(AnimationChannel.Targets.SCALE,
-                            new Keyframe(0f, KeyframeAnimations.scaleVec(0f, 0f, 0f),
+                            new Keyframe(1f, KeyframeAnimations.scaleVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("bipedArmRight",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                            new Keyframe(1f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("bipedArmRight",
                     new AnimationChannel(AnimationChannel.Targets.SCALE,
-                            new Keyframe(0f, KeyframeAnimations.scaleVec(0f, 0f, 0f),
+                            new Keyframe(1f, KeyframeAnimations.scaleVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("illagerArms",
                     new AnimationChannel(AnimationChannel.Targets.SCALE,
-                            new Keyframe(0f, KeyframeAnimations.scaleVec(1f, 1f, 1f),
+                            new Keyframe(1f, KeyframeAnimations.scaleVec(1f, 1f, 1f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("book",
                     new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),
+                            new Keyframe(1f, KeyframeAnimations.posVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("book",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                            new Keyframe(1f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR))).build();
     public static final AnimationDefinition ENCHANTER_SIT = AnimationDefinition.Builder.withLength(0f).looping()
             .addAnimation("root",
@@ -415,14 +415,6 @@ public class EnchanterAnimation {
                             new Keyframe(0.76f, KeyframeAnimations.posVec(0f, 0.5f, 0f),
                                     AnimationChannel.Interpolations.LINEAR),
                             new Keyframe(1f, KeyframeAnimations.posVec(0f, -1f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR)))
-            .addAnimation("bipedArmLeft",
-                    new AnimationChannel(AnimationChannel.Targets.SCALE,
-                            new Keyframe(0f, KeyframeAnimations.scaleVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR)))
-            .addAnimation("bipedArmRight",
-                    new AnimationChannel(AnimationChannel.Targets.SCALE,
-                            new Keyframe(0f, KeyframeAnimations.scaleVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("bipedCape",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
