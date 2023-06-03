@@ -20,7 +20,7 @@ mixin {
     add sourceSets.main, "enchantwithmob.refmap.json"
 }
 
-version = '1.19.4-9.4.0'
+version = '1.19.4-9.4.1'
 group = 'baguchan.enchantwithmob' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'EnchantWithMob'
 
@@ -136,7 +136,7 @@ dependencies {
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
     minecraft 'net.minecraftforge:forge:1.19.4-45.0.29'
     annotationProcessor "org.spongepowered:mixin:0.8.5:processor"
-    implementation fg.deobf("curse.maven:bagus-lib-866533:4563536")
+    implementation fg.deobf("curse.maven:bagus-lib-866533:4564777")
     //implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.19:3.1.31")
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency

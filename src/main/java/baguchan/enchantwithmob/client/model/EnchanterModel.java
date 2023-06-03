@@ -235,32 +235,32 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 	}
 
 	@Override
-	public Iterable<ModelPart> rightHands() {
+	public Iterable<ModelPart> rightHandArmors() {
 		return ImmutableList.of(this.armorBipedRightArm, this.illagerRightArm);
 	}
 
 	@Override
-	public Iterable<ModelPart> leftHands() {
+	public Iterable<ModelPart> leftHandArmors() {
 		return ImmutableList.of(this.armorBipedLeftArm, this.illagerLeftArm);
 	}
 
 	@Override
-	public Iterable<ModelPart> rightLegParts() {
+	public Iterable<ModelPart> rightLegPartArmors() {
 		return ImmutableList.of(this.armorRightLeg);
 	}
 
 	@Override
-	public Iterable<ModelPart> leftLegParts() {
+	public Iterable<ModelPart> leftLegPartArmors() {
 		return ImmutableList.of(this.armorLeftLeg);
 	}
 
 	@Override
-	public Iterable<ModelPart> bodyParts() {
+	public Iterable<ModelPart> bodyPartArmors() {
 		return ImmutableList.of(this.body);
 	}
 
 	@Override
-	public Iterable<ModelPart> headParts() {
+	public Iterable<ModelPart> headPartArmors() {
 		return ImmutableList.of(this.head);
 	}
 }
