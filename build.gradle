@@ -125,9 +125,6 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven {
-        url "https://cursemaven.com"
-    }
 }
 
 dependencies {
