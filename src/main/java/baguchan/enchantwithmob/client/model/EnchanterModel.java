@@ -66,7 +66,7 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 
 		PartDefinition bipedLegs = root.addOrReplaceChild("bipedLegs", CubeListBuilder.create(), PartPose.offset(0.0F, -10.0F, 0.0F));
 
-		PartDefinition bipedLegLeft = bipedLegs.addOrReplaceChild("bipedLegLeft", CubeListBuilder.create().texOffs(0, 22).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(2.0F, 0.0F, 0.0F));
+		PartDefinition bipedLegLeft = bipedLegs.addOrReplaceChild("bipedLegLeft", CubeListBuilder.create().texOffs(0, 22).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(2.0F, 0.0F, 0.0F));
 
 		PartDefinition armorBipedLeftLeg = bipedLegLeft.addOrReplaceChild("armorBipedLeftLeg", CubeListBuilder.create().texOffs(16, 48).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offset(0.0F, 0.0F, 0.0F));
 
@@ -79,7 +79,7 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		PartDefinition armorBipedRightFoot = bipedLegRight.addOrReplaceChild("armorBipedRightFoot", CubeListBuilder.create().texOffs(0, 16).addBox(-2.0F, 0.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition bipedBody = root.addOrReplaceChild("bipedBody", CubeListBuilder.create().texOffs(16, 20).addBox(-4.0F, -10.0F, -3.0F, 8.0F, 12.0F, 6.0F, new CubeDeformation(0.0F))
-				.texOffs(0, 38).addBox(-4.0F, -10.0F, -3.0F, 8.0F, 16.0F, 6.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -12.0F, 0.0F));
+				.texOffs(0, 38).addBox(-4.0F, -10.0F, -3.0F, 8.0F, 19.0F, 6.0F, new CubeDeformation(0.25F)), PartPose.offset(0.0F, -12.0F, 0.0F));
 
 		PartDefinition bipedArms = bipedBody.addOrReplaceChild("bipedArms", CubeListBuilder.create(), PartPose.offset(0.0F, -8.0F, 0.0F));
 
@@ -96,7 +96,7 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		PartDefinition armorBipedRightArm = bipedArmRight.addOrReplaceChild("armorBipedRightArm", CubeListBuilder.create().texOffs(40, 16).addBox(-3.0F, -2.0F, -2.0F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition illagerArms = bipedBody.addOrReplaceChild("illagerArms", CubeListBuilder.create().texOffs(44, 22).addBox(4.0F, 0.0F, -2.0F, 4.0F, 8.0F, 4.0F, new CubeDeformation(0.0F))
-				.texOffs(44, 22).addBox(-8.0F, 0.0F, -2.0F, 4.0F, 8.0F, 4.0F, new CubeDeformation(0.0F))
+				.texOffs(44, 22).mirror().addBox(-8.0F, 0.0F, -2.0F, 4.0F, 8.0F, 4.0F, new CubeDeformation(0.0F)).mirror(false)
 				.texOffs(40, 38).addBox(-4.0F, 4.0F, -2.0F, 8.0F, 4.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -8.5F, 0.3F, -0.7505F, 0.0F, 0.0F));
 
 		PartDefinition armorIllagerLeftArm = illagerArms.addOrReplaceChild("armorIllagerLeftArm", CubeListBuilder.create().texOffs(32, 48).addBox(-1.0F, -1.5F, -2.05F, 4.0F, 12.0F, 4.0F, new CubeDeformation(0.0F)), PartPose.offset(5.0F, 0.0F, 0.0F));
@@ -112,7 +112,8 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		PartDefinition bipedHeadBaseRotator = bipedBody.addOrReplaceChild("bipedHeadBaseRotator", CubeListBuilder.create(), PartPose.offset(0.0F, -10.0F, 0.0F));
 
 		PartDefinition bipedHead = bipedHeadBaseRotator.addOrReplaceChild("bipedHead", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F))
-				.texOffs(24, 0).addBox(-1.0F, -3.0F, -6.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+				.texOffs(24, 0).addBox(-1.0F, -3.0F, -6.0F, 2.0F, 4.0F, 2.0F, new CubeDeformation(0.0F))
+				.texOffs(1, 91).addBox(-5.0F, -14.0F, -5.0F, 10.0F, 8.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		PartDefinition armorBipedHead = bipedHead.addOrReplaceChild("armorBipedHead", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
