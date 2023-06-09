@@ -6,12 +6,9 @@ import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.registry.ModSoundEvents;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import baguchan.enchantwithmob.utils.MobEnchantmentData;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -30,7 +27,6 @@ import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -212,21 +208,6 @@ public class EnchanterEntity extends SpellcasterIllager {
     @Override
     public SoundEvent getCelebrateSound() {
         return ModSoundEvents.ENCHANTER_AMBIENT.get();
-    }
-
-    @org.jetbrains.annotations.Nullable
-    @Override
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_37856_, DifficultyInstance p_37857_, MobSpawnType p_37858_, @org.jetbrains.annotations.Nullable SpawnGroupData p_37859_, @org.jetbrains.annotations.Nullable CompoundTag p_37860_) {
-        this.populateDefaultEquipmentSlots(p_37856_.getRandom(), p_37857_);
-        this.populateDefaultEquipmentEnchantments(p_37856_.getRandom(), p_37857_);
-        return super.finalizeSpawn(p_37856_, p_37857_, p_37858_, p_37859_, p_37860_);
-    }
-
-    @Override
-    protected void populateDefaultEquipmentSlots(RandomSource randomSource, DifficultyInstance difficultyInstance) {
-        this.setItemSlot(EquipmentSlot.CHEST, new ItemStack(ModItems.ENCHANTER_CLOTHES.get()));
-        this.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.ENCHANTER_HAT.get()));
-        this.setItemSlot(EquipmentSlot.FEET, new ItemStack(ModItems.ENCHANTER_BOOTS.get()));
     }
 
     @Override

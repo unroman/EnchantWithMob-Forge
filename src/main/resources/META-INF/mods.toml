@@ -19,7 +19,7 @@ version = "${file.jarVersion}" #mandatory
 # A display name for the mod
 displayName = "Enchant With Mob" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-#updateJSONURL="http://myurl.me/" #optional
+updateJSONURL = "https://api.modrinth.com/updates/enchant-with-mob/forge_updates.json"
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL = "https://www.curseforge.com/minecraft/mc-mods/enchant-with-mob" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
