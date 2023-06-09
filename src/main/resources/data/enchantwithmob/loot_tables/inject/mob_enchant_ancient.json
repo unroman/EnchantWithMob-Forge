@@ -29,7 +29,9 @@
           "functions": [
             {
               "function": "enchantwithmob:mob_enchant_randomly_function",
-              "enchantments": "enchantwithmob:soul_steal"
+              "enchantments": [
+                "enchantwithmob:soul_steal"
+              ]
             }
           ],
           "name": "enchantwithmob:mob_enchant_book"
