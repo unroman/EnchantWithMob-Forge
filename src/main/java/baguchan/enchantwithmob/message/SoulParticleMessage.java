@@ -38,7 +38,7 @@ public class SoulParticleMessage {
 				Entity entity = Minecraft.getInstance().level.getEntity(message.entityId);
 				if (entity != null) {
 					for (int i = 0; i < 4; i++) {
-						entity.level.addParticle(ParticleTypes.SCULK_SOUL, entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D), 0.0F, 0.1F, 0.0F);
+						entity.level().addParticle(ParticleTypes.SCULK_SOUL, entity.getRandomX(0.5D), entity.getRandomY(), entity.getRandomZ(0.5D), 0.0F, 0.1F, 0.0F);
 					}
 				}
 			});

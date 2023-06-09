@@ -96,7 +96,7 @@ public class EnchanterEntity extends SpellcasterIllager {
     public void tick() {
         super.tick();
 
-        if (this.level.isClientSide) {
+        if (this.level().isClientSide) {
             this.setupAnimationStates();
         }
     }
@@ -181,7 +181,7 @@ public class EnchanterEntity extends SpellcasterIllager {
     @Override
     public boolean doHurtTarget(Entity p_70652_1_) {
         this.playSound(ModSoundEvents.ENCHANTER_ATTACK.get(), this.getSoundVolume(), this.getVoicePitch());
-        this.level.broadcastEntityEvent(this, (byte) 4);
+        this.level().broadcastEntityEvent(this, (byte) 4);
         return super.doHurtTarget(p_70652_1_);
     }
 
@@ -268,18 +268,18 @@ public class EnchanterEntity extends SpellcasterIllager {
             } else if (EnchanterEntity.this.tickCount < this.nextAttackTickCount) {
                 return false;
             } else {
-                List<LivingEntity> list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.fillter);
+                List<LivingEntity> list = EnchanterEntity.this.level().getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.fillter);
                 if (list.isEmpty()) {
                     return false;
                 } else {
-                    List<LivingEntity> enchanted_list = EnchanterEntity.this.level.getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.enchanted_fillter);
+                    List<LivingEntity> enchanted_list = EnchanterEntity.this.level().getEntitiesOfClass(LivingEntity.class, EnchanterEntity.this.getBoundingBox().expandTowards(16.0D, 8.0D, 16.0D), this.enchanted_fillter);
 
                     //set enchant limit
                     if (enchanted_list.size() < 5) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
                         if (target != EnchanterEntity.this.getTarget() && target.isAlliedTo(EnchanterEntity.this) && EnchanterEntity.this.isAlliedTo(target) && (target.getTeam() == EnchanterEntity.this.getTeam() || target.getMobType() == MobType.ILLAGER && target.getTeam() == null)) {
                             EnchanterEntity.this.setEnchantTarget(target);
-                            EnchanterEntity.this.level.broadcastEntityEvent(EnchanterEntity.this, (byte) 61);
+                            EnchanterEntity.this.level().broadcastEntityEvent(EnchanterEntity.this, (byte) 61);
                             return true;
                         } else {
                             return false;

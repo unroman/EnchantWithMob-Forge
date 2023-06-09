@@ -40,7 +40,7 @@ public class SoulStealMobEnchant extends MobEnchant {
                     if (attacker.getAbsorptionAmount() < 6) {
                         attacker.setAbsorptionAmount(Mth.clamp(attacker.getAbsorptionAmount() + enchantLevel, 0, 6));
                     }
-                    if (!entity.level.isClientSide()) {
+                    if (!entity.level().isClientSide()) {
                         SoulParticleMessage message = new SoulParticleMessage(entity);
                         EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
                     }

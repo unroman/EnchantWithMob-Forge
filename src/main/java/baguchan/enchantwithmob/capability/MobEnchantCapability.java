@@ -130,17 +130,17 @@ public class MobEnchantCapability {
 	 * Add Enchant Attribute
 	 */
 	public void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-		if (!entity.level.isClientSide) {
-			enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
+		if (!entity.level().isClientSide) {
+            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
 
-			if (EnchantConfig.COMMON.dungeonsLikeHealth.get()) {
-				AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
-				if (modifiableattributeinstance != null && !modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
-					modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
-					modifiableattributeinstance.addPermanentModifier(HEALTH_MODIFIER);
-					entity.setHealth(entity.getHealth() * 1.25F);
-				}
-			}
+            if (EnchantConfig.COMMON.dungeonsLikeHealth.get()) {
+                AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
+                if (modifiableattributeinstance != null && !modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
+                    modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
+                    modifiableattributeinstance.addPermanentModifier(HEALTH_MODIFIER);
+                    entity.setHealth(entity.getHealth() * 1.25F);
+                }
+            }
 		}
 	}
 
@@ -148,26 +148,26 @@ public class MobEnchantCapability {
 	 * Changed Enchant Attribute When Enchant is Changed
 	 */
 	protected void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-		if (!entity.level.isClientSide) {
-			enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
-		}
+        if (!entity.level().isClientSide) {
+            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
+        }
 	}
 
 	/*
 	 * Remove Enchant Attribute effect
 	 */
 	protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant) {
-		if (!entity.level.isClientSide()) {
-			enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
+        if (!entity.level().isClientSide()) {
+            enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
 
-			AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
-			if (modifiableattributeinstance != null) {
-				if (modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
-					entity.setHealth(entity.getHealth() / 1.25F);
-					modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
-				}
-			}
-		}
+            AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
+            if (modifiableattributeinstance != null) {
+                if (modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
+                    entity.setHealth(entity.getHealth() / 1.25F);
+                    modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
+                }
+            }
+        }
 	}
 
 	public List<MobEnchantHandler> getMobEnchants() {

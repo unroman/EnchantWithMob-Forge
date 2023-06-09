@@ -62,19 +62,19 @@ public class PoisonCloudMobEnchant extends MobEnchant {
 			int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.POISON_CLOUD.get());
 
 			if (cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.POISON_CLOUD.get())) {
-				//arrow is different
-				if (!(projectile instanceof AbstractArrow) || !projectile.isOnGround()) {
-					AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level, event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
-					areaeffectcloud.setRadius(0.6F);
-					areaeffectcloud.setRadiusOnUse(-0.01F);
-					areaeffectcloud.setWaitTime(10);
-					areaeffectcloud.setDuration(80);
-					areaeffectcloud.setOwner(owner);
-					areaeffectcloud.setRadiusPerTick(-0.001F);
+                //arrow is different
+                if (!(projectile instanceof AbstractArrow) || !projectile.onGround()) {
+                    AreaEffectCloud areaeffectcloud = new AreaEffectCloud(owner.level(), event.getRayTraceResult().getLocation().x, event.getRayTraceResult().getLocation().y, event.getRayTraceResult().getLocation().z);
+                    areaeffectcloud.setRadius(0.6F);
+                    areaeffectcloud.setRadiusOnUse(-0.01F);
+                    areaeffectcloud.setWaitTime(10);
+                    areaeffectcloud.setDuration(80);
+                    areaeffectcloud.setOwner(owner);
+                    areaeffectcloud.setRadiusPerTick(-0.001F);
 
-					areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, i - 1));
-					owner.level.addFreshEntity(areaeffectcloud);
-				}
+                    areaeffectcloud.addEffect(new MobEffectInstance(MobEffects.POISON, 80, i - 1));
+                    owner.level().addFreshEntity(areaeffectcloud);
+                }
 			}
 		}
 		;

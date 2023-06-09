@@ -59,7 +59,7 @@ public class MobEnchantingCommand {
 					enchantCap.getEnchantCap().setEnchantType((LivingEntity) entity, MobEnchantCapability.EnchantType.NORMAL);
 				}
 
-				commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.clear", entity.getDisplayName()), true);
+				commandStack.sendSuccess(() -> Component.translatable("commands.enchantwithmob.mob_enchanting.clear", entity.getDisplayName()), true);
 				return 1;
 			} else {
 				commandStack.sendFailure(Component.translatable("commands.enchantwithmob.mob_enchanting.clear.fail.no_living_entity", entity.getDisplayName()));
@@ -81,7 +81,7 @@ public class MobEnchantingCommand {
 					enchantCap.getEnchantCap().setEnchantType((LivingEntity) entity, ancientMob ? MobEnchantCapability.EnchantType.ANCIENT : MobEnchantCapability.EnchantType.NORMAL);
 				}
 
-				commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.ancient_mob.set_ancient", entity.getDisplayName()), true);
+				commandStack.sendSuccess(() -> Component.translatable("commands.enchantwithmob.ancient_mob.set_ancient", entity.getDisplayName()), true);
 				return 1;
 			} else {
 				commandStack.sendFailure(Component.translatable("commands.enchantwithmob.ancient_mobb.fail.no_living_entity", entity.getDisplayName()));
@@ -104,7 +104,7 @@ public class MobEnchantingCommand {
 						enchantCap.getEnchantCap().addMobEnchant((LivingEntity) entity, mobEnchant, level);
 					}
 
-					commandStack.sendSuccess(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.getRegistry().get().getKey(mobEnchant)), true);
+					commandStack.sendSuccess(() -> Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.getRegistry().get().getKey(mobEnchant)), true);
 					return 1;
 				} else {
 					commandStack.sendFailure(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_mobenchant"));
