@@ -61,6 +61,8 @@ public abstract class LivingEntityMixin extends Entity implements IEnchantCap {
 		MobEnchantCapability mobEnchantCapability = new MobEnchantCapability();
 		mobEnchantCapability.deserializeNBT(nbt.getCompound("MobEnchantData"));
 		this.setEnchantCap(mobEnchantCapability);
+		LivingEntity livingEntity = (LivingEntity) ((Object) this);
+		mobEnchantCapability.sync(livingEntity);
 	}
 
 	@Override

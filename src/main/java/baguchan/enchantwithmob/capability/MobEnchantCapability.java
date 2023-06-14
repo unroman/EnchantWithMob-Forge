@@ -85,6 +85,9 @@ public class MobEnchantCapability {
 		capability.enchantOwner = this.enchantOwner;
 		capability.enchantType = this.enchantType;
 		((IEnchantCap) entity).setEnchantCap(capability);
+		for (MobEnchantHandler handler : capability.mobEnchants) {
+			this.onChangedEnchantEffect(entity, handler.getMobEnchant(), handler.getEnchantLevel());
+		}
 	}
 
 	public void removeOwner() {
@@ -130,7 +133,6 @@ public class MobEnchantCapability {
 	 * Add Enchant Attribute
 	 */
 	public void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-		if (!entity.level().isClientSide) {
             enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
 
             if (EnchantConfig.COMMON.dungeonsLikeHealth.get()) {
@@ -141,23 +143,19 @@ public class MobEnchantCapability {
                     entity.setHealth(entity.getHealth() * 1.25F);
                 }
             }
-		}
 	}
 
 	/*
 	 * Changed Enchant Attribute When Enchant is Changed
 	 */
 	protected void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-        if (!entity.level().isClientSide) {
-            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
-        }
+		enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
 	}
 
 	/*
 	 * Remove Enchant Attribute effect
 	 */
 	protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant) {
-        if (!entity.level().isClientSide()) {
             enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
 
             AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
@@ -167,7 +165,6 @@ public class MobEnchantCapability {
                     modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
                 }
             }
-        }
 	}
 
 	public List<MobEnchantHandler> getMobEnchants() {
