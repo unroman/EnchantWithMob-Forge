@@ -1,8 +1,9 @@
 package baguchan.enchantwithmob;
 
 import baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
+import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.command.MobEnchantingCommand;
-import baguchan.enchantwithmob.message.SoulParticleMessage;
+import baguchan.enchantwithmob.message.*;
 import baguchan.enchantwithmob.registry.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.raid.Raid;
@@ -33,25 +34,28 @@ public class EnchantWithMob {
 	private static final Logger LOGGER = LogManager.getLogger();
 
 	public static final String MODID = "enchantwithmob";
-	public static final String NETWORK_PROTOCOL = "2";
-	public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
-			.networkProtocolVersion(() -> NETWORK_PROTOCOL)
-			.clientAcceptedVersions(NETWORK_PROTOCOL::equals)
-			.serverAcceptedVersions(NETWORK_PROTOCOL::equals)
-			.simpleChannel();
+    public static final String NETWORK_PROTOCOL = "2";
+    public static final SimpleChannel CHANNEL = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID, "net"))
+            .networkProtocolVersion(() -> NETWORK_PROTOCOL)
+            .clientAcceptedVersions(NETWORK_PROTOCOL::equals)
+            .serverAcceptedVersions(NETWORK_PROTOCOL::equals)
+            .simpleChannel();
 
-	public static Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
-	});
+    public static Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-	public EnchantWithMob() {
-		IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static Capability<MobEnchantCapability> MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
-		this.setupMessages();
-		// Register the setup method for modloading
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-		// Register the enqueueIMC method for modloading
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-		// Register the processIMC method for modloading
+    public EnchantWithMob() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        this.setupMessages();
+        // Register the setup method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        // Register the enqueueIMC method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
+        // Register the processIMC method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
 		// Register the doClientStuff method for modloading
 		FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
@@ -80,11 +84,31 @@ public class EnchantWithMob {
 	}
 
 	private void setupMessages() {
-		CHANNEL.messageBuilder(SoulParticleMessage.class, 0)
-				.encoder(SoulParticleMessage::serialize).decoder(SoulParticleMessage::deserialize)
-				.consumerMainThread(SoulParticleMessage::handle)
-				.add();
-	}
+        CHANNEL.messageBuilder(SoulParticleMessage.class, 0)
+                .encoder(SoulParticleMessage::serialize).decoder(SoulParticleMessage::deserialize)
+                .consumerMainThread(SoulParticleMessage::handle)
+                .add();
+        CHANNEL.messageBuilder(AncientMessage.class, 1)
+                .encoder(AncientMessage::serialize).decoder(AncientMessage::deserialize)
+                .consumerMainThread(AncientMessage::handle)
+                .add();
+        CHANNEL.messageBuilder(MobEnchantedMessage.class, 2)
+                .encoder(MobEnchantedMessage::serialize).decoder(MobEnchantedMessage::deserialize)
+                .consumerMainThread(MobEnchantedMessage::handle)
+                .add();
+        CHANNEL.messageBuilder(MobEnchantFromOwnerMessage.class, 3)
+                .encoder(MobEnchantFromOwnerMessage::serialize).decoder(MobEnchantFromOwnerMessage::deserialize)
+                .consumerMainThread(MobEnchantFromOwnerMessage::handle)
+                .add();
+        CHANNEL.messageBuilder(RemoveAllMobEnchantMessage.class, 4)
+                .encoder(RemoveAllMobEnchantMessage::serialize).decoder(RemoveAllMobEnchantMessage::deserialize)
+                .consumerMainThread(RemoveAllMobEnchantMessage::handle)
+                .add();
+        CHANNEL.messageBuilder(RemoveMobEnchantOwnerMessage.class, 6)
+                .encoder(RemoveMobEnchantOwnerMessage::serialize).decoder(RemoveMobEnchantOwnerMessage::deserialize)
+                .consumerMainThread(RemoveMobEnchantOwnerMessage::handle)
+                .add();
+    }
 
 	private void doClientStuff(final FMLClientSetupEvent event) {
 	}

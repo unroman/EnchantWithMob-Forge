@@ -2,9 +2,10 @@ package baguchan.enchantwithmob.api;
 
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 
+import javax.annotation.Nullable;
+
 public interface IEnchantCap {
 
-	MobEnchantCapability getEnchantCap();
-
-	void setEnchantCap(MobEnchantCapability cap);
+    @Nullable
+    MobEnchantCapability getEnchantCap();
 }

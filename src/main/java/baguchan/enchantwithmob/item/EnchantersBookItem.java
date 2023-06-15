@@ -63,8 +63,6 @@ public class EnchantersBookItem extends Item {
 									} else {
 										flag[0] = MobEnchantUtils.addItemMobEnchantToEntity(stack, enchantedMob, cap);
 									}
-									//add Enchanting Owner
-									cap.getEnchantCap().addOwner(enchantedMob, playerIn);
 								}
 							}
 							;

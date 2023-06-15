@@ -305,9 +305,6 @@ public class MobEnchantUtils {
 				flag = true;
 			}
 		}
-		if (flag) {
-			capability.getEnchantCap().addOwner(livingEntity, ownerEntity);
-		}
 		return flag;
 	}
 
@@ -351,8 +348,10 @@ public class MobEnchantUtils {
 	}
 
 	public static boolean checkAllowMobEnchantFromMob(@Nullable MobEnchant mobEnchant, LivingEntity livingEntity, IEnchantCap capability) {
-		if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity) && !EnchantConfig.COMMON.universalEnchant.get()) {
-			return false;
+		if (!EnchantConfig.COMMON.universalEnchant.get()) {
+			if (mobEnchant != null && !mobEnchant.isCompatibleMob(livingEntity)) {
+				return false;
+			}
 		}
 
 		if (mobEnchant.isDisabled()) {

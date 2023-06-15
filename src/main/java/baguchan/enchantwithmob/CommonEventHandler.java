@@ -12,6 +12,7 @@ import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -54,12 +55,16 @@ public class CommonEventHandler {
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.register(ItemMobEnchantCapability.class);
+        event.register(MobEnchantCapability.class);
     }
 
     @SubscribeEvent
     public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Projectile) {
             event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "item_mob_enchant"), new ItemMobEnchantCapability());
+        }
+        if (event.getObject() instanceof LivingEntity) {
+            event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
         }
     }
 
@@ -82,7 +87,70 @@ public class CommonEventHandler {
     public static void onEnderDragonSpawn(EntityJoinLevelEvent event) {
         if (event.getEntity() instanceof IEnchantCap cap && event.getEntity() instanceof EnderDragon livingEntity) {
             LevelAccessor world = event.getLevel();
-            if (!cap.getEnchantCap().hasEnchant()) {
+            if (!world.isClientSide()) {
+                if (!cap.getEnchantCap().hasEnchant()) {
+                    if (isSpawnAlwayEnchantableAncientEntity(livingEntity)) {
+                        int i = 0;
+                        float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
+                        switch (world.getDifficulty()) {
+                            case EASY:
+                                i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 30);
+
+                                MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
+                                break;
+                            case NORMAL:
+                                i = (int) Mth.clamp((5 + world.getRandom().nextInt(15)) * difficultScale, 1, 60);
+
+                                MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
+                                break;
+                            case HARD:
+                                i = (int) Mth.clamp((5 + world.getRandom().nextInt(20)) * difficultScale, 1, 100);
+
+                                MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
+                                break;
+                        }
+                        livingEntity.setHealth(livingEntity.getMaxHealth());
+                    }
+
+                    // On add MobEnchant Alway Enchantable Mob
+                    if (isSpawnAlwayEnchantableEntity(livingEntity)) {
+                        int i = 0;
+                        float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
+                        switch (world.getDifficulty()) {
+                            case EASY:
+                                i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
+
+                                MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
+                                break;
+                            case NORMAL:
+                                i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
+
+                                MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
+                                break;
+                            case HARD:
+                                i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
+
+                                MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
+                                break;
+                        }
+
+                        livingEntity.setHealth(livingEntity.getMaxHealth());
+                    }
+                }
+            }
+        }
+    }
+
+    /*
+     * handle the Normal Entity Mob Enchant
+     */
+    @SubscribeEvent
+    public static void onSpawnEntity(MobSpawnEvent.FinalizeSpawn event) {
+        if (event.getEntity() instanceof IEnchantCap cap) {
+            LevelAccessor world = event.getLevel();
+            if (!world.isClientSide()) {
+                LivingEntity livingEntity = event.getEntity();
+
                 if (isSpawnAlwayEnchantableAncientEntity(livingEntity)) {
                     int i = 0;
                     float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
@@ -103,6 +171,7 @@ public class CommonEventHandler {
                             MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
                             break;
                     }
+
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                 }
 
@@ -130,101 +199,36 @@ public class CommonEventHandler {
 
                     livingEntity.setHealth(livingEntity.getMaxHealth());
                 }
-            }
-        }
-    }
-
-    /*
-     * handle the Normal Entity Mob Enchant
-     */
-    @SubscribeEvent
-    public static void onSpawnEntity(MobSpawnEvent.FinalizeSpawn event) {
-        if (event.getEntity() instanceof IEnchantCap cap) {
-            LevelAccessor world = event.getLevel();
-
-            LivingEntity livingEntity = event.getEntity();
-
-            if (isSpawnAlwayEnchantableAncientEntity(livingEntity)) {
-                int i = 0;
-                float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
-                switch (world.getDifficulty()) {
-                    case EASY:
-                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 30);
-
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
-                        break;
-                    case NORMAL:
-                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(15)) * difficultScale, 1, 60);
-
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
-                        break;
-                    case HARD:
-                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(20)) * difficultScale, 1, 100);
-
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, true);
-                        break;
-                }
-
-                livingEntity.setHealth(livingEntity.getMaxHealth());
-                cap.getEnchantCap().sync(livingEntity);
-
-            }
-
-            // On add MobEnchant Alway Enchantable Mob
-            if (isSpawnAlwayEnchantableEntity(livingEntity)) {
-                int i = 0;
-                float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
-                switch (world.getDifficulty()) {
-                    case EASY:
-                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
-
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
-                        break;
-                    case NORMAL:
-                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
-
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
-                        break;
-                    case HARD:
-                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
-
-                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, false, false);
-                        break;
-                }
-
-                livingEntity.setHealth(livingEntity.getMaxHealth());
-                cap.getEnchantCap().sync(livingEntity);
-            }
 
 
-            if (EnchantConfig.COMMON.naturalSpawnEnchantedMob.get() && isSpawnEnchantableEntity(event.getEntity())) {
+                if (EnchantConfig.COMMON.naturalSpawnEnchantedMob.get() && isSpawnEnchantableEntity(event.getEntity())) {
 
-                if (!(livingEntity instanceof Animal) && !(livingEntity instanceof WaterAnimal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
-                    if (event.getSpawnType() != MobSpawnType.BREEDING && event.getSpawnType() != MobSpawnType.CONVERSION && event.getSpawnType() != MobSpawnType.STRUCTURE && event.getSpawnType() != MobSpawnType.MOB_SUMMONED) {
-                        if (world.getRandom().nextFloat() < (EnchantConfig.COMMON.difficultyBasePercent.get() * world.getDifficulty().getId()) + world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() * EnchantConfig.COMMON.effectiveBasePercent.get()) {
-                            if (!world.isClientSide()) {
-                                int i = 0;
-                                float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
-                                switch (world.getDifficulty()) {
-                                    case EASY:
-                                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
+                    if (!(livingEntity instanceof Animal) && !(livingEntity instanceof WaterAnimal) || EnchantConfig.COMMON.spawnEnchantedAnimal.get()) {
+                        if (event.getSpawnType() != MobSpawnType.BREEDING && event.getSpawnType() != MobSpawnType.CONVERSION && event.getSpawnType() != MobSpawnType.STRUCTURE && event.getSpawnType() != MobSpawnType.MOB_SUMMONED) {
+                            if (world.getRandom().nextFloat() < (EnchantConfig.COMMON.difficultyBasePercent.get() * world.getDifficulty().getId()) + world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() * EnchantConfig.COMMON.effectiveBasePercent.get()) {
+                                if (!world.isClientSide()) {
+                                    int i = 0;
+                                    float difficultScale = world.getCurrentDifficultyAt(livingEntity.blockPosition()).getEffectiveDifficulty() - 0.2F;
+                                    switch (world.getDifficulty()) {
+                                        case EASY:
+                                            i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 20);
 
-                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
-                                        break;
-                                    case NORMAL:
-                                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
+                                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
+                                            break;
+                                        case NORMAL:
+                                            i = (int) Mth.clamp((5 + world.getRandom().nextInt(5)) * difficultScale, 1, 40);
 
-                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
-                                        break;
-                                    case HARD:
-                                        i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
+                                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
+                                            break;
+                                        case HARD:
+                                            i = (int) Mth.clamp((5 + world.getRandom().nextInt(10)) * difficultScale, 1, 50);
 
-                                        MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
-                                        break;
+                                            MobEnchantUtils.addRandomEnchantmentToEntity(livingEntity, cap, world.getRandom(), i, true, true, false);
+                                            break;
+                                    }
+
+                                    livingEntity.setHealth(livingEntity.getMaxHealth());
                                 }
-
-                                livingEntity.setHealth(livingEntity.getMaxHealth());
-                                cap.getEnchantCap().sync(livingEntity);
                             }
                         }
                     }
@@ -287,20 +291,23 @@ public class CommonEventHandler {
                 }
                 ;
 
-                if (cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.THORN.get())) {
-                    int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.THORN.get());
 
-                    if (event.getSource().getDirectEntity() == attacker && !event.getSource().isIndirect() && livingEntity.getRandom().nextFloat() < i * 0.1F) {
-                        attacker.hurt(attacker.damageSources().thorns(livingEntity), getThornDamage(event.getAmount(), cap.getEnchantCap()));
-                    }
-                }
             }
-            ;
         }
 
         if (livingEntity instanceof IEnchantCap cap) {
             if (!event.getSource().is(DamageTypes.STARVE) && cap.getEnchantCap().hasEnchant() && MobEnchantUtils.findMobEnchantFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.PROTECTION.get())) {
                 event.setAmount(getDamageReduction(event.getAmount(), cap.getEnchantCap()));
+            }
+            if (event.getSource().getDirectEntity() != null) {
+                LivingEntity attacker = (LivingEntity) event.getSource().getDirectEntity();
+                if (cap.getEnchantCap().hasEnchant()) {
+                    int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.THORN.get());
+
+                    if (event.getSource().getDirectEntity() instanceof LivingEntity && !event.getSource().is(DamageTypeTags.IS_PROJECTILE) && !event.getSource().is(DamageTypes.THORNS) && livingEntity.getRandom().nextFloat() < i * 0.1F) {
+                        attacker.hurt(livingEntity.damageSources().thorns(livingEntity), getThornDamage(event.getAmount(), cap.getEnchantCap()));
+                    }
+                }
             }
 
 
@@ -487,7 +494,9 @@ public class CommonEventHandler {
         Player oldPlayer = event.getOriginal();
         Player newPlayer = event.getEntity();
         if (!event.isWasDeath()) {
-            ((IEnchantCap) newPlayer).setEnchantCap(((IEnchantCap) oldPlayer).getEnchantCap());
+            ((IEnchantCap) oldPlayer).getEnchantCap().getMobEnchants().forEach(mobEnchantHandler -> {
+                ((IEnchantCap) newPlayer).getEnchantCap().addMobEnchant(newPlayer, mobEnchantHandler.getMobEnchant(), mobEnchantHandler.getEnchantLevel());
+            });
         }
     }
 }
