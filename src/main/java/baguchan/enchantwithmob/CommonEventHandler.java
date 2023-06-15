@@ -300,14 +300,15 @@ public class CommonEventHandler {
                 event.setAmount(getDamageReduction(event.getAmount(), cap.getEnchantCap()));
             }
             if (event.getSource().getDirectEntity() != null) {
-                LivingEntity attacker = (LivingEntity) event.getSource().getDirectEntity();
-                if (cap.getEnchantCap().hasEnchant()) {
-                    int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.THORN.get());
+               if (cap.getEnchantCap().hasEnchant()) {
+                   int i = MobEnchantUtils.getMobEnchantLevelFromHandler(cap.getEnchantCap().getMobEnchants(), MobEnchants.THORN.get());
 
-                    if (event.getSource().getDirectEntity() instanceof LivingEntity && !event.getSource().is(DamageTypeTags.IS_PROJECTILE) && !event.getSource().is(DamageTypes.THORNS) && livingEntity.getRandom().nextFloat() < i * 0.1F) {
-                        attacker.hurt(livingEntity.damageSources().thorns(livingEntity), getThornDamage(event.getAmount(), cap.getEnchantCap()));
-                    }
-                }
+                   if (event.getSource().getDirectEntity() instanceof LivingEntity && !event.getSource().is(DamageTypeTags.IS_PROJECTILE) && !event.getSource().is(DamageTypes.THORNS) && livingEntity.getRandom().nextFloat() < i * 0.1F) {
+                       LivingEntity attacker = (LivingEntity) event.getSource().getDirectEntity();
+
+                       attacker.hurt(livingEntity.damageSources().thorns(livingEntity), getThornDamage(event.getAmount(), cap.getEnchantCap()));
+                   }
+               }
             }
 
 
