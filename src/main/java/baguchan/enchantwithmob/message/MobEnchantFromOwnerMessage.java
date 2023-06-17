@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.message;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -44,11 +44,11 @@ public class MobEnchantFromOwnerMessage {
             context.enqueueWork(() -> {
                 Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
                 Entity ownerEntity = Minecraft.getInstance().player.level().getEntity(message.ownerID);
-                if (entity != null && entity instanceof LivingEntity && ownerEntity != null && ownerEntity instanceof LivingEntity) {
-                    entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
-                    {
-                        enchantCap.addOwner((LivingEntity) entity, (LivingEntity) ownerEntity);
-                    });
+                if (entity != null && entity instanceof LivingEntity && ownerEntity != null && ownerEntity instanceof LivingEntity livingEntity) {
+                    if (livingEntity instanceof IEnchantCap cap) {
+                        cap.getEnchantCap().addOwner((LivingEntity) entity, (LivingEntity) ownerEntity);
+                    }
+                    ;
                 }
             });
         }

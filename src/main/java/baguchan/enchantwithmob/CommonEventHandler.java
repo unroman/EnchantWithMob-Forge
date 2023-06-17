@@ -2,15 +2,15 @@ package baguchan.enchantwithmob;
 
 import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.api.IEnchantVisual;
-import baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.capability.MobEnchantHandler;
+import baguchan.enchantwithmob.message.MobEnchantedMessage;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
 import baguchan.enchantwithmob.registry.ModItems;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -28,14 +28,11 @@ import net.minecraft.world.entity.animal.WaterAnimal;
 import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.entity.vehicle.Minecart;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.event.AnvilUpdateEvent;
-import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingExperienceDropEvent;
@@ -45,28 +42,13 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = EnchantWithMob.MODID)
 public class CommonEventHandler {
-
-    @SubscribeEvent
-    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.register(ItemMobEnchantCapability.class);
-        event.register(MobEnchantCapability.class);
-    }
-
-    @SubscribeEvent
-    public static void onAttachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
-        if (event.getObject() instanceof Projectile) {
-            event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "item_mob_enchant"), new ItemMobEnchantCapability());
-        }
-        if (event.getObject() instanceof LivingEntity) {
-            event.addCapability(new ResourceLocation(EnchantWithMob.MODID, "mob_enchant"), new MobEnchantCapability());
-        }
-    }
 
     /*
      * add Enchant Visual
@@ -489,6 +471,46 @@ public class CommonEventHandler {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        if (player instanceof ServerPlayer) {
+            if (player instanceof IEnchantCap cap) {
+                for (int i = 0; i < cap.getEnchantCap().getMobEnchants().size(); i++) {
+                    EnchantWithMob.CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new MobEnchantedMessage(player, cap.getEnchantCap().getMobEnchants().get(i)));
+
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerChangeDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        Player playerEntity = event.getEntity();
+        if (playerEntity instanceof IEnchantCap cap) {
+
+            for (int i = 0; i < cap.getEnchantCap().getMobEnchants().size(); i++) {
+                EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> playerEntity), new MobEnchantedMessage(playerEntity, cap.getEnchantCap().getMobEnchants().get(i)));
+            }
+        }
+        ;
+    }
+
+    @SubscribeEvent
+    public static void bringBackEnchant(EntityJoinLevelEvent event) {
+        Entity livingEntity = event.getEntity();
+        if (livingEntity instanceof IEnchantCap cap) {
+
+            //Sync Client Enchant
+            for (int i = 0; i < cap.getEnchantCap().getMobEnchants().size(); i++) {
+                MobEnchantedMessage message = new MobEnchantedMessage(livingEntity, cap.getEnchantCap().getMobEnchants().get(i));
+                EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), message);
+            }
+        }
+        ;
+    }
+
 
     @SubscribeEvent
     public static void onClone(PlayerEvent.Clone event) {

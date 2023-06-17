@@ -1,7 +1,6 @@
 package baguchan.enchantwithmob;
 
 import baguchan.enchantwithmob.capability.ItemMobEnchantCapability;
-import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import baguchan.enchantwithmob.command.MobEnchantingCommand;
 import baguchan.enchantwithmob.message.*;
 import baguchan.enchantwithmob.registry.*;
@@ -42,9 +41,6 @@ public class EnchantWithMob {
             .simpleChannel();
 
     public static Capability<ItemMobEnchantCapability> ITEM_MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
-    });
-
-    public static Capability<MobEnchantCapability> MOB_ENCHANT_CAP = CapabilityManager.get(new CapabilityToken<>() {
     });
 
     public EnchantWithMob() {

@@ -2,37 +2,30 @@ package baguchan.enchantwithmob.capability;
 
 import baguchan.enchantwithmob.EnchantConfig;
 import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.message.*;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import com.google.common.collect.Lists;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 
-public class MobEnchantCapability implements ICapabilityProvider, INBTSerializable<CompoundTag> {
+public class MobEnchantCapability {
 	private static final UUID HEALTH_MODIFIER_UUID = UUID.fromString("6699a403-e2cc-31e6-195e-4757200e0935");
 
 	private static final AttributeModifier HEALTH_MODIFIER = new AttributeModifier(HEALTH_MODIFIER_UUID, "Health boost", 0.5D, AttributeModifier.Operation.MULTIPLY_BASE);
 
-
-	public static final EmptyMobEnchantCapability EMPTY_CAP = new EmptyMobEnchantCapability();
 
 	private List<MobEnchantHandler> mobEnchants = Lists.newArrayList();
 	private Optional<LivingEntity> enchantOwner = Optional.empty();
@@ -58,7 +51,7 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 		//Sync Client Enchant
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
-
+		this.sync(entity);
 	}
 
 	public void addMobEnchant(LivingEntity entity, MobEnchant mobEnchant, int enchantLevel, boolean ancient) {
@@ -72,6 +65,7 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			AncientMessage message = new AncientMessage(entity, enchantType == EnchantType.ANCIENT);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
+		this.sync(entity);
 	}
 
 	/**
@@ -89,26 +83,38 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 			MobEnchantedMessage message = new MobEnchantedMessage(entity, mobEnchant, enchantLevel);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
+		this.addOwner(entity, owner);
 		this.onNewEnchantEffect(entity, mobEnchant, enchantLevel);
 		entity.refreshDimensions();
-		this.addOwner(entity, owner);
+		this.sync(entity);
 	}
 
 	public void addOwner(LivingEntity entity, @Nullable LivingEntity owner) {
 		this.fromOwner = true;
 		this.enchantOwner = Optional.ofNullable(owner);
+		this.sync(entity);
 		if (!entity.level().isClientSide) {
 			MobEnchantFromOwnerMessage message = new MobEnchantFromOwnerMessage(entity, owner);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
 	}
 
-	public void removeOwner(LivingEntity entity) {
+	public final void sync(LivingEntity entity) {
+		MobEnchantCapability capability = new MobEnchantCapability();
+		capability.mobEnchants = this.mobEnchants;
+		capability.enchantOwner = this.enchantOwner;
+		capability.enchantType = this.enchantType;
+		((IEnchantCap) entity).setEnchantCap(capability);
+
+	}
+
+	public void removeOwner(LivingEntity livingEntity) {
 		this.fromOwner = false;
 		this.enchantOwner = Optional.empty();
-		if (!entity.level().isClientSide) {
-			RemoveMobEnchantOwnerMessage message = new RemoveMobEnchantOwnerMessage(entity);
-			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
+		//Sync Client Enchant
+		if (!livingEntity.level().isClientSide) {
+			RemoveMobEnchantOwnerMessage message = new RemoveMobEnchantOwnerMessage(livingEntity);
+			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> livingEntity), message);
 		}
 	}
 
@@ -116,38 +122,37 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 	 * Remove MobEnchant on Entity
 	 */
 	public void removeAllMobEnchant(LivingEntity entity) {
-		List<MobEnchantHandler> mobEnchantHandlers = Lists.newArrayList();
+
+		for (int i = 0; i < mobEnchants.size(); ++i) {
+			this.onRemoveEnchantEffect(entity, mobEnchants.get(i).getMobEnchant());
+		}
+		//Sync Client Enchant
 		if (!entity.level().isClientSide) {
 			RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
-		mobEnchantHandlers.addAll(mobEnchants);
-		this.mobEnchants.removeAll(mobEnchantHandlers);
+		this.mobEnchants.removeAll(mobEnchants);
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
-		for (MobEnchantHandler mobEnchant : mobEnchantHandlers) {
-			this.onRemoveEnchantEffect(entity, mobEnchant.getMobEnchant());
-		}
 	}
 
 	/*
 	 * Remove MobEnchant on Entity from owner
 	 */
 	public void removeMobEnchantFromOwner(LivingEntity entity) {
-		List<MobEnchantHandler> mobEnchantHandlers = Lists.newArrayList();
-		mobEnchantHandlers.addAll(mobEnchants);
+		for (int i = 0; i < mobEnchants.size(); ++i) {
+			this.onRemoveEnchantEffect(entity, mobEnchants.get(i).getMobEnchant());
+		}
 		//Sync Client Enchant
 		if (!entity.level().isClientSide) {
 			RemoveAllMobEnchantMessage message = new RemoveAllMobEnchantMessage(entity);
 			EnchantWithMob.CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> entity), message);
 		}
-		this.mobEnchants.removeAll(mobEnchantHandlers);
+		this.mobEnchants.removeAll(mobEnchants);
 		this.removeOwner(entity);
 		//size changed like minecraft dungeons
 		entity.refreshDimensions();
-		for (MobEnchantHandler mobEnchant : mobEnchantHandlers) {
-			this.onRemoveEnchantEffect(entity, mobEnchant.getMobEnchant());
-		}
+		this.sync(entity);
 	}
 
 
@@ -155,22 +160,22 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 	 * Add Enchant Attribute
 	 */
 	public void onNewEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
-            enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
+		enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
 
-            if (EnchantConfig.COMMON.dungeonsLikeHealth.get()) {
-                AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
-                if (modifiableattributeinstance != null && !modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
-                    modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
-                    modifiableattributeinstance.addPermanentModifier(HEALTH_MODIFIER);
-                    entity.setHealth(entity.getHealth() * 1.25F);
-                }
-            }
+		if (EnchantConfig.COMMON.dungeonsLikeHealth.get()) {
+			AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
+			if (modifiableattributeinstance != null && !modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
+				modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
+				modifiableattributeinstance.addPermanentModifier(HEALTH_MODIFIER);
+				entity.setHealth(entity.getHealth() * 1.25F);
+			}
+		}
 	}
 
 	/*
 	 * Changed Enchant Attribute When Enchant is Changed
 	 */
-	protected void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
+	public void onChangedEnchantEffect(LivingEntity entity, MobEnchant enchant, int enchantLevel) {
 		enchant.applyAttributesModifiersToEntity(entity, entity.getAttributes(), enchantLevel);
 	}
 
@@ -178,15 +183,15 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 	 * Remove Enchant Attribute effect
 	 */
 	protected void onRemoveEnchantEffect(LivingEntity entity, MobEnchant enchant) {
-            enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
+		enchant.removeAttributesModifiersFromEntity(entity, entity.getAttributes());
 
-            AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
-            if (modifiableattributeinstance != null) {
-                if (modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
-                    entity.setHealth(entity.getHealth() / 1.25F);
-                    modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
-                }
-            }
+		AttributeInstance modifiableattributeinstance = entity.getAttributes().getInstance(Attributes.MAX_HEALTH);
+		if (modifiableattributeinstance != null) {
+			if (modifiableattributeinstance.hasModifier(HEALTH_MODIFIER)) {
+				entity.setHealth(entity.getHealth() / 1.25F);
+				modifiableattributeinstance.removeModifier(HEALTH_MODIFIER);
+			}
+		}
 	}
 
 	public List<MobEnchantHandler> getMobEnchants() {
@@ -252,12 +257,6 @@ public class MobEnchantCapability implements ICapabilityProvider, INBTSerializab
 
 		fromOwner = nbt.getBoolean("FromOwner");
 		enchantType = EnchantType.get(nbt.getString("EnchantType"));
-	}
-
-	@Override
-	@Nonnull
-	public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @javax.annotation.Nullable Direction facing) {
-		return capability == EnchantWithMob.MOB_ENCHANT_CAP ? LazyOptional.of(() -> this).cast() : LazyOptional.empty();
 	}
 
 	public enum EnchantType {

@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.message;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantHandler;
 import baguchan.enchantwithmob.mobenchant.MobEnchant;
 import baguchan.enchantwithmob.registry.MobEnchants;
@@ -57,13 +57,12 @@ public class MobEnchantedMessage {
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
                 Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
-                if (entity != null && entity instanceof LivingEntity) {
-                    entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
-                    {
-                        if (!MobEnchantUtils.findMobEnchantHandler(enchantCap.getMobEnchants(), message.enchantType)) {
-                            enchantCap.addMobEnchant((LivingEntity) entity, message.enchantType, message.level);
+                if (entity != null && entity instanceof LivingEntity livingEntity) {
+                    if (livingEntity instanceof IEnchantCap cap) {
+                        if (!MobEnchantUtils.findMobEnchantHandler(cap.getEnchantCap().getMobEnchants(), message.enchantType)) {
+                            cap.getEnchantCap().addMobEnchant((LivingEntity) entity, message.enchantType, message.level);
                         }
-                    });
+                    }
                 }
             });
         }

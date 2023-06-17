@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.message;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import baguchan.enchantwithmob.capability.MobEnchantCapability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,11 +42,11 @@ public class AncientMessage {
         if (context.getDirection().getReceptionSide() == LogicalSide.CLIENT) {
             context.enqueueWork(() -> {
                 Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
-                if (entity != null && entity instanceof LivingEntity) {
-                    entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
-                    {
-                        enchantCap.setEnchantType((LivingEntity) entity, message.isAncient ? MobEnchantCapability.EnchantType.ANCIENT : MobEnchantCapability.EnchantType.NORMAL);
-                    });
+                if (entity != null && entity instanceof LivingEntity livingEntity) {
+                    if (livingEntity instanceof IEnchantCap cap) {
+                        cap.getEnchantCap().setEnchantType((LivingEntity) entity, message.isAncient ? MobEnchantCapability.EnchantType.ANCIENT : MobEnchantCapability.EnchantType.NORMAL);
+                    }
+                    ;
                 }
             });
         }

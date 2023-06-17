@@ -8,4 +8,6 @@ public interface IEnchantCap {
 
     @Nullable
     MobEnchantCapability getEnchantCap();
+
+    void setEnchantCap(MobEnchantCapability capability);
 }

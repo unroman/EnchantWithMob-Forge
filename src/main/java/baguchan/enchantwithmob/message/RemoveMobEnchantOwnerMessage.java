@@ -1,6 +1,6 @@
 package baguchan.enchantwithmob.message;
 
-import baguchan.enchantwithmob.EnchantWithMob;
+import baguchan.enchantwithmob.api.IEnchantCap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.Entity;
@@ -39,10 +39,10 @@ public class RemoveMobEnchantOwnerMessage {
             context.enqueueWork(() -> {
                 Entity entity = Minecraft.getInstance().player.level().getEntity(message.entityId);
                 if (entity != null && entity instanceof LivingEntity livingEntity) {
-                    entity.getCapability(EnchantWithMob.MOB_ENCHANT_CAP, null).ifPresent(enchantCap ->
-                    {
-                        enchantCap.removeOwner(livingEntity);
-                    });
+                    if (livingEntity instanceof IEnchantCap cap) {
+                        cap.getEnchantCap().removeOwner(livingEntity);
+                    }
+                    ;
                 }
             });
         }
