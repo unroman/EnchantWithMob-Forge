@@ -26,6 +26,8 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 	private final ModelPart rightLeg;
 	private final ModelPart armorLeftLeg;
 	private final ModelPart armorRightLeg;
+	private final ModelPart armorLeftFoot;
+	private final ModelPart armorRightFoot;
 	private final ModelPart rightArm;
 	private final ModelPart leftArm;
 
@@ -49,6 +51,8 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		this.rightLeg = this.root.getChild("bipedLegs").getChild("bipedLegRight");
 		this.armorRightLeg = this.rightLeg.getChild("armorBipedRightLeg");
 		this.armorLeftLeg = this.leftLeg.getChild("armorBipedLeftLeg");
+		this.armorRightFoot = this.rightLeg.getChild("armorBipedRightFoot");
+		this.armorLeftFoot = this.leftLeg.getChild("armorBipedLeftFoot");
 		this.bipedArms = this.body.getChild("bipedArms");
 		this.leftArm = this.bipedArms.getChild("bipedArmLeft");
 		this.rightArm = this.bipedArms.getChild("bipedArmRight");
@@ -163,6 +167,8 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		this.illagerLeftArm.visible = false;
 		this.armorRightLeg.visible = false;
 		this.armorLeftLeg.visible = false;
+		this.armorRightFoot.visible = false;
+		this.armorLeftFoot.visible = false;
 		this.rightHand.visible = false;
 		this.leftHand.visible = false;
 
