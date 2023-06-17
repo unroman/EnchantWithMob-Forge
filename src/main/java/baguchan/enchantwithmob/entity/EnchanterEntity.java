@@ -44,6 +44,10 @@ public class EnchanterEntity extends SpellcasterIllager {
     private int idleAnimationTimeout = 0;
     private float castingScale;
 
+    public int attackAnimationTick;
+    public final int attackAnimationLength = 40;
+    public final int attackAnimationActionPoint = 20;
+
     public EnchanterEntity(EntityType<? extends EnchanterEntity> type, Level p_i48551_2_) {
         super(type, p_i48551_2_);
         this.xpReward = 12;
@@ -68,12 +72,28 @@ public class EnchanterEntity extends SpellcasterIllager {
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, false));
     }
 
+
+    @Override
+    public void baseTick() {
+        super.baseTick();
+        if (this.level().isClientSide) {
+            if (this.attackAnimationTick < this.attackAnimationLength) {
+                this.attackAnimationTick++;
+            }
+
+            if (this.attackAnimationTick > this.attackAnimationLength) {
+                this.attackAnimationState.stop();
+            }
+        }
+    }
+
     @Override
     public void handleEntityEvent(byte p_21375_) {
         if (p_21375_ == 4) {
             this.attackAnimationState.start(this.tickCount);
             this.idleAnimationState.stop();
             this.castingAnimationState.stop();
+            this.attackAnimationTick = 0;
         } else if (p_21375_ == 61) {
             this.castingAnimationState.start(this.tickCount);
             this.idleAnimationState.stop();
@@ -176,13 +196,6 @@ public class EnchanterEntity extends SpellcasterIllager {
     @Override
     public boolean canBeLeader() {
         return false;
-    }
-
-    @Override
-    public boolean doHurtTarget(Entity p_70652_1_) {
-        this.playSound(ModSoundEvents.ENCHANTER_ATTACK.get(), this.getSoundVolume(), this.getVoicePitch());
-        this.level().broadcastEntityEvent(this, (byte) 4);
-        return super.doHurtTarget(p_70652_1_);
     }
 
     @Override
@@ -375,7 +388,7 @@ public class EnchanterEntity extends SpellcasterIllager {
 
     static class AttackGoal extends Goal {
         private final EnchanterEntity enchanter;
-        private int cooldown;
+        private int tick;
 
         AttackGoal(EnchanterEntity enchanter) {
             this.enchanter = enchanter;
@@ -395,9 +408,20 @@ public class EnchanterEntity extends SpellcasterIllager {
         }
 
         @Override
+        public boolean canContinueToUse() {
+            return super.canContinueToUse() && this.tick < this.enchanter.attackAnimationLength;
+        }
+
+        @Override
+        public void start() {
+            super.start();
+            this.enchanter.level().broadcastEntityEvent(this.enchanter, (byte) 4);
+        }
+
+        @Override
         public void stop() {
             super.stop();
-            this.cooldown = 5;
+            this.tick = 0;
         }
 
         @Override
@@ -408,20 +432,24 @@ public class EnchanterEntity extends SpellcasterIllager {
             if (livingentity != null && livingentity.isAlive()) {
                 this.enchanter.getLookControl().setLookAt(livingentity, 30.0F, 30.0F);
                 if (this.getAttackReachSqr(livingentity) >= this.enchanter.distanceToSqr(livingentity.getX(), livingentity.getY(), livingentity.getZ())) {
-                    if (this.cooldown <= 0) {
+                    if (this.tick == this.enchanter.attackAnimationActionPoint) {
                         this.enchanter.swing(InteractionHand.MAIN_HAND);
                         this.enchanter.doHurtTarget(livingentity);
-
-                        this.cooldown = 30;
+                        this.enchanter.playSound(ModSoundEvents.ENCHANTER_ATTACK.get());
                     }
                     this.enchanter.getNavigation().stop();
                 }
             }
-            this.cooldown = Math.max(this.cooldown - 1, 0);
+            ++this.tick;
         }
 
         protected double getAttackReachSqr(LivingEntity attackTarget) {
             return (double) (this.enchanter.getBbWidth() * 1.5F * this.enchanter.getBbWidth() * 1.5F + attackTarget.getBbWidth());
+        }
+
+        @Override
+        public boolean requiresUpdateEveryTick() {
+            return true;
         }
     }
 

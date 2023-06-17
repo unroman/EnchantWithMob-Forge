@@ -174,7 +174,7 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		}
 
 		this.animate(entity.idleAnimationState, EnchanterAnimation.ENCHANTER_MCD_IDLE, ageInTicks);
-		this.animate(entity.attackAnimationState, EnchanterAnimation.ENCHANTER_MCD_ATTACK, ageInTicks, 3.0F);
+		this.animate(entity.attackAnimationState, EnchanterAnimation.ENCHANTER_MCD_ATTACK, ageInTicks);
 		this.animate(entity.castingAnimationState, EnchanterAnimation.ENCHANTER_MCD_CAST_SPELL, ageInTicks);
 	}
 
