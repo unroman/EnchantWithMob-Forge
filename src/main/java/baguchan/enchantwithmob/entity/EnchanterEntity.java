@@ -266,7 +266,7 @@ public class EnchanterEntity extends SpellcasterIllager {
         };
 
         private final Predicate<LivingEntity> enchanted_fillter = (entity) -> {
-            return !(entity instanceof EnchanterEntity) && entity instanceof IEnchantCap enchantCap && !enchantCap.getEnchantCap().hasEnchant();
+            return !(entity instanceof EnchanterEntity) && entity instanceof IEnchantCap enchantCap && enchantCap.getEnchantCap().hasEnchant();
         };
 
         /**
