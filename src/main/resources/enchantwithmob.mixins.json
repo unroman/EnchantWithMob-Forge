@@ -5,15 +5,16 @@
   "minVersion": "0.8",
   "refmap": "enchantwithmob.refmap.json",
   "mixins": [
-    "LivingEntityMixin",
     "EvokerFangsMixin",
+    "LivingEntityMixin",
     "WoodlandMansionPieceMixin"
   ],
   "client": [
     "ArrowMixin",
+    "EnderDragonRendererMixin",
     "EvokerFangsRendererMixin",
-    "WitherSkullRendererMixin",
-    "EnderDragonRendererMixin"
+    "LivingEntityRendererMixin",
+    "WitherSkullRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
