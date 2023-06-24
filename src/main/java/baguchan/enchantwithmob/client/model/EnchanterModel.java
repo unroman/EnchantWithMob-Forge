@@ -146,21 +146,9 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 
 		AbstractIllager.IllagerArmPose abstractillager$illagerarmpose = entity.getArmPose();
 
-		boolean flag = abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CROSSED;
-		if (this.riding && abstractillager$illagerarmpose != AbstractIllager.IllagerArmPose.SPELLCASTING) {
-			this.rightHand.xRot = (-(float) Math.PI / 5F);
-			this.rightHand.yRot = 0.0F;
-			this.rightHand.zRot = 0.0F;
-			this.leftHand.xRot = (-(float) Math.PI / 5F);
-			this.leftHand.yRot = 0.0F;
-			this.leftHand.zRot = 0.0F;
-			this.rightLeg.xRot = -1.4137167F;
-			this.rightLeg.yRot = ((float) Math.PI / 10F);
-			this.rightLeg.zRot = 0.07853982F;
-			this.leftLeg.xRot = -1.4137167F;
-			this.leftLeg.yRot = (-(float) Math.PI / 10F);
-			this.leftLeg.zRot = -0.07853982F;
-		}
+		boolean flag = abstractillager$illagerarmpose == AbstractIllager.IllagerArmPose.CELEBRATING;
+
+
 		this.armorBipedRightArm.visible = false;
 		this.armorBipedLeftArm.visible = false;
 		this.illagerRightArm.visible = false;
@@ -172,7 +160,15 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 		this.rightHand.visible = false;
 		this.leftHand.visible = false;
 
-		this.animateWalk(EnchanterAnimation.ENCHANTER_MCD_WALK, limbSwing, limbSwingAmount, 3.0F, 4.5F);
+		if (this.riding) {
+			this.applyStatic(EnchanterAnimation.ENCHANTER_SIT);
+		} else {
+			this.animateWalk(EnchanterAnimation.ENCHANTER_MCD_WALK, limbSwing, limbSwingAmount, 3.0F, 4.5F);
+		}
+
+		if (flag) {
+			this.animateWalk(EnchanterAnimation.ENCHANTER_WIN, ageInTicks, 1.0F, 1.0F, 1.0F);
+		}
 
 		if (!entity.castingAnimationState.isStarted() && !entity.attackAnimationState.isStarted()) {
 			this.animateWalk(EnchanterAnimation.ENCHANTER_IDLE, ageInTicks, 1.0F, 1.0F, 1.0F);

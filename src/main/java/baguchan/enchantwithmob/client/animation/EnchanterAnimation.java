@@ -39,7 +39,7 @@ public class EnchanterAnimation {
     public static final AnimationDefinition ENCHANTER_SIT = AnimationDefinition.Builder.withLength(0f).looping()
             .addAnimation("root",
                     new AnimationChannel(AnimationChannel.Targets.POSITION,
-                            new Keyframe(0f, KeyframeAnimations.posVec(0f, -10f, 0f),
+                            new Keyframe(0f, KeyframeAnimations.posVec(0f, 0f, 0f),
                                     AnimationChannel.Interpolations.LINEAR)))
             .addAnimation("bipedLegs",
                     new AnimationChannel(AnimationChannel.Targets.ROTATION,
