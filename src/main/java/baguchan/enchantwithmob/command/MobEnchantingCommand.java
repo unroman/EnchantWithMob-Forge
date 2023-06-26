@@ -8,6 +8,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.exceptions.Dynamic2CommandExceptionType;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -26,6 +27,10 @@ public class MobEnchantingCommand {
 		return SharedSuggestionProvider.suggestResource(collection.stream().map((mobenchant) -> MobEnchants.getRegistry().get().getKey(mobenchant)), p_136345_);
 	};
 
+	private static final Dynamic2CommandExceptionType ERROR_LEVEL_TOO_HIGH = new Dynamic2CommandExceptionType((p_137022_, p_137023_) -> {
+		return Component.translatable("commands.enchant.failed.level", p_137022_, p_137023_);
+	});
+
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 
@@ -35,7 +40,7 @@ public class MobEnchantingCommand {
 			return setClear(ctx.getSource(), EntityArgument.getEntity(ctx, "target"));
 		}))).then(Commands.literal("give").then(Commands.argument("target", EntityArgument.entity())
 				.then(Commands.argument("mob_enchantment", MobEnchantArgument.mobEnchantment()).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "mob_enchantment"), 1))
-						.then(Commands.argument("level", IntegerArgumentType.integer()).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "mob_enchantment"), IntegerArgumentType.getInteger(p_198357_0_, "level")))))));
+						.then(Commands.argument("level", IntegerArgumentType.integer(1)).executes((p_198357_0_) -> setMobEnchants(p_198357_0_.getSource(), EntityArgument.getEntity(p_198357_0_, "target"), MobEnchantArgument.getMobEnchant(p_198357_0_, "mob_enchantment"), IntegerArgumentType.getInteger(p_198357_0_, "level")))))));
 
 		dispatcher.register(enchantCommand);
 
@@ -100,12 +105,17 @@ public class MobEnchantingCommand {
 		if (entity != null) {
 			if (entity instanceof LivingEntity) {
 				if (mobEnchant != null) {
-					if (entity instanceof IEnchantCap enchantCap) {
-						enchantCap.getEnchantCap().addMobEnchant((LivingEntity) entity, mobEnchant, level);
-					}
+					if (level > mobEnchant.getMaxLevel()) {
+						commandStack.sendFailure(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant.fail.too_high"));
+						return 0;
+					} else {
+						if (entity instanceof IEnchantCap enchantCap) {
+							enchantCap.getEnchantCap().addMobEnchant((LivingEntity) entity, mobEnchant, level);
+						}
 
-					commandStack.sendSuccess(() -> Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.getRegistry().get().getKey(mobEnchant)), true);
-					return 1;
+						commandStack.sendSuccess(() -> Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant", entity.getDisplayName(), MobEnchants.getRegistry().get().getKey(mobEnchant)), true);
+						return 1;
+					}
 				} else {
 					commandStack.sendFailure(Component.translatable("commands.enchantwithmob.mob_enchanting.set_enchant.fail.no_mobenchant"));
 
