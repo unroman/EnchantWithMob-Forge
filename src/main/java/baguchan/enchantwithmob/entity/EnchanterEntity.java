@@ -8,7 +8,6 @@ import baguchan.enchantwithmob.utils.MobEnchantUtils;
 import baguchan.enchantwithmob.utils.MobEnchantmentData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
@@ -42,11 +41,13 @@ public class EnchanterEntity extends SpellcasterIllager {
     public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState castingAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
-    private float castingScale;
 
     public int attackAnimationTick;
     public final int attackAnimationLength = 40;
     public final int attackAnimationActionPoint = 20;
+
+    public int castingAnimationTick;
+    public final int castingAnimationLength = 72;
 
     public EnchanterEntity(EntityType<? extends EnchanterEntity> type, Level p_i48551_2_) {
         super(type, p_i48551_2_);
@@ -81,8 +82,16 @@ public class EnchanterEntity extends SpellcasterIllager {
                 this.attackAnimationTick++;
             }
 
-            if (this.attackAnimationTick > this.attackAnimationLength) {
+            if (this.attackAnimationTick >= this.attackAnimationLength) {
                 this.attackAnimationState.stop();
+            }
+
+            if (this.castingAnimationTick < this.castingAnimationLength) {
+                this.castingAnimationTick++;
+            }
+
+            if (this.castingAnimationTick >= this.castingAnimationLength) {
+                this.castingAnimationState.stop();
             }
         }
     }
@@ -98,6 +107,7 @@ public class EnchanterEntity extends SpellcasterIllager {
             this.castingAnimationState.start(this.tickCount);
             this.idleAnimationState.stop();
             this.attackAnimationState.stop();
+            this.castingAnimationTick = 0;
         } else {
             super.handleEntityEvent(p_21375_);
         }
@@ -122,7 +132,7 @@ public class EnchanterEntity extends SpellcasterIllager {
     }
 
     private void setupAnimationStates() {
-        if (this.getTarget() != null || this.getDeltaMovement().horizontalDistanceSqr() > 1.0E-6D) {
+        if (this.attackAnimationState.isStarted() || this.castingAnimationState.isStarted() || this.hurtTime > 0) {
             this.idleAnimationState.ifStarted(AnimationState::stop);
         } else if (this.idleAnimationTimeout <= 0) {
             this.idleAnimationTimeout = this.random.nextInt(200) + 80;
@@ -130,19 +140,6 @@ public class EnchanterEntity extends SpellcasterIllager {
         } else {
             --this.idleAnimationTimeout;
         }
-        if (isCastingSpell()) {
-            idleAnimationState.stop();
-            castingScale = Mth.clamp(castingScale + 0.1F, 0, 1);
-        } else {
-            idleAnimationState.stop();
-            castingScale = Mth.clamp(castingScale - 0.1F, 0, 1);
-        }
-
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public float getCastingScale() {
-        return castingScale;
     }
 
 
