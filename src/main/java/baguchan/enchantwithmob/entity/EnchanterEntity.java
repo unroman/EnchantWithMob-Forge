@@ -40,11 +40,10 @@ public class EnchanterEntity extends SpellcasterIllager {
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState attackAnimationState = new AnimationState();
     public final AnimationState castingAnimationState = new AnimationState();
-    private int idleAnimationTimeout = 0;
 
     public int attackAnimationTick;
-    public final int attackAnimationLength = 40;
-    public final int attackAnimationActionPoint = 20;
+    public final int attackAnimationLength = 20;
+    public final int attackAnimationActionPoint = 10;
 
     public int castingAnimationTick;
     public final int castingAnimationLength = 72;
@@ -132,13 +131,10 @@ public class EnchanterEntity extends SpellcasterIllager {
     }
 
     private void setupAnimationStates() {
-        if (this.attackAnimationState.isStarted() || this.castingAnimationState.isStarted() || this.hurtTime > 0) {
-            this.idleAnimationState.ifStarted(AnimationState::stop);
-        } else if (this.idleAnimationTimeout <= 0) {
-            this.idleAnimationTimeout = this.random.nextInt(200) + 80;
-            this.idleAnimationState.startIfStopped(this.tickCount);
+        if (this.attackAnimationState.isStarted() || this.castingAnimationState.isStarted() || this.hurtTime > 0 || this.walkAnimation.isMoving()) {
+            this.idleAnimationState.stop();
         } else {
-            --this.idleAnimationTimeout;
+            this.idleAnimationState.startIfStopped(this.tickCount);
         }
     }
 
