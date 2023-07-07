@@ -283,7 +283,7 @@ public class EnchanterEntity extends SpellcasterIllager {
                     //set enchant limit
                     if (enchanted_list.size() < 5) {
                         LivingEntity target = list.get(EnchanterEntity.this.random.nextInt(list.size()));
-                        if (target != EnchanterEntity.this.getTarget() && target.isAlliedTo(EnchanterEntity.this) && EnchanterEntity.this.isAlliedTo(target) && (target.getTeam() == EnchanterEntity.this.getTeam() || target.getMobType() == MobType.ILLAGER && target.getTeam() == null)) {
+                        if (target != EnchanterEntity.this.getTarget() && target != EnchanterEntity.this && target.isAlliedTo(EnchanterEntity.this) && EnchanterEntity.this.isAlliedTo(target) && (target.getTeam() == EnchanterEntity.this.getTeam() || target.getMobType() == MobType.ILLAGER && target.getTeam() == null)) {
                             EnchanterEntity.this.setEnchantTarget(target);
                             EnchanterEntity.this.level().broadcastEntityEvent(EnchanterEntity.this, (byte) 61);
                             return true;
