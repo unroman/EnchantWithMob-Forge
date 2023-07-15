@@ -106,9 +106,14 @@ public class EnchanterModel<T extends EnchanterEntity> extends HierarchicalModel
 			this.applyStatic(EnchanterAnimation.ENCHANTER_SIT);
 		}
 
+		if (entity.castingAnimationState.isStarted()) {
+			this.animate(entity.castingAnimationState, EnchanterAnimation.ENCHANTER_ENCHANCE, ageInTicks);
+		}
 
-		this.animate(entity.castingAnimationState, EnchanterAnimation.ENCHANTER_ENCHANCE, ageInTicks);
-		this.animate(entity.attackAnimationState, EnchanterAnimation.ENCHANTER_ATTACK, ageInTicks);
+		if (entity.attackAnimationState.isStarted()) {
+			this.animate(entity.attackAnimationState, EnchanterAnimation.ENCHANTER_ATTACK, ageInTicks);
+		}
+
 		if (!entity.castingAnimationState.isStarted() && !entity.attackAnimationState.isStarted()) {
 			this.animate(entity.idleAnimationState, EnchanterAnimation.ENCHANTER_IDLE, ageInTicks);
 			this.applyStatic(EnchanterAnimation.ENCHANTER_NO_ARM);
